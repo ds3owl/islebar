@@ -119,12 +119,12 @@ public class CliHookTests
     }
 
     [Theory]
-    [InlineData("깨진 입력")]
+    [InlineData("broken input")]
     [InlineData("")]
     public void Bad_input_quietly_returns_0(string stdin)
     {
         using var dir = new TempDir();
         Assert.Equal((0, ""), Hook(stdin, "--dir", dir.Path));
-        Assert.Equal((0, ""), Hook(stdin, "--dir", dir.Path, "--모르는옵션"));
+        Assert.Equal((0, ""), Hook(stdin, "--dir", dir.Path, "--unknown-option"));
     }
 }

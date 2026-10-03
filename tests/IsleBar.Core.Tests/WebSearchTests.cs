@@ -11,9 +11,9 @@ public class WebSearchTests
     [InlineData("auto", "ko", "google")]
     [InlineData("auto", "zh", "baidu")]        // Simplified Chinese defaults to Baidu
     [InlineData("auto", "ja", "google")]
-    [InlineData("auto", "모르는말", "google")]
+    [InlineData("auto", "xx-unknown", "google")]
     [InlineData(null, "zh", "baidu")]
-    [InlineData("없는엔진", "ko", "google")]
+    [InlineData("no-such-engine", "ko", "google")]
     [InlineData("naver", "en", "naver")]       // an explicitly chosen engine stays when the language changes
     public void Auto_uses_language_default_and_explicit_choice_is_kept(string? setting, string language, string expected)
         => Assert.Equal(expected, WebSearch.Resolve(setting, language).Id);
@@ -40,11 +40,11 @@ public class WebSearchTests
     }
 
     [Theory]
-    [InlineData("google", "https://www.google.com/search?q=%EB%82%A0%EC%94%A8%20%EC%B2%9C%EC%95%88")]
-    [InlineData("naver", "https://search.naver.com/search.naver?query=%EB%82%A0%EC%94%A8%20%EC%B2%9C%EC%95%88")]
-    [InlineData("baidu", "https://www.baidu.com/s?wd=%EB%82%A0%EC%94%A8%20%EC%B2%9C%EC%95%88")]
+    [InlineData("google", "https://www.google.com/search?q=%EC%98%A4%EB%8A%98%20%EB%82%A0%EC%94%A8")]
+    [InlineData("naver", "https://search.naver.com/search.naver?query=%EC%98%A4%EB%8A%98%20%EB%82%A0%EC%94%A8")]
+    [InlineData("baidu", "https://www.baidu.com/s?wd=%EC%98%A4%EB%8A%98%20%EB%82%A0%EC%94%A8")]
     public void Builds_URL_per_engine(string engine, string expected)
-        => Assert.Equal(expected, WebSearch.UrlFor(WebSearch.Resolve(engine, "ko"), "  날씨 천안 ")!.AbsoluteUri);
+        => Assert.Equal(expected, WebSearch.UrlFor(WebSearch.Resolve(engine, "ko"), "  오늘 날씨 ")!.AbsoluteUri);
 
     [Fact]
     public void Special_characters_do_not_break_URL()
@@ -83,7 +83,7 @@ public class WebSearchTests
         SettingsCodec.Apply(new IsleBarSettings { WebEngine = "naver" }, json);
         Assert.Equal("naver", SettingsCodec.FromJson(json).WebEngine);
 
-        json["web_engine"] = "없는엔진";
+        json["web_engine"] = "no-such-engine";
         Assert.Equal(WebSearch.Auto, SettingsCodec.FromJson(json).WebEngine);
     }
 }

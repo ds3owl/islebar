@@ -17,18 +17,18 @@ public sealed class ClaudeArgumentsTests
     public void Defaults_are_only_bypass_after_question()
     {
         Assert.Equal(
-            [Exe, "작업표시줄 검색창 만들어 줘", "--dangerously-skip-permissions"],
-            ClaudeArguments.Build(Exe, "작업표시줄 검색창 만들어 줘", Opts()));
+            [Exe, "build a taskbar search box", "--dangerously-skip-permissions"],
+            ClaudeArguments.Build(Exe, "build a taskbar search box", Opts()));
     }
 
     [Fact]
     public void Question_comes_first()
     {
         // --remote-control and --resume take values, so a question after them would be eaten as the session name
-        var args = ClaudeArguments.Build(Exe, "왜 느려?", Opts(session: "resume", rc: true));
+        var args = ClaudeArguments.Build(Exe, "why so slow?", Opts(session: "resume", rc: true));
 
         Assert.Equal(Exe, args[0]);
-        Assert.Equal("왜 느려?", args[1]);
+        Assert.Equal("why so slow?", args[1]);
         Assert.True(args.ToList().IndexOf("--resume") > 1);
         Assert.True(args.ToList().IndexOf("--remote-control") > 1);
     }
@@ -45,10 +45,10 @@ public sealed class ClaudeArgumentsTests
     }
 
     [Theory]
-    [InlineData("-v 왜 느려?", " -v 왜 느려?")]
-    [InlineData("--help 이거 뭐야", " --help 이거 뭐야")]
+    [InlineData("-v why so slow?", " -v why so slow?")]
+    [InlineData("--help what is this", " --help what is this")]
     [InlineData("-", " -")]
-    [InlineData("  -p 이거  ", " -p 이거")]     // trim first, then prepend the space
+    [InlineData("  -p this  ", " -p this")]     // trim first, then prepend the space
     public void Question_starting_with_hyphen_gets_leading_space(string question, string expected)
     {
         var args = ClaudeArguments.Build(Exe, question, Opts());
@@ -57,7 +57,7 @@ public sealed class ClaudeArgumentsTests
 
     [Fact]
     public void Hyphen_in_the_middle_is_left_alone()
-        => Assert.Equal("이거 -v 왜?", ClaudeArguments.Build(Exe, "이거 -v 왜?", Opts())[1]);
+        => Assert.Equal("this -v why?", ClaudeArguments.Build(Exe, "this -v why?", Opts())[1]);
 
     // ---------------- perm ----------------
 
@@ -140,14 +140,14 @@ public sealed class ClaudeArgumentsTests
         // question → perm → session → model → effort → rc (must match the Python version's build_args)
         Assert.Equal(
             [
-                Exe, "왜 느려?",
+                Exe, "why so slow?",
                 "--permission-mode", "plan",
                 "--resume",
                 "--model", "opus[1m]",
                 "--effort", "max",
                 "--remote-control",
             ],
-            ClaudeArguments.Build(Exe, "왜 느려?", Opts("resume", "opus", "max", "plan", rc: true)));
+            ClaudeArguments.Build(Exe, "why so slow?", Opts("resume", "opus", "max", "plan", rc: true)));
     }
 
     [Fact]
@@ -155,15 +155,15 @@ public sealed class ClaudeArgumentsTests
     {
         // perm=bypass (always) + other defaults + Opus button
         Assert.Equal(
-            [Exe, "리팩터링해 줘", "--dangerously-skip-permissions", "--model", "opus[1m]"],
-            ClaudeArguments.Build(Exe, "리팩터링해 줘", Opts(model: "opus")));
+            [Exe, "refactor this", "--dangerously-skip-permissions", "--model", "opus[1m]"],
+            ClaudeArguments.Build(Exe, "refactor this", Opts(model: "opus")));
     }
 
     [Fact]
     public void Default_settings_use_auto_permission_mode()
     {
         // Fresh installs start on auto, not bypass (10-01)
-        var args = ClaudeArguments.Build(Exe, "안녕", new LaunchOptions());
+        var args = ClaudeArguments.Build(Exe, "hello", new LaunchOptions());
         Assert.DoesNotContain(ClaudeArguments.BypassFlag, args);
         Assert.Equal(["--permission-mode", "auto"], args.Skip(2).Take(2));
     }
@@ -171,9 +171,9 @@ public sealed class ClaudeArgumentsTests
     [Fact]
     public void Empty_executable_path_throws()
     {
-        Assert.Throws<ArgumentException>(() => ClaudeArguments.Build("", "안녕", Opts()));
-        Assert.Throws<ArgumentNullException>(() => ClaudeArguments.Build(null!, "안녕", Opts()));
-        Assert.Throws<ArgumentNullException>(() => ClaudeArguments.Build(Exe, "안녕", null!));
+        Assert.Throws<ArgumentException>(() => ClaudeArguments.Build("", "hello", Opts()));
+        Assert.Throws<ArgumentNullException>(() => ClaudeArguments.Build(null!, "hello", Opts()));
+        Assert.Throws<ArgumentNullException>(() => ClaudeArguments.Build(Exe, "hello", null!));
     }
 
     [Fact]
@@ -181,11 +181,11 @@ public sealed class ClaudeArgumentsTests
     {
         // Only items containing spaces are quoted (display only; execution passes the list as is)
         Assert.Equal(
-            Exe + " \"왜 느려?\" --dangerously-skip-permissions",
-            ClaudeArguments.ToDisplayString(ClaudeArguments.Build(Exe, "왜 느려?", Opts())));
+            Exe + " \"why so slow?\" --dangerously-skip-permissions",
+            ClaudeArguments.ToDisplayString(ClaudeArguments.Build(Exe, "why so slow?", Opts())));
         Assert.Equal(
-            Exe + " 안녕 --dangerously-skip-permissions",
-            ClaudeArguments.ToDisplayString(ClaudeArguments.Build(Exe, "안녕", Opts())));
+            Exe + " hello --dangerously-skip-permissions",
+            ClaudeArguments.ToDisplayString(ClaudeArguments.Build(Exe, "hello", Opts())));
     }
 
     // ---------------- Finding claude ----------------
@@ -193,7 +193,7 @@ public sealed class ClaudeArgumentsTests
     [Fact]
     public void Claude_on_PATH_comes_first()
     {
-        var path = string.Join(Path.PathSeparator, ["/없는/폴더", "/opt/claude/bin"]);
+        var path = string.Join(Path.PathSeparator, ["/no/such/dir", "/opt/claude/bin"]);
         Assert.Equal(
             Path.Combine("/opt/claude/bin", "claude.exe"),
             ClaudeExecutable.Resolve(path, "/home/ubuntu", p => p.StartsWith("/opt/claude/bin", StringComparison.Ordinal)));
@@ -203,7 +203,7 @@ public sealed class ClaudeArgumentsTests
     public void Falls_back_to_user_folder_when_not_on_PATH()
         => Assert.Equal(
             Path.Combine("/home/ubuntu", ".local", "bin", "claude.exe"),
-            ClaudeExecutable.Resolve("/없는/폴더", "/home/ubuntu", _ => false));
+            ClaudeExecutable.Resolve("/no/such/dir", "/home/ubuntu", _ => false));
 
     [Fact]
     public void Empty_PATH_does_not_crash()

@@ -43,7 +43,7 @@ public class ActivityLifetimeTests
     [InlineData("run", -30, true)]   // clock skew stamped it in the future
     public void Transfer_visibility_time_depends_on_state(string state, int ageSeconds, bool alive)
     {
-        var transfer = new ActivityState { Title = "📥 폰 → PC", Name = "a.jpg", State = state, Total = 10, Done = 5 };
+        var transfer = new ActivityState { Title = "📥 Phone → PC", Name = "a.jpg", State = state, Total = 10, Done = 5 };
         Assert.Equal(alive, ActivityStore.IsAlive(transfer, Now.AddSeconds(-ageSeconds), Now));
     }
 

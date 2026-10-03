@@ -28,14 +28,14 @@ public sealed class IslandTests
         var path = store.Write("보내는중", new ActivityState
         {
             RawKind = ActivityState.KindTransfer,
-            Title = "📥 폰 → PC",
-            Name = "휴가 영상.mp4",
+            Title = "📥 Phone → PC",
+            Name = "clip 01.mp4",
             Stage = "upload",
             Total = 81_920_000,
             Done = 4_096_000,
             State = "run",
-            Msg = "받는 중",
-            Open = @"C:\Users\me\Downloads\휴가 영상.mp4",
+            Msg = "receiving",
+            Open = @"C:\Users\me\Downloads\clip 01.mp4",
             T0 = Now.ToUnixTimeSeconds(),
         });
 
@@ -44,8 +44,8 @@ public sealed class IslandTests
 
         var live = store.Read(DateTimeOffset.UtcNow);
         var one = Assert.Single(live);
-        Assert.Equal("📥 폰 → PC", one.Title);
-        Assert.Equal("휴가 영상.mp4", one.Name);
+        Assert.Equal("📥 Phone → PC", one.Title);
+        Assert.Equal("clip 01.mp4", one.Name);
         Assert.Equal(81_920_000, one.Total);
         Assert.Equal(4_096_000, one.Done);
         Assert.Equal(ActivityKind.Transfer, one.Kind);
@@ -60,16 +60,16 @@ public sealed class IslandTests
     {
         using var dir = new TempDir();
         var store = new ActivityStore(dir.Path);
-        var path = store.Write("t", new ActivityState { Title = "📤 PC → 폰", Name = "보고서.html" });
+        var path = store.Write("t", new ActivityState { Title = "📤 PC → Phone", Name = "보고서.html" });
         var text = File.ReadAllText(path);
 
         // BMP characters (Hangul, arrows) are written as is → a person can open and read the file
-        Assert.Contains("PC → 폰", text, StringComparison.Ordinal);
+        Assert.Contains("PC → Phone", text, StringComparison.Ordinal);
         Assert.Contains("보고서.html", text, StringComparison.Ordinal);
 
         // Emoji (outside the BMP) are escaped as \uD83D\uDCE4. That's valid JSON and Python's json.load reads it fine.
         var read = ActivityStore.ReadFile(path)!;
-        Assert.Equal("📤 PC → 폰", read.Title);
+        Assert.Equal("📤 PC → Phone", read.Title);
         Assert.Equal("보고서.html", read.Name);
     }
 
@@ -78,14 +78,14 @@ public sealed class IslandTests
     {
         using var dir = new TempDir();
         var store = new ActivityStore(dir.Path);
-        var fresh = store.Write("새것", new ActivityState { Name = "새것" });
-        var stale = store.Write("낡은것", new ActivityState { Name = "낡은것" });
+        var fresh = store.Write("fresh", new ActivityState { Name = "fresh" });
+        var stale = store.Write("stale", new ActivityState { Name = "stale" });
 
         // Set it back 2 min 1 s → an abandoned transfer
         File.SetLastWriteTimeUtc(stale, DateTime.UtcNow - TimeSpan.FromSeconds(121));
 
         var live = store.Read(DateTimeOffset.UtcNow);
-        Assert.Equal("새것", Assert.Single(live).Name);
+        Assert.Equal("fresh", Assert.Single(live).Name);
         Assert.True(File.Exists(stale));        // only ignored, not deleted
         Assert.True(File.Exists(fresh));
     }
@@ -95,7 +95,7 @@ public sealed class IslandTests
     {
         using var dir = new TempDir();
         var store = new ActivityStore(dir.Path);
-        var path = store.Write("경계", new ActivityState { Name = "경계" });
+        var path = store.Write("edge", new ActivityState { Name = "edge" });
         var now = DateTimeOffset.UtcNow;
         File.SetLastWriteTimeUtc(path, (now - TimeSpan.FromSeconds(119)).UtcDateTime);
 
@@ -108,16 +108,16 @@ public sealed class IslandTests
     {
         using var dir = new TempDir();
         var store = new ActivityStore(dir.Path);
-        var old = store.Write("가", new ActivityState { Name = "가" });
-        var mid = store.Write("나", new ActivityState { Name = "나" });
-        var recent = store.Write("다", new ActivityState { Name = "다" });
+        var old = store.Write("a", new ActivityState { Name = "a" });
+        var mid = store.Write("b", new ActivityState { Name = "b" });
+        var recent = store.Write("c", new ActivityState { Name = "c" });
 
         var now = DateTimeOffset.UtcNow;
         File.SetLastWriteTimeUtc(old, (now - TimeSpan.FromSeconds(90)).UtcDateTime);
         File.SetLastWriteTimeUtc(mid, (now - TimeSpan.FromSeconds(45)).UtcDateTime);
         File.SetLastWriteTimeUtc(recent, (now - TimeSpan.FromSeconds(1)).UtcDateTime);
 
-        Assert.Equal(["다", "나", "가"], store.Read(now).Select(s => s.Name));
+        Assert.Equal(["c", "b", "a"], store.Read(now).Select(s => s.Name));
     }
 
     [Fact]
@@ -125,23 +125,23 @@ public sealed class IslandTests
     {
         using var dir = new TempDir();
         var store = new ActivityStore(dir.Path);
-        store.Write("좋은것", new ActivityState { Name = "좋은것" });
-        File.WriteAllText(dir.File("깨진것.json"), "{ 반쯤 쓰다 죽은 파일");
+        store.Write("good", new ActivityState { Name = "good" });
+        File.WriteAllText(dir.File("broken.json"), "{ half-written file");
 
-        Assert.Equal("좋은것", Assert.Single(store.Read(DateTimeOffset.UtcNow)).Name);
+        Assert.Equal("good", Assert.Single(store.Read(DateTimeOffset.UtcNow)).Name);
     }
 
     [Fact]
     public void Missing_folder_does_not_crash()
-        => Assert.Empty(new ActivityStore("/없는/폴더/여기").Read(DateTimeOffset.UtcNow));
+        => Assert.Empty(new ActivityStore("/no/such/dir/here").Read(DateTimeOffset.UtcNow));
 
     [Fact]
     public void Writing_same_id_overwrites()
     {
         using var dir = new TempDir();
         var store = new ActivityStore(dir.Path);
-        store.Write("한개", new ActivityState { Done = 10, Total = 100, State = "run" });
-        store.Write("한개", new ActivityState { Done = 90, Total = 100, State = "run" });
+        store.Write("one", new ActivityState { Done = 10, Total = 100, State = "run" });
+        store.Write("one", new ActivityState { Done = 90, Total = 100, State = "run" });
 
         var one = Assert.Single(store.Read(DateTimeOffset.UtcNow));
         Assert.Equal(90, one.Done);
@@ -155,7 +155,7 @@ public sealed class IslandTests
         var store = new ActivityStore(dir.Path);
         for (var i = 0; i < 5; i++)
         {
-            store.Write("한개", new ActivityState { Done = i });
+            store.Write("one", new ActivityState { Done = i });
         }
 
         Assert.Empty(Directory.GetFiles(dir.Path, "*.tmp-*"));
@@ -166,9 +166,9 @@ public sealed class IslandTests
     {
         using var dir = new TempDir();
         var store = new ActivityStore(dir.Path);
-        store.Write("지울것", new ActivityState());
-        Assert.True(store.Remove("지울것"));
-        Assert.False(store.Remove("지울것"));
+        store.Write("to-delete", new ActivityState());
+        Assert.True(store.Remove("to-delete"));
+        Assert.False(store.Remove("to-delete"));
         Assert.Empty(store.Read(DateTimeOffset.UtcNow));
     }
 
@@ -189,13 +189,13 @@ public sealed class IslandTests
         // new-convention folder + Python version's tgprog folder
         var store = new ActivityStore([new ActivitySource(newDir.Path), new ActivitySource(oldDir.Path, "tgprog_*.json")]);
 
-        store.Write("새규칙", new ActivityState { Name = "새규칙" });
+        store.Write("new-rule", new ActivityState { Name = "new-rule" });
         File.WriteAllText(Path.Combine(oldDir.Path, "tgprog_1234.json"),
-            """{"title":"📥 폰 → PC","name":"예전 전송","total":100,"done":50,"state":"run"}""");
-        File.WriteAllText(Path.Combine(oldDir.Path, "관계없는.json"), """{"name":"모양이 안 맞음"}""");
+            """{"title":"📥 Phone → PC","name":"old transfer","total":100,"done":50,"state":"run"}""");
+        File.WriteAllText(Path.Combine(oldDir.Path, "unrelated.json"), """{"name":"wrong shape"}""");
 
         var names = store.Read(DateTimeOffset.UtcNow).Select(s => s.Name).ToHashSet();
-        Assert.Equal(["새규칙", "예전 전송"], names.Order());   // files that don't match the pattern aren't read
+        Assert.Equal(["new-rule", "old transfer"], names.Order());   // files that don't match the pattern aren't read
     }
 
     // ---------------- Legacy (tgprog) file compatibility ----------------
@@ -205,7 +205,7 @@ public sealed class IslandTests
     {
         using var dir = new TempDir();
         File.WriteAllText(dir.File("tgprog_1.json"),
-            """{"title":"📤 PC → 폰","name":"a.zip","stage":"upload","total":100,"done":25,"state":"run","t0":1759000000}""");
+            """{"title":"📤 PC → Phone","name":"a.zip","stage":"upload","total":100,"done":25,"state":"run","t0":1759000000}""");
 
         var one = Assert.Single(new ActivityStore(dir.Path).Read(DateTimeOffset.UtcNow));
         Assert.Equal(ActivityKind.Transfer, one.Kind);
@@ -225,9 +225,9 @@ public sealed class IslandTests
     }
 
     [Theory]
-    [InlineData("📥 폰 → PC", TransferDirection.Incoming)]
-    [InlineData("📥 폰 → PC  ", TransferDirection.Incoming)]   // trailing whitespace is trimmed first
-    [InlineData("📤 PC → 폰", TransferDirection.Outgoing)]
+    [InlineData("📥 Phone → PC", TransferDirection.Incoming)]
+    [InlineData("📥 Phone → PC  ", TransferDirection.Incoming)]   // trailing whitespace is trimmed first
+    [InlineData("📤 PC → Phone", TransferDirection.Outgoing)]
     [InlineData(null, TransferDirection.Outgoing)]
     [InlineData("", TransferDirection.Outgoing)]
     public void Direction_is_decided_by_whether_title_ends_with_PC(string? title, TransferDirection expected)
@@ -327,12 +327,12 @@ public sealed class IslandTests
     public void Same_kind_picks_most_recent()
     {
         var snapshot = IslandSelector.Select([
-            State(ActivityKind.Transfer, Now.AddMinutes(-1), name: "예전 것"),
-            State(ActivityKind.Transfer, Now, name: "최근 것"),
-            State(ActivityKind.Transfer, Now.AddSeconds(-30), name: "중간 것"),
+            State(ActivityKind.Transfer, Now.AddMinutes(-1), name: "older one"),
+            State(ActivityKind.Transfer, Now, name: "latest one"),
+            State(ActivityKind.Transfer, Now.AddSeconds(-30), name: "middle one"),
         ]);
 
-        Assert.Equal("최근 것", snapshot.Primary!.Name);
+        Assert.Equal("latest one", snapshot.Primary!.Name);
         Assert.Equal(2, snapshot.ExtraCount);
     }
 
@@ -341,12 +341,12 @@ public sealed class IslandTests
     {
         using var dir = new TempDir();
         var store = new ActivityStore(dir.Path);
-        store.Write("음악", new ActivityState { RawKind = ActivityState.KindMusic, Name = "노래" });
-        store.Write("권한", new ActivityState { RawKind = ActivityState.KindAgentPermission, Name = "파일을 지울까요?" });
-        store.Write("타이머", new ActivityState { RawKind = ActivityState.KindTimer, Name = "뽀모도로" });
+        store.Write("music", new ActivityState { RawKind = ActivityState.KindMusic, Name = "song" });
+        store.Write("perm", new ActivityState { RawKind = ActivityState.KindAgentPermission, Name = "Delete this file?" });
+        store.Write("timer", new ActivityState { RawKind = ActivityState.KindTimer, Name = "Pomodoro" });
 
         var snapshot = IslandSelector.Select(store.Read(DateTimeOffset.UtcNow));
-        Assert.Equal("파일을 지울까요?", snapshot.Primary!.Name);
+        Assert.Equal("Delete this file?", snapshot.Primary!.Name);
         Assert.Equal(2, snapshot.ExtraCount);
     }
 
@@ -377,7 +377,7 @@ public sealed class IslandTests
         var fit = TextFit.Fit("50%  ", "아주아주긴파일이름.mp4", 15, new FakeMeasure());
         Assert.StartsWith("50%  ", fit, StringComparison.Ordinal);
         Assert.EndsWith(TextFit.Ellipsis, fit, StringComparison.Ordinal);
-        Assert.True(new FakeMeasure().Measure(fit) <= 15, $"아직 넘친다: {fit} ({new FakeMeasure().Measure(fit)})");
+        Assert.True(new FakeMeasure().Measure(fit) <= 15, $"still overflows: {fit} ({new FakeMeasure().Measure(fit)})");
     }
 
     [Fact]
@@ -389,7 +389,7 @@ public sealed class IslandTests
         const double max = 26;   // width where both prefixes fit
 
         var shortPrefix = "5%  ";
-        var longPrefix = "100% · 1분 30초  ";
+        var longPrefix = "100% · 1m 30s  ";
         var withShort = TextFit.Fit(shortPrefix, name, max, measure);
         var withLong = TextFit.Fit(longPrefix, name, max, measure);
 
@@ -398,7 +398,7 @@ public sealed class IslandTests
         var nameAfterLong = withLong[longPrefix.Length..];
         Assert.True(
             nameAfterLong.Length < nameAfterShort.Length,
-            $"'{nameAfterLong}' 이 '{nameAfterShort}' 보다 짧아야 한다");
+            $"'{nameAfterLong}' should be shorter than '{nameAfterShort}'");
 
         // As long as the prefix fits, the result fits too
         Assert.True(measure.Measure(withShort) <= max, withShort);
@@ -461,7 +461,7 @@ public sealed class IslandTests
     [InlineData("24h", 24 * 60 * 60)]
     public void Parses_as_duration(string input, int expectedSeconds)
     {
-        Assert.True(TimerParser.TryParse(input, out var duration), $"'{input}'을 못 읽었다");
+        Assert.True(TimerParser.TryParse(input, out var duration), $"could not read '{input}'");
         Assert.Equal(expectedSeconds, (int)duration.TotalSeconds);
     }
 
@@ -469,7 +469,7 @@ public sealed class IslandTests
     [InlineData("25")]                          // no unit → could be a question
     [InlineData("25분 동안 뭘 할까?")]           // words follow → it's a question
     [InlineData("타이머 25분")]                  // words precede
-    [InlineData("왜 25m 밖에 안 돼?")]
+    [InlineData("why only 25m left?")]
     [InlineData("0분")]
     [InlineData("0")]
     [InlineData("-5분")]                         // the leading '-' is left over → a question
@@ -479,22 +479,22 @@ public sealed class IslandTests
     [InlineData("")]
     [InlineData("   ")]
     [InlineData(null)]
-    [InlineData("작업표시줄 검색창 만들어 줘")]
+    [InlineData("build a taskbar search box")]
     [InlineData("25시간 30분")]
     [InlineData("99999999999m")]                 // used to throw OverflowException and crash the bar (review 10-03)
     [InlineData("300000000h")]
     [InlineData("1e300s")]
     public void Does_not_parse_as_duration(string? input)
-        => Assert.False(TimerParser.TryParse(input, out _), $"'{input}'을 시간으로 읽어 버렸다");
+        => Assert.False(TimerParser.TryParse(input, out _), $"'{input}' was read as a duration");
 
     [Fact]
     public void Converts_pomodoro_25_minutes_to_state()
     {
         Assert.True(TimerParser.TryParse("25분", out var duration));
-        var state = TimerParser.ToActivity(duration, Now, "뽀모도로");
+        var state = TimerParser.ToActivity(duration, Now, "Pomodoro");
 
         Assert.Equal(ActivityKind.Timer, state.Kind);
-        Assert.Equal("뽀모도로", state.Name);
+        Assert.Equal("Pomodoro", state.Name);
         Assert.Equal("run", state.State);
         Assert.Equal(Now.ToUnixTimeSeconds(), state.T0);
         Assert.Equal(Now.AddMinutes(25).ToUnixTimeSeconds(), state.Due);

@@ -72,8 +72,8 @@ public sealed class ModelAliasTests
 
         ### Another section
 
-        | **`절대로`** | 여기 것은 읽지 않는다 |
-        | **`가져오면`** | 안 된다 |
+        | **`never`** | not read from here |
+        | **`import`** | must not happen |
         """;
 
         Assert.Equal(["opus", "sonnet", "haiku"], ModelAliasParser.Parse(doc));
@@ -87,8 +87,8 @@ public sealed class ModelAliasTests
     }
 
     [Theory]
-    [InlineData("표가 아예 없는 문서")]
-    [InlineData("### Model aliases\n(표가 사라졌다)")]                        // 0 aliases
+    [InlineData("a document with no table")]
+    [InlineData("### Model aliases\n(the table is gone)")]                  // 0 aliases
     [InlineData("### Model aliases\n**`opus`**")]                              // 1 alias
     [InlineData("### Model aliases\n**`opus`** **`sonnet`**")]                  // 2 → fewer than 3
     [InlineData("### Model aliases\n**`default`** **`best`** **`opusplan`**")]  // special values only

@@ -10,7 +10,7 @@ public sealed class PomodoroStopwatchTests
     [Fact]
     public void Stopwatch_counts_up_from_zero_and_stops_when_paused()
     {
-        var sw = TimerParser.ToStopwatch(Now, "스톱워치");
+        var sw = TimerParser.ToStopwatch(Now, "Stopwatch");
         Assert.True(TimerParser.IsStopwatch(sw));
         Assert.Null(TimerParser.Remaining(sw, Now));
         Assert.Equal(TimeSpan.FromSeconds(90), TimerParser.Elapsed(sw, Now.AddSeconds(90)));
@@ -29,30 +29,30 @@ public sealed class PomodoroStopwatchTests
     [Fact]
     public void Pomodoro_survives_a_sleep_but_a_plain_timer_does_not()
     {
-        var pomodoro = TimerParser.ToPomodoro(1, focus: true, Now, "집중", "휴식");
+        var pomodoro = TimerParser.ToPomodoro(1, focus: true, Now, "Focus", "Break");
         var timer = TimerParser.ToActivity(TimeSpan.FromMinutes(25), Now);
         var woke = Now.AddMinutes(25 + 40);   // the laptop slept through the end of the phase
         Assert.True(ActivityStore.IsAlive(pomodoro, Now, woke));
         Assert.False(ActivityStore.IsAlive(timer, Now, woke));
         Assert.False(ActivityStore.IsAlive(pomodoro, Now, Now.AddHours(5)));   // not after hours away
-        Assert.Equal("휴식 1/4", TimerParser.AdvancePomodoro(pomodoro, woke, "집중", "휴식")!.Name);
+        Assert.Equal("Break 1/4", TimerParser.AdvancePomodoro(pomodoro, woke, "Focus", "Break")!.Name);
     }
 
     [Fact]
     public void Pomodoro_runs_four_focus_break_cycles_then_ends()
     {
-        var state = TimerParser.ToPomodoro(1, focus: true, Now, "집중", "휴식");
-        Assert.Equal("집중 1/4", state.Name);
+        var state = TimerParser.ToPomodoro(1, focus: true, Now, "Focus", "Break");
+        Assert.Equal("Focus 1/4", state.Name);
         var t = Now;
         var names = new List<string>();
         while (state is not null)
         {
             names.Add(state.Name!);
             t = t.Add(TimeSpan.FromSeconds(state.Total!.Value)).Add(TimerParser.PomodoroHandover);
-            state = TimerParser.AdvancePomodoro(state, t, "집중", "휴식");
+            state = TimerParser.AdvancePomodoro(state, t, "Focus", "Break");
         }
 
-        Assert.Equal(["집중 1/4", "휴식 1/4", "집중 2/4", "휴식 2/4", "집중 3/4", "휴식 3/4", "집중 4/4", "휴식 4/4"], names);
+        Assert.Equal(["Focus 1/4", "Break 1/4", "Focus 2/4", "Break 2/4", "Focus 3/4", "Break 3/4", "Focus 4/4", "Break 4/4"], names);
     }
 
     [Fact]

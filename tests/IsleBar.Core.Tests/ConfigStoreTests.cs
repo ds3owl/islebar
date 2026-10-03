@@ -27,10 +27,10 @@ public sealed class ConfigStoreTests
     }
 
     [Theory]
-    [InlineData("{ 이건 JSON이 아니다")]
+    [InlineData("{ this is not JSON")]
     [InlineData("")]
     [InlineData("[1, 2, 3]")]          // JSON but not an object
-    [InlineData("\"그냥 문자열\"")]
+    [InlineData("\"just a string\"")]
     [InlineData("null")]
     public void Broken_JSON_gives_defaults_and_keeps_the_file(string content)
     {
@@ -52,7 +52,7 @@ public sealed class ConfigStoreTests
         // A truncated settings file used to be replaced by defaults on the bar's first save — history and all gone (10-01).
         using var dir = new TempDir();
         var path = dir.File("islebar.json");
-        const string broken = "{ \"drop_command\": \"pythonw send.py\", \"history\": [\"안녕";
+        const string broken = "{ \"drop_command\": \"pythonw send.py\", \"history\": [\"hello";
         File.WriteAllText(path, broken);
         var store = new ConfigStore(path);
 
@@ -77,9 +77,9 @@ public sealed class ConfigStoreTests
           "lang": 42,
           "folder": "/home/ubuntu",
           "files": "yes",
-          "history": "문자열인데 목록이어야 함",
+          "history": "a string where a list belongs",
           "quick": [1, 2, "model"],
-          "models_checked": "어제",
+          "models_checked": "yesterday",
           "values": { "session": true, "perm": "plan", "rc": 1, "effort": "high" }
         }
         """);
@@ -131,18 +131,18 @@ public sealed class ConfigStoreTests
         using var dir = new TempDir();
         var path = dir.File("islebar.json");
         File.WriteAllText(path, """
-        { "lang": "ko", "내가_나중에_추가할_설정": { "깊은": [1, 2, 3] }, "theme": "dark" }
+        { "lang": "ko", "setting_added_later": { "nested": [1, 2, 3] }, "theme": "dark" }
         """);
 
         var store = new ConfigStore(path);
         var settings = store.Load();
-        settings.Folder = "/tmp/새폴더";
+        settings.Folder = "/tmp/new folder";
         Assert.True(store.Save(settings));
 
         var raw = store.LoadRaw();
         Assert.Equal("dark", (string?)raw["theme"]);
-        Assert.Equal(3, raw["내가_나중에_추가할_설정"]!["깊은"]!.AsArray().Count);
-        Assert.Equal("/tmp/새폴더", (string?)raw["folder"]);
+        Assert.Equal(3, raw["setting_added_later"]!["nested"]!.AsArray().Count);
+        Assert.Equal("/tmp/new folder", (string?)raw["folder"]);
         Assert.Equal("ko", (string?)raw["lang"]);
     }
 
@@ -158,7 +158,7 @@ public sealed class ConfigStoreTests
             Lang = "ja",
             Folder = @"C:\Users\me\Desktop",
             Files = false,
-            History = ["첫 질문", "두 번째 질문"],
+            History = ["first question", "second question"],
             Quick = ["perm", "effort"],
             Models = ["opus", "fable"],
             ModelsChecked = 1_759_000_000,
@@ -170,7 +170,7 @@ public sealed class ConfigStoreTests
         Assert.Equal("ja", read.Lang);
         Assert.Equal(@"C:\Users\me\Desktop", read.Folder);
         Assert.False(read.Files);
-        Assert.Equal(["첫 질문", "두 번째 질문"], read.History);
+        Assert.Equal(["first question", "second question"], read.History);
         Assert.Equal(["perm", "effort"], read.Quick);
         Assert.Equal(["opus", "fable"], read.Models);
         Assert.Equal(1_759_000_000, read.ModelsChecked);
@@ -232,15 +232,15 @@ public sealed class ConfigStoreTests
         var arr = new JsonArray();
         for (var i = 0; i < 70; i++)
         {
-            arr.Add((JsonNode)$"질문 {i}");
+            arr.Add((JsonNode)$"question {i}");
         }
 
         File.WriteAllText(path, new JsonObject { ["history"] = arr }.ToJsonString());
 
         var history = new ConfigStore(path).Load().History;
         Assert.Equal(50, history.Count);
-        Assert.Equal("질문 20", history[0]);
-        Assert.Equal("질문 69", history[^1]);
+        Assert.Equal("question 20", history[0]);
+        Assert.Equal("question 69", history[^1]);
     }
 
     [Fact]
@@ -296,7 +296,7 @@ public sealed class ConfigStoreTests
             {
                 store.Update(s =>
                 {
-                    s.History = [$"질문 {n++}"];
+                    s.History = [$"question {n++}"];
                     return true;
                 });
             }
@@ -350,7 +350,7 @@ public sealed class ConfigStoreTests
     public void Creates_missing_folder_when_saving()
     {
         using var dir = new TempDir();
-        var path = Path.Combine(dir.Path, "깊은", "폴더", "islebar.json");
+        var path = Path.Combine(dir.Path, "deep", "folder", "islebar.json");
         var store = new ConfigStore(path);
         Assert.True(store.Save(store.Load()));
         Assert.True(File.Exists(path));

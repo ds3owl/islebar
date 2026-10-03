@@ -33,7 +33,7 @@ public sealed class CliTests
     [Fact]
     public void Unknown_command()
     {
-        var (code, _, error) = Run("날아라");
+        var (code, _, error) = Run("fly");
         Assert.Equal(CommandRunner.ExitUsage, code);
         Assert.Contains("unknown command", error, StringComparison.Ordinal);
     }
@@ -43,8 +43,8 @@ public sealed class CliTests
     {
         using var dir = new TempDir();
         var (code, output, error) = Run(
-            "push", "--dir", dir.Path, "--id", "보내는중", "--kind", "transfer",
-            "--title", "📥 폰 → PC", "--name", "휴가 영상.mp4",
+            "push", "--dir", dir.Path, "--id", "sending", "--kind", "transfer",
+            "--title", "📥 Phone → PC", "--name", "clip 01.mp4",
             "--total", "81920000", "--done", "4096000", "--state", "run");
 
         Assert.Equal(CommandRunner.ExitOk, code);
@@ -54,8 +54,8 @@ public sealed class CliTests
         Assert.True(File.Exists(path));
         var state = ActivityStore.ReadFile(path)!;
         Assert.Equal(ActivityKind.Transfer, state.Kind);
-        Assert.Equal("📥 폰 → PC", state.Title);
-        Assert.Equal("휴가 영상.mp4", state.Name);
+        Assert.Equal("📥 Phone → PC", state.Title);
+        Assert.Equal("clip 01.mp4", state.Name);
         Assert.Equal(0.05, state.Fraction!.Value, 3);
         Assert.NotNull(state.T0);              // filled with the current time if not given
     }
@@ -74,7 +74,7 @@ public sealed class CliTests
     public void Invalid_kind_is_usage_error()
     {
         using var dir = new TempDir();
-        var (code, _, error) = Run("push", "--dir", dir.Path, "--kind", "없는종류");
+        var (code, _, error) = Run("push", "--dir", dir.Path, "--kind", "nosuchkind");
         Assert.Equal(CommandRunner.ExitUsage, code);
         Assert.Contains("--kind", error, StringComparison.Ordinal);
         Assert.Empty(Directory.GetFiles(dir.Path));   // don't write a bogus state
@@ -84,7 +84,7 @@ public sealed class CliTests
     public void Invalid_state_is_usage_error()
     {
         using var dir = new TempDir();
-        var (code, _, error) = Run("push", "--dir", dir.Path, "--state", "몰라");
+        var (code, _, error) = Run("push", "--dir", dir.Path, "--state", "dunno");
         Assert.Equal(CommandRunner.ExitUsage, code);
         Assert.Contains("--state", error, StringComparison.Ordinal);
     }
@@ -93,23 +93,23 @@ public sealed class CliTests
     public void Unknown_option_is_reported_and_continues()
     {
         using var dir = new TempDir();
-        var (code, _, error) = Run("push", "--dir", dir.Path, "--id", "a", "--오타", "값");
+        var (code, _, error) = Run("push", "--dir", dir.Path, "--id", "a", "--typo", "value");
         Assert.Equal(CommandRunner.ExitOk, code);
-        Assert.Contains("--오타", error, StringComparison.Ordinal);
+        Assert.Contains("--typo", error, StringComparison.Ordinal);
     }
 
     [Fact]
     public void Show_picks_by_priority()
     {
         using var dir = new TempDir();
-        Run("push", "--dir", dir.Path, "--id", "음악", "--kind", "music", "--name", "노래");
-        Run("push", "--dir", dir.Path, "--id", "전송", "--kind", "transfer", "--name", "파일");
-        Run("push", "--dir", dir.Path, "--id", "권한", "--kind", "claude-permission", "--name", "지울까요?");
+        Run("push", "--dir", dir.Path, "--id", "music", "--kind", "music", "--name", "song");
+        Run("push", "--dir", dir.Path, "--id", "transfer", "--kind", "transfer", "--name", "file");
+        Run("push", "--dir", dir.Path, "--id", "perm", "--kind", "claude-permission", "--name", "Delete it?");
 
         var (code, output, _) = Run("show", "--dir", dir.Path);
         Assert.Equal(CommandRunner.ExitOk, code);
         Assert.Contains("AgentPermission", output, StringComparison.Ordinal);   // the old name claude-permission is still read
-        Assert.Contains("지울까요?", output, StringComparison.Ordinal);
+        Assert.Contains("Delete it?", output, StringComparison.Ordinal);
         Assert.Contains("+2", output, StringComparison.Ordinal);
     }
 
@@ -126,23 +126,23 @@ public sealed class CliTests
     public void List_shows_everything()
     {
         using var dir = new TempDir();
-        Run("push", "--dir", dir.Path, "--id", "가", "--name", "첫째");
-        Run("push", "--dir", dir.Path, "--id", "나", "--name", "둘째");
+        Run("push", "--dir", dir.Path, "--id", "a", "--name", "first");
+        Run("push", "--dir", dir.Path, "--id", "b", "--name", "second");
 
         var (code, output, _) = Run("list", "--dir", dir.Path);
         Assert.Equal(CommandRunner.ExitOk, code);
-        Assert.Contains("첫째", output, StringComparison.Ordinal);
-        Assert.Contains("둘째", output, StringComparison.Ordinal);
+        Assert.Contains("first", output, StringComparison.Ordinal);
+        Assert.Contains("second", output, StringComparison.Ordinal);
     }
 
     [Fact]
     public void rm()
     {
         using var dir = new TempDir();
-        Run("push", "--dir", dir.Path, "--id", "지울것");
+        Run("push", "--dir", dir.Path, "--id", "to-delete");
 
-        Assert.Equal(CommandRunner.ExitOk, Run("rm", "지울것", "--dir", dir.Path).Code);
-        Assert.Equal(CommandRunner.ExitFailed, Run("rm", "지울것", "--dir", dir.Path).Code);
+        Assert.Equal(CommandRunner.ExitOk, Run("rm", "to-delete", "--dir", dir.Path).Code);
+        Assert.Equal(CommandRunner.ExitFailed, Run("rm", "to-delete", "--dir", dir.Path).Code);
     }
 
     [Fact]
@@ -150,7 +150,7 @@ public sealed class CliTests
     {
         using var dir = new TempDir();
         Assert.Equal(CommandRunner.ExitUsage, Run("rm", "--dir", dir.Path).Code);
-        Assert.Equal(CommandRunner.ExitUsage, Run("rm", "가", "나", "--dir", dir.Path).Code);
+        Assert.Equal(CommandRunner.ExitUsage, Run("rm", "a", "b", "--dir", dir.Path).Code);
     }
 
     /// <summary>
@@ -176,12 +176,12 @@ public sealed class CliTests
     public void Timer_allows_options_after_duration()
     {
         using var dir = new TempDir();
-        var (code, output, _) = Run("timer", "25분", "--dir", dir.Path, "--label", "뽀모도로");
+        var (code, output, _) = Run("timer", "25분", "--dir", dir.Path, "--label", "Pomodoro");
         Assert.Equal(CommandRunner.ExitOk, code);
         Assert.Contains("1500", output, StringComparison.Ordinal);
 
         var state = ActivityStore.ReadFile(Directory.GetFiles(dir.Path, "*.json").Single())!;
-        Assert.Equal("뽀모도로", state.Name);
+        Assert.Equal("Pomodoro", state.Name);
     }
 
     [Fact]
@@ -197,16 +197,16 @@ public sealed class CliTests
     [Fact]
     public void Args_previews_launch_arguments()
     {
-        var (code, output, _) = Run("args", "왜 느려?", "--model", "opus", "--rc");
+        var (code, output, _) = Run("args", "why so slow?", "--model", "opus", "--rc");
         Assert.Equal(CommandRunner.ExitOk, code);
-        Assert.Equal("""claude "왜 느려?" --dangerously-skip-permissions --model opus[1m] --remote-control""", output.Trim());
+        Assert.Equal("""claude "why so slow?" --dangerously-skip-permissions --model opus[1m] --remote-control""", output.Trim());
     }
 
     [Fact]
     public void Args_also_does_not_read_option_values_as_question()
     {
-        var (_, output, _) = Run("args", "--session", "resume", "안녕");
-        Assert.Equal("claude 안녕 --dangerously-skip-permissions --resume", output.Trim());
+        var (_, output, _) = Run("args", "--session", "resume", "hello");
+        Assert.Equal("claude hello --dangerously-skip-permissions --resume", output.Trim());
     }
 
     [Fact]
@@ -222,7 +222,7 @@ public sealed class CliTests
     public void Untrustworthy_document_reports_failure()
     {
         using var dir = new TempDir();
-        var path = dir.File("나쁜문서.md");
+        var path = dir.File("bad-doc.md");
         File.WriteAllText(path, "### Model aliases\n**`opus`**");
 
         var (code, _, error) = Run("aliases", path);
@@ -233,7 +233,7 @@ public sealed class CliTests
     [Fact]
     public void Missing_folder_ends_with_error()
     {
-        var (code, _, error) = Run("aliases", "/없는/파일.md");
+        var (code, _, error) = Run("aliases", "/no/such/file.md");
         Assert.Equal(CommandRunner.ExitFailed, code);
         Assert.NotEqual("", error);
     }

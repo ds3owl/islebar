@@ -14,7 +14,7 @@ public sealed class RecentFolderTests
 
     [Fact]
     public void New_folder_goes_first()
-        => Assert.Equal(["새것", "옛것"], RecentFolders.Add(["옛것"], "새것"));
+        => Assert.Equal(["new", "old"], RecentFolders.Add(["old"], "new"));
 
     [Fact]
     public void Existing_folder_is_moved_to_front()
@@ -44,16 +44,16 @@ public sealed class RecentFolderTests
     public void Over_the_limit_drops_from_the_end()
     {
         var list = Enumerable.Range(0, RecentFolders.Max).Select(i => "f" + i).ToList();
-        var after = RecentFolders.Add(list, "새것");
+        var after = RecentFolders.Add(list, "new");
 
         Assert.Equal(RecentFolders.Max, after.Count);
-        Assert.Equal("새것", after[0]);
+        Assert.Equal("new", after[0]);
         Assert.DoesNotContain("f" + (RecentFolders.Max - 1), after);   // the oldest one is dropped
     }
 
     [Fact]
     public void Missing_folders_are_filtered_out()
-        => Assert.Equal(["있음"], RecentFolders.Prune(["있음", "없음"], f => f == "있음"));
+        => Assert.Equal(["exists"], RecentFolders.Prune(["exists", "missing"], f => f == "exists"));
 
     [Fact]
     public void Normalizing_removes_empty_values_and_duplicates()
@@ -106,7 +106,7 @@ public sealed class RecentFolderTests
         s.Values.Model = "opus";
         s.CodexValues.Model = "gpt-5.5";
         s.CodexValues.Perm = "auto";
-        s.RecentFolders = ["첫폴더", "둘째폴더"];
+        s.RecentFolders = ["first-folder", "second-folder"];
         new ConfigStore(path).Save(s);
 
         var back = new ConfigStore(path).Load();
@@ -114,7 +114,7 @@ public sealed class RecentFolderTests
         Assert.Equal("opus", back.Values.Model);
         Assert.Equal("gpt-5.5", back.CodexValues.Model);
         Assert.Equal("auto", back.CodexValues.Perm);
-        Assert.Equal(["첫폴더", "둘째폴더"], back.RecentFolders);
+        Assert.Equal(["first-folder", "second-folder"], back.RecentFolders);
     }
 
     [Fact]
@@ -157,12 +157,12 @@ public sealed class RecentFolderTests
     {
         using var dir = new TempDir();
         var store = new ActivityStore(dir.Path);
-        store.Write("코덱스작업", new ActivityState
+        store.Write("codex-task", new ActivityState
         {
             RawKind = ActivityState.KindAgentDone,
             Agent = AgentKind.Codex,
             Title = "Codex",
-            Name = "고치기",
+            Name = "fix",
             State = "done",
         });
 

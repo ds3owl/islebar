@@ -26,7 +26,7 @@ public class ModeOrderTests
     [Theory]
     [InlineData(new[] { "web", "claude", "files" }, "web,claude,files")]
     [InlineData(new[] { "web" }, "web,claude,files")]                       // missing ones appended in default order
-    [InlineData(new[] { "files", "files", "모름", "web" }, "files,web,claude")] // duplicates and unknown names dropped
+    [InlineData(new[] { "files", "files", "unknown", "web" }, "files,web,claude")] // duplicates and unknown names dropped
     [InlineData(new string[0], "claude,files,web")]
     public void Normalizes_saved_order(string[] saved, string expected)
         => Assert.Equal(expected, string.Join(",", BarModes.Normalize(saved).Select(BarModes.Key)));

@@ -72,7 +72,7 @@ public sealed class UiLogicTests
             var bg = new Rgb((byte)v, (byte)v, (byte)v);
             var set = ThemePalette.ForBackground(bg, new Rgb(0, 0x78, 0xD4));
             var gap = Math.Abs(ThemePalette.Brightness(set.Foreground) - ThemePalette.Brightness(bg));
-            Assert.True(gap > 60, $"밝기 {v} 에서 글자와 바탕이 너무 비슷하다 (차이 {gap:F0})");
+            Assert.True(gap > 60, $"at brightness {v} text and background are too similar (gap {gap:F0})");
         }
     }
 

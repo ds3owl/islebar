@@ -77,8 +77,8 @@ public sealed class AgentProfileTests
     {
         var opts = Opts(session: "resume", model: "opus", effort: "high", perm: "bypass", rc: true);
         Assert.Equal(
-            ClaudeArguments.Build(ClaudeExe, "왜 이렇게 됐지", opts),
-            ClaudeProfile.Instance.BuildArgs(ClaudeExe, "왜 이렇게 됐지", opts));
+            ClaudeArguments.Build(ClaudeExe, "why did this happen", opts),
+            ClaudeProfile.Instance.BuildArgs(ClaudeExe, "why did this happen", opts));
     }
 
     // ---------- Codex assembly ----------
@@ -86,8 +86,8 @@ public sealed class AgentProfileTests
     [Fact]
     public void Codex_puts_question_last()
     {
-        var args = CodexProfile.Instance.BuildArgs(CodexExe, "이 함수 고쳐 줘", Opts(perm: "ask"));
-        Assert.Equal([CodexExe, "이 함수 고쳐 줘"], args);
+        var args = CodexProfile.Instance.BuildArgs(CodexExe, "fix this function", Opts(perm: "ask"));
+        Assert.Equal([CodexExe, "fix this function"], args);
     }
 
     [Fact]
@@ -98,8 +98,8 @@ public sealed class AgentProfileTests
     }
 
     [Theory]
-    [InlineData("-v 왜 이래")]
-    [InlineData("--help 말고")]
+    [InlineData("-v what is this")]
+    [InlineData("--help not that")]
     public void Codex_also_protects_hyphen_question_with_leading_space(string question)
     {
         var args = CodexProfile.Instance.BuildArgs(CodexExe, question, Opts(perm: "ask"));
@@ -111,27 +111,27 @@ public sealed class AgentProfileTests
     [InlineData("auto", CodexProfile.FullAutoFlag)]
     public void Codex_permission_mapping(string perm, string expected)
     {
-        var args = CodexProfile.Instance.BuildArgs(CodexExe, "질문", Opts(perm: perm));
-        Assert.Equal([CodexExe, expected, "질문"], args);
+        var args = CodexProfile.Instance.BuildArgs(CodexExe, "question", Opts(perm: perm));
+        Assert.Equal([CodexExe, expected, "question"], args);
     }
 
     [Theory]
     [InlineData("ask")]
     [InlineData("plan")]   // Codex has no equivalent → nothing is added
     public void Codex_adds_nothing_when_permission_has_no_equivalent(string perm)
-        => Assert.Equal([CodexExe, "질문"], CodexProfile.Instance.BuildArgs(CodexExe, "질문", Opts(perm: perm)));
+        => Assert.Equal([CodexExe, "question"], CodexProfile.Instance.BuildArgs(CodexExe, "question", Opts(perm: perm)));
 
     [Fact]
     public void Codex_resume_is_a_subcommand_right_after_executable()
     {
         Assert.Equal(
-            [CodexExe, CodexProfile.ResumeCommand, CodexProfile.ResumeLastFlag, "질문"],
-            CodexProfile.Instance.BuildArgs(CodexExe, "질문", Opts(session: "continue", perm: "ask")));
+            [CodexExe, CodexProfile.ResumeCommand, CodexProfile.ResumeLastFlag, "question"],
+            CodexProfile.Instance.BuildArgs(CodexExe, "question", Opts(session: "continue", perm: "ask")));
 
         // the picker: the first word after "resume" is a session id, so the question is not passed (review 10-03)
         Assert.Equal(
             [CodexExe, CodexProfile.ResumeCommand],
-            CodexProfile.Instance.BuildArgs(CodexExe, "질문", Opts(session: "resume", perm: "ask")));
+            CodexProfile.Instance.BuildArgs(CodexExe, "question", Opts(session: "resume", perm: "ask")));
     }
 
     [Fact]
@@ -146,27 +146,27 @@ public sealed class AgentProfileTests
 
     [Fact]
     public void Codex_new_session_has_no_subcommand()
-        => Assert.Equal([CodexExe, "질문"], CodexProfile.Instance.BuildArgs(CodexExe, "질문", Opts(session: "new", perm: "ask")));
+        => Assert.Equal([CodexExe, "question"], CodexProfile.Instance.BuildArgs(CodexExe, "question", Opts(session: "new", perm: "ask")));
 
     [Fact]
     public void Codex_passes_model_full_id_as_is()
     {
         // No substitution like Claude's opus→opus[1m]
         Assert.Equal(
-            [CodexExe, CodexProfile.ModelFlag, "gpt-6-astra", "질문"],
-            CodexProfile.Instance.BuildArgs(CodexExe, "질문", Opts(model: "gpt-6-astra", perm: "ask")));
+            [CodexExe, CodexProfile.ModelFlag, "gpt-6-astra", "question"],
+            CodexProfile.Instance.BuildArgs(CodexExe, "question", Opts(model: "gpt-6-astra", perm: "ask")));
     }
 
     [Fact]
     public void Codex_adds_no_model_when_default()
-        => Assert.Equal([CodexExe, "질문"], CodexProfile.Instance.BuildArgs(CodexExe, "질문", Opts(model: "default", perm: "ask")));
+        => Assert.Equal([CodexExe, "question"], CodexProfile.Instance.BuildArgs(CodexExe, "question", Opts(model: "default", perm: "ask")));
 
     [Fact]
     public void Codex_ignores_effort_and_remote_control_even_when_set()
     {
         var args = CodexProfile.Instance.BuildArgs(
-            CodexExe, "질문", Opts(effort: "max", rc: true, perm: "ask"));
-        Assert.Equal([CodexExe, "질문"], args);
+            CodexExe, "question", Opts(effort: "max", rc: true, perm: "ask"));
+        Assert.Equal([CodexExe, "question"], args);
         Assert.DoesNotContain("--effort", args);
         Assert.DoesNotContain("--remote-control", args);
     }
@@ -175,7 +175,7 @@ public sealed class AgentProfileTests
     public void Codex_order_with_everything_enabled()
     {
         var args = CodexProfile.Instance.BuildArgs(
-            CodexExe, "질문", Opts(session: "continue", model: "gpt-5.5", effort: "high", perm: "bypass", rc: true));
+            CodexExe, "question", Opts(session: "continue", model: "gpt-5.5", effort: "high", perm: "bypass", rc: true));
 
         // subcommand → permission → model → question
         Assert.Equal(
@@ -184,7 +184,7 @@ public sealed class AgentProfileTests
                 CodexProfile.ResumeCommand, CodexProfile.ResumeLastFlag,
                 CodexProfile.BypassFlag,
                 CodexProfile.ModelFlag, "gpt-5.5",
-                "질문",
+                "question",
             ],
             args);
     }
@@ -266,7 +266,7 @@ public sealed class AgentProfileTests
         Assert.Equal(AgentKind.Codex, copy.Agent);
         Assert.Contains("gpt-7-nova", copy.CodexModels);
 
-        copy.CodexModels.Add("딴것");
-        Assert.DoesNotContain("딴것", s.CodexModels);   // the list must not be shared
+        copy.CodexModels.Add("other");
+        Assert.DoesNotContain("other", s.CodexModels);   // the list must not be shared
     }
 }

@@ -35,7 +35,7 @@ public class PruneTests
         using var dir = new TempDir();
         var store = new ActivityStore(dir.Path);
         var now = DateTimeOffset.UtcNow;
-        var done = store.Write("d", new ActivityState { Title = "📥 폰 → PC", State = "done" });
+        var done = store.Write("d", new ActivityState { Title = "📥 Phone → PC", State = "done" });
         File.SetLastWriteTimeUtc(done, now.AddSeconds(-8).UtcDateTime);   // past the 6-second done window but under 10 seconds
         Assert.Equal(0, store.PruneDead(now));
     }

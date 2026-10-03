@@ -18,12 +18,12 @@ public sealed class SystemWatchTests
     public void Flash_notices_expire_while_held_notices_remain()
     {
         var board = new NoticeBoard();
-        board.Flash("a", SystemNotice.Make("잠깐", NoticeGlyphs.Copy, T0), TimeSpan.FromSeconds(2), T0);
-        board.Hold("b", SystemNotice.Make("고정", NoticeGlyphs.Wifi, T0, urgent: true));
+        board.Flash("a", SystemNotice.Make("brief", NoticeGlyphs.Copy, T0), TimeSpan.FromSeconds(2), T0);
+        board.Hold("b", SystemNotice.Make("pinned", NoticeGlyphs.Wifi, T0, urgent: true));
 
         Assert.Equal(2, board.Snapshot(T0.AddSeconds(1)).Count);
         var later = board.Snapshot(T0.AddSeconds(2));
-        Assert.Equal(["고정"], later.Select(n => n.Title));
+        Assert.Equal(["pinned"], later.Select(n => n.Title));
 
         board.Clear("b");
         Assert.Empty(board.Snapshot(T0.AddSeconds(3)));
@@ -33,12 +33,12 @@ public sealed class SystemWatchTests
     public void Posting_again_with_same_key_replaces()
     {
         var board = new NoticeBoard();
-        board.Flash("power", SystemNotice.Make("첫째", NoticeGlyphs.Charging, T0), TimeSpan.FromSeconds(2), T0);
-        board.Flash("power", SystemNotice.Make("둘째", NoticeGlyphs.Charging, T0), TimeSpan.FromSeconds(2), T0);
+        board.Flash("power", SystemNotice.Make("first", NoticeGlyphs.Charging, T0), TimeSpan.FromSeconds(2), T0);
+        board.Flash("power", SystemNotice.Make("second", NoticeGlyphs.Charging, T0), TimeSpan.FromSeconds(2), T0);
 
         var items = board.Snapshot(T0);
         Assert.Single(items);
-        Assert.Equal("둘째", items[0].Title);
+        Assert.Equal("second", items[0].Title);
         Assert.Equal("system:power", items[0].SourcePath);
         Assert.True(board.Has("power", T0));
         Assert.False(board.Has("power", T0.AddSeconds(5)));
@@ -48,14 +48,14 @@ public sealed class SystemWatchTests
     public void Replace_all_at_once()
     {
         var board = new NoticeBoard();
-        board.Flash("old", SystemNotice.Make("옛것", NoticeGlyphs.Calendar, T0), TimeSpan.FromMinutes(1), T0);
+        board.Flash("old", SystemNotice.Make("old", NoticeGlyphs.Calendar, T0), TimeSpan.FromMinutes(1), T0);
         board.ReplaceAll(
         [
-            new("cal:1", SystemNotice.Make("하나", NoticeGlyphs.Calendar, T0)),
-            new("cal:2", SystemNotice.Make("둘", NoticeGlyphs.Calendar, T0)),
+            new("cal:1", SystemNotice.Make("one", NoticeGlyphs.Calendar, T0)),
+            new("cal:2", SystemNotice.Make("two", NoticeGlyphs.Calendar, T0)),
         ]);
 
-        Assert.Equal(["하나", "둘"], board.Snapshot(T0.AddHours(1)).Select(n => n.Title));
+        Assert.Equal(["one", "two"], board.Snapshot(T0.AddHours(1)).Select(n => n.Title));
         board.ReplaceAll([]);
         Assert.Empty(board.Snapshot(T0));
     }
@@ -63,14 +63,14 @@ public sealed class SystemWatchTests
     [Fact]
     public void Notice_shape_is_notice_kind_and_error_when_urgent()
     {
-        var calm = SystemNotice.Make("충전 중 · 78%", NoticeGlyphs.Charging, T0, done: 78, total: 100, open: "ms-settings:batterysaver");
+        var calm = SystemNotice.Make("Charging · 78%", NoticeGlyphs.Charging, T0, done: 78, total: 100, open: "ms-settings:batterysaver");
         Assert.Equal(ActivityKind.Notice, calm.Kind);
         Assert.Equal("run", calm.State);
         Assert.Equal(0.78, calm.Fraction!.Value, 3);
         Assert.Equal(T0.ToUnixTimeSeconds(), calm.T0);
         Assert.Null(calm.Msg);
 
-        var urgent = SystemNotice.Make("인터넷 끊김", NoticeGlyphs.NoInternet, T0, msg: " ", urgent: true);
+        var urgent = SystemNotice.Make("No internet", NoticeGlyphs.NoInternet, T0, msg: " ", urgent: true);
         Assert.Equal(ActivityRunState.Error, urgent.RunState);
         Assert.Null(urgent.Msg);   // a blank message counts as none
     }
@@ -93,16 +93,16 @@ public sealed class SystemWatchTests
         Assert.Equal("배터리 · 76%", NoticeText.OnBattery(Ko, 76));
         Assert.Equal("배터리 20% · 약 45분", NoticeText.BatteryLow(Ko, 20, TimeSpan.FromMinutes(45)));
         Assert.Equal("배터리 10% · 약 1시간 20분", NoticeText.BatteryLow(Ko, 10, TimeSpan.FromMinutes(80.5)));
-        Assert.Equal("에어팟 · 연결됨", NoticeText.Connected(Ko, "에어팟"));
-        Assert.Equal("에어팟 · 연결 끊김", NoticeText.Disconnected(Ko, "에어팟"));
-        Assert.Equal("복사됨 · 안녕", NoticeText.Copied(Ko, "안녕"));
+        Assert.Equal("AirPods · 연결됨", NoticeText.Connected(Ko, "AirPods"));
+        Assert.Equal("AirPods · 연결 끊김", NoticeText.Disconnected(Ko, "AirPods"));
+        Assert.Equal("복사됨 · hello", NoticeText.Copied(Ko, "hello"));
         Assert.Equal("파일 복사됨", NoticeText.CopiedFiles(Ko, 1));
         Assert.Equal("파일 3개 복사됨", NoticeText.CopiedFiles(Ko, 3));
         Assert.Equal("CPU 96% · chrome", NoticeText.Cpu(Ko, 96, "chrome"));
         Assert.Equal("CPU 96%", NoticeText.Cpu(Ko, 96, null));
         Assert.Equal("메모리 93%", NoticeText.Memory(Ko, 93));
-        Assert.Equal("10분 후 · 팀 회의", NoticeText.EventSoon(Ko, 10, "팀 회의"));
-        Assert.Equal("팀 회의 · 지금", NoticeText.EventNow(Ko, "팀 회의"));
+        Assert.Equal("10분 후 · Team sync", NoticeText.EventSoon(Ko, 10, "Team sync"));
+        Assert.Equal("Team sync · 지금", NoticeText.EventNow(Ko, "Team sync"));
         Assert.Equal("마이크 사용 중 · Zoom", NoticeText.InUse(Ko, camera: false, "Zoom"));
         Assert.Equal("카메라 사용 중", NoticeText.InUse(Ko, camera: true, null));
     }
@@ -306,10 +306,10 @@ public sealed class SystemWatchTests
     [Fact]
     public void Preview_collapses_to_one_line_and_masks_passwords()
     {
-        Assert.Equal("첫 줄 둘째 줄", ClipboardRules.Preview("  첫 줄\r\n\t둘째 줄  "));
+        Assert.Equal("first line second line", ClipboardRules.Preview("  first line\r\n\tsecond line  "));
         Assert.Equal("abcdefghijklmnopqrstuvwx…", ClipboardRules.Preview("abcdefghijklmnopqrstuvwxyz and more"));
         Assert.Equal("••••••", ClipboardRules.Preview("Tr0ub4dor&3"));
-        Assert.Equal("••••••", ClipboardRules.Preview("그냥 글", fromPasswordManager: true));
+        Assert.Equal("••••••", ClipboardRules.Preview("plain text", fromPasswordManager: true));
         Assert.Equal(string.Empty, ClipboardRules.Preview("   \n "));
 
         // Don't cut an emoji (surrogate pair) in half
@@ -412,11 +412,11 @@ public sealed class SystemWatchTests
     public void Reads_each_time_format()
     {
         var ics = Calendar(
-            "BEGIN:VEVENT", "UID:1", "SUMMARY:UTC 일정", "DTSTART:20260930T050000Z", "END:VEVENT",
-            "BEGIN:VEVENT", "UID:2", "SUMMARY:서울 일정", "DTSTART;TZID=Asia/Seoul:20260930T140000", "END:VEVENT",
-            "BEGIN:VEVENT", "UID:3", "SUMMARY:떠 있는 시각", "DTSTART:20260930T140000", "END:VEVENT",
-            "BEGIN:VEVENT", "UID:4", "SUMMARY:종일", "DTSTART;VALUE=DATE:20260930", "END:VEVENT",
-            "BEGIN:VEVENT", "UID:5", "SUMMARY:시작 없음", "END:VEVENT");
+            "BEGIN:VEVENT", "UID:1", "SUMMARY:UTC event", "DTSTART:20260930T050000Z", "END:VEVENT",
+            "BEGIN:VEVENT", "UID:2", "SUMMARY:Zoned event", "DTSTART;TZID=Asia/Seoul:20260930T140000", "END:VEVENT",
+            "BEGIN:VEVENT", "UID:3", "SUMMARY:Floating time", "DTSTART:20260930T140000", "END:VEVENT",
+            "BEGIN:VEVENT", "UID:4", "SUMMARY:All day", "DTSTART;VALUE=DATE:20260930", "END:VEVENT",
+            "BEGIN:VEVENT", "UID:5", "SUMMARY:No start", "END:VEVENT");
 
         var events = IcsParser.Parse(ics, Seoul);
         Assert.Equal(4, events.Count);
@@ -433,16 +433,16 @@ public sealed class SystemWatchTests
         var ics = Calendar(
             "BEGIN:VEVENT",
             "UID:x",
-            "SUMMARY:아주 긴 회의\\, 그리고",
-            " 이어지는 제목\\; 끝",
+            "SUMMARY:A very long meeting\\, and",
+            " the rest\\; end",
             "DTSTART:20260930T050000Z",
             "BEGIN:VALARM",
-            "SUMMARY:알람 제목은 무시",
+            "SUMMARY:Alarm summary is ignored",
             "END:VALARM",
             "END:VEVENT");
 
         var e = Assert.Single(IcsParser.Parse(ics, Seoul));
-        Assert.Equal("아주 긴 회의, 그리고이어지는 제목; 끝", e.Summary);
+        Assert.Equal("A very long meeting, andthe rest; end", e.Summary);
     }
 
     [Fact]
@@ -450,7 +450,7 @@ public sealed class SystemWatchTests
     {
         // From 2026-09-28 (Mon), Mon and Wed at 10:00 (Seoul), excluding Wed 9/30
         var ics = Calendar(
-            "BEGIN:VEVENT", "UID:w", "SUMMARY:스탠드업",
+            "BEGIN:VEVENT", "UID:w", "SUMMARY:Standup",
             "DTSTART;TZID=Asia/Seoul:20260928T100000",
             "RRULE:FREQ=WEEKLY;BYDAY=MO,WE",
             "EXDATE;TZID=Asia/Seoul:20260930T100000",
@@ -531,13 +531,13 @@ public sealed class SystemWatchTests
     public void Modified_occurrence_and_cancelled_event()
     {
         var ics = Calendar(
-            "BEGIN:VEVENT", "UID:r", "SUMMARY:주간회의", "DTSTART:20261001T010000Z", "RRULE:FREQ=WEEKLY;COUNT=3", "END:VEVENT",
-            "BEGIN:VEVENT", "UID:r", "SUMMARY:주간회의(옮김)", "RECURRENCE-ID:20261008T010000Z", "DTSTART:20261008T050000Z", "END:VEVENT",
-            "BEGIN:VEVENT", "UID:gone", "SUMMARY:취소됨", "STATUS:CANCELLED", "DTSTART:20261002T010000Z", "END:VEVENT");
+            "BEGIN:VEVENT", "UID:r", "SUMMARY:Weekly sync", "DTSTART:20261001T010000Z", "RRULE:FREQ=WEEKLY;COUNT=3", "END:VEVENT",
+            "BEGIN:VEVENT", "UID:r", "SUMMARY:Weekly sync (moved)", "RECURRENCE-ID:20261008T010000Z", "DTSTART:20261008T050000Z", "END:VEVENT",
+            "BEGIN:VEVENT", "UID:gone", "SUMMARY:Cancelled", "STATUS:CANCELLED", "DTSTART:20261002T010000Z", "END:VEVENT");
 
         var from = new DateTimeOffset(2026, 9, 30, 0, 0, 0, TimeSpan.Zero);
         var list = IcsSchedule.Occurrences(IcsParser.Parse(ics, Seoul), from, from.AddDays(30));
-        Assert.Equal(["주간회의", "주간회의(옮김)", "주간회의"], list.Select(o => o.Summary));
+        Assert.Equal(["Weekly sync", "Weekly sync (moved)", "Weekly sync"], list.Select(o => o.Summary));
         Assert.Equal(5, list[1].Start.Hour);
     }
 
@@ -555,15 +555,15 @@ public sealed class SystemWatchTests
     public void Broken_ICS_does_not_throw()
     {
         Assert.Empty(IcsParser.Parse(null));
-        Assert.Empty(IcsParser.Parse("<html>로그인이 필요합니다</html>"));
-        Assert.Empty(IcsParser.Parse("BEGIN:VEVENT\nDTSTART:어제\nEND:VEVENT"));
+        Assert.Empty(IcsParser.Parse("<html>Sign-in required</html>"));
+        Assert.Empty(IcsParser.Parse("BEGIN:VEVENT\nDTSTART:yesterday\nEND:VEVENT"));
     }
 
     [Fact]
     public void Event_alerts_run_from_10_minutes_before_to_1_minute_after_start()
     {
         var start = T0.AddMinutes(30);
-        IcsOccurrence[] occ = [new("회의", start, false), new("휴가", start, true)];
+        IcsOccurrence[] occ = [new("Meeting", start, false), new("Vacation", start, true)];
 
         Assert.Empty(CalendarLogic.Alerts(occ, start.AddMinutes(-11)));
 

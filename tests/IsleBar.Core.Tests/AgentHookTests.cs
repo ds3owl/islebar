@@ -27,7 +27,7 @@ public class AgentHookTests
         var done = AgentHook.FromCodexHook("""{"hook_event_name":"Stop","session_id":"s","cwd":"C:\\p\\isle"}""")!;
         Assert.Null(done.Write!.Name);   // the CLI keeps the prompt name already on the pill
         Assert.Equal("isle", done.FallbackName);
-        Assert.Equal(40, AgentHook.PromptName(new string('가', 60))!.Length);
+        Assert.Equal(40, AgentHook.PromptName(new string('x', 60))!.Length);
         Assert.Null(AgentHook.PromptName("   "));
     }
 
@@ -117,7 +117,7 @@ public class AgentHookTests
 
     [Theory]
     [InlineData("""{"hook_event_name":"PreToolUse","session_id":"a"}""")]
-    [InlineData("깨짐")]
+    [InlineData("broken")]
     [InlineData("")]
     [InlineData(null)]
     [InlineData("[1]")]
@@ -169,11 +169,11 @@ public class AgentHookTests
     [Fact]
     public void Session_name_is_used_for_both_done_and_permission()
     {
-        string? Title(string? path) => path == "t.jsonl" ? "한글 타이핑 위치 문제" : null;
+        string? Title(string? path) => path == "t.jsonl" ? "Fix cursor jump while typing" : null;
         var done = AgentHook.FromClaude("""{"hook_event_name":"Stop","session_id":"a","cwd":"/p/x","transcript_path":"t.jsonl"}""", null, Title)!;
         var ask = AgentHook.FromClaude("""{"hook_event_name":"Notification","session_id":"a","cwd":"/p/x","transcript_path":"t.jsonl"}""", null, Title)!;
-        Assert.Equal("한글 타이핑 위치 문제", done.Write!.Name);
-        Assert.Equal("한글 타이핑 위치 문제", ask.Write!.Name);
+        Assert.Equal("Fix cursor jump while typing", done.Write!.Name);
+        Assert.Equal("Fix cursor jump while typing", ask.Write!.Name);
     }
 
     [Fact]

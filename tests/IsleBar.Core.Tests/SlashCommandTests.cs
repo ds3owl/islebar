@@ -28,8 +28,8 @@ public sealed class SlashCommandTests
     public void Looks_at_both_working_folder_and_home()
     {
         using var t = new TempDir();
-        Write(CommandFile(t.Path, "proj", "deploy.md"), "배포한다");
-        Write(CommandFile(t.Path, "home", "note.md"), "메모한다");
+        Write(CommandFile(t.Path, "proj", "deploy.md"), "Deploys");
+        Write(CommandFile(t.Path, "home", "note.md"), "Takes a note");
 
         var found = SlashCommandScanner.Scan(Path.Combine(t.Path, "proj"), Path.Combine(t.Path, "home"));
 
@@ -42,8 +42,8 @@ public sealed class SlashCommandTests
     public void No_project_commands_without_working_folder()
     {
         using var t = new TempDir();
-        Write(CommandFile(t.Path, "proj", "deploy.md"), "배포한다");
-        Write(CommandFile(t.Path, "home", "note.md"), "메모한다");
+        Write(CommandFile(t.Path, "proj", "deploy.md"), "Deploys");
+        Write(CommandFile(t.Path, "home", "note.md"), "Takes a note");
 
         // This is what the owner ran into — launched from another folder, project commands disappear
         var found = SlashCommandScanner.Scan(null, Path.Combine(t.Path, "home"));
@@ -55,7 +55,7 @@ public sealed class SlashCommandTests
     public void Missing_folders_give_empty_list_without_crashing()
     {
         using var t = new TempDir();
-        Assert.Empty(SlashCommandScanner.Scan(Path.Combine(t.Path, "없음"), Path.Combine(t.Path, "없음2")));
+        Assert.Empty(SlashCommandScanner.Scan(Path.Combine(t.Path, "missing"), Path.Combine(t.Path, "missing2")));
         Assert.Empty(SlashCommandScanner.Scan(null, null));
         Assert.Empty(SlashCommandScanner.Scan("", "   "));
     }
@@ -64,7 +64,7 @@ public sealed class SlashCommandTests
     public void Subfolders_are_joined_with_colon()
     {
         using var t = new TempDir();
-        Write(CommandFile(t.Path, "home", "git", "commit.md"), "커밋한다");
+        Write(CommandFile(t.Path, "home", "git", "commit.md"), "Commits");
 
         var found = SlashCommandScanner.Scan(null, Path.Combine(t.Path, "home"));
 
@@ -77,7 +77,7 @@ public sealed class SlashCommandTests
     {
         using var t = new TempDir();
         var home = Path.Combine(t.Path, "home");
-        Write(Path.Combine(home, ".claude", "plugins", "synced", "myplug", "commands", "run.md"), "돌린다");
+        Write(Path.Combine(home, ".claude", "plugins", "synced", "myplug", "commands", "run.md"), "Runs");
 
         var found = SlashCommandScanner.Scan(null, home);
 
@@ -89,14 +89,14 @@ public sealed class SlashCommandTests
     public void Project_wins_on_name_clash()
     {
         using var t = new TempDir();
-        Write(CommandFile(t.Path, "proj", "build.md"), "---\ndescription: 프로젝트 것\n---\n");
-        Write(CommandFile(t.Path, "home", "build.md"), "---\ndescription: 홈 것\n---\n");
+        Write(CommandFile(t.Path, "proj", "build.md"), "---\ndescription: project one\n---\n");
+        Write(CommandFile(t.Path, "home", "build.md"), "---\ndescription: home one\n---\n");
 
         var found = SlashCommandScanner.Scan(Path.Combine(t.Path, "proj"), Path.Combine(t.Path, "home"));
 
         Assert.Single(found);
         Assert.Equal(CommandSource.Project, found[0].Source);
-        Assert.Equal("프로젝트 것", found[0].Description);
+        Assert.Equal("project one", found[0].Description);
     }
 
     [Fact]
@@ -126,12 +126,12 @@ public sealed class SlashCommandTests
     // ---------- Reading front matter ----------
 
     [Theory]
-    [InlineData("---\ndescription: 코드 본다\nargument-hint: <PR번호>\n---\n본문", "코드 본다", "<PR번호>")]
-    [InlineData("---\ndescription: \"따옴표 붙은 것\"\n---\n", "따옴표 붙은 것", "")]
-    [InlineData("---\ndescription: '홑따옴표'\n---\n", "홑따옴표", "")]
-    [InlineData("---\nDescription: 대문자 키\n---\n", "대문자 키", "")]
-    [InlineData("머리말이 아예 없다", "", "")]
-    [InlineData("---\n엉뚱한 줄\n---\n", "", "")]
+    [InlineData("---\ndescription: Reviews code\nargument-hint: <PR number>\n---\nbody", "Reviews code", "<PR number>")]
+    [InlineData("---\ndescription: \"quoted value\"\n---\n", "quoted value", "")]
+    [InlineData("---\ndescription: 'single quotes'\n---\n", "single quotes", "")]
+    [InlineData("---\nDescription: Capital key\n---\n", "Capital key", "")]
+    [InlineData("no front matter at all", "", "")]
+    [InlineData("---\nunrelated line\n---\n", "", "")]
     [InlineData("", "", "")]
     public void Extracts_only_description_and_argument_hint_from_front_matter(string text, string desc, string hint)
     {
@@ -148,7 +148,7 @@ public sealed class SlashCommandTests
     public void Command_stays_listed_even_with_broken_front_matter()
     {
         using var t = new TempDir();
-        Write(CommandFile(t.Path, "home", "broken.md"), "---\n닫지 않은 머리말\n설명도 없음\n");
+        Write(CommandFile(t.Path, "home", "broken.md"), "---\nunclosed front matter\nno description either\n");
 
         var found = SlashCommandScanner.Scan(null, Path.Combine(t.Path, "home"));
 
@@ -159,10 +159,10 @@ public sealed class SlashCommandTests
     [Fact]
     public void Commands_taking_arguments_show_the_argument_in_display()
     {
-        var c = new SlashCommand("code-review", CommandSource.User, "본다", "<PR번호>", "x");
-        Assert.Equal("/code-review <PR번호>", c.Display);
+        var c = new SlashCommand("code-review", CommandSource.User, "Reviews", "<PR number>", "x");
+        Assert.Equal("/code-review <PR number>", c.Display);
 
-        var noArg = new SlashCommand("simplify", CommandSource.User, "줄인다", "", "x");
+        var noArg = new SlashCommand("simplify", CommandSource.User, "Simplifies", "", "x");
         Assert.Equal("/simplify", noArg.Display);
     }
 
@@ -170,17 +170,17 @@ public sealed class SlashCommandTests
 
     private static readonly IReadOnlyList<SlashCommand> Sample =
     [
-        new("code-review", CommandSource.User, "코드를 본다", "<PR번호>", "a"),
-        new("commit", CommandSource.Project, "커밋한다", "", "b"),
-        new("loop", CommandSource.User, "되풀이한다", "<간격>", "c"),
-        new("simplify", CommandSource.User, "코드를 줄인다", "", "d"),
+        new("code-review", CommandSource.User, "Reviews the code", "<PR number>", "a"),
+        new("commit", CommandSource.Project, "Commits", "", "b"),
+        new("loop", CommandSource.User, "Repeats on an interval", "<interval>", "c"),
+        new("simplify", CommandSource.User, "Compacts the diff", "", "d"),
     ];
 
     [Theory]
     [InlineData("/co", true)]
     [InlineData("  /co", true)]
     [InlineData("/", true)]
-    [InlineData("왜 이래", false)]
+    [InlineData("why is this", false)]
     [InlineData("", false)]
     [InlineData(null, false)]
     public void Knows_when_input_is_a_command(string? text, bool expected)
@@ -190,7 +190,7 @@ public sealed class SlashCommandTests
     [InlineData("/loop 5m /foo", "loop")]
     [InlineData("/commit", "commit")]
     [InlineData("/", "")]
-    [InlineData("그냥 질문", null)]
+    [InlineData("just a question", null)]
     public void Extracts_only_the_name_part(string text, string? expected)
         => Assert.Equal(expected, SlashCommandMatcher.NamePart(text));
 
@@ -203,7 +203,7 @@ public sealed class SlashCommandTests
     [Fact]
     public void Prefix_matches_come_first()
     {
-        // "co" is a prefix of code-review and commit, while simplify only has it in its description ("코드를 줄인다")
+        // "co" is a prefix of code-review and commit, while simplify only has it in its description ("Compacts the diff")
         var m = SlashCommandMatcher.Match(Sample, "/co");
         Assert.Equal(["code-review", "commit"], m.Take(2).Select(c => c.Name));
     }
@@ -211,17 +211,17 @@ public sealed class SlashCommandTests
     [Fact]
     public void Falls_back_to_description_when_not_in_name()
     {
-        var m = SlashCommandMatcher.Match(Sample, "/되풀이");
+        var m = SlashCommandMatcher.Match(Sample, "/repeat");
         Assert.Equal(["loop"], m.Select(c => c.Name));
     }
 
     [Fact]
     public void No_match_gives_empty_list()
-        => Assert.Empty(SlashCommandMatcher.Match(Sample, "/없는명령어xyz"));
+        => Assert.Empty(SlashCommandMatcher.Match(Sample, "/nosuchcommandxyz"));
 
     [Fact]
     public void Non_command_input_gives_empty_list()
-        => Assert.Empty(SlashCommandMatcher.Match(Sample, "왜 이렇게 됐지"));
+        => Assert.Empty(SlashCommandMatcher.Match(Sample, "why did this happen"));
 
     [Fact]
     public void While_typing_arguments_only_that_command_remains()
@@ -233,7 +233,7 @@ public sealed class SlashCommandTests
 
     [Fact]
     public void Typing_arguments_with_wrong_name_gives_empty_list()
-        => Assert.Empty(SlashCommandMatcher.Match(Sample, "/없는것 인자"));
+        => Assert.Empty(SlashCommandMatcher.Match(Sample, "/nosuch arg"));
 
     [Fact]
     public void Limits_the_count()

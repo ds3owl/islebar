@@ -25,7 +25,7 @@ public sealed class LocalizationTests
     {
         foreach (var info in LanguageCatalog.Languages)
         {
-            Assert.True(LanguageCatalog.IsKnown(info.Code), $"{info.Code} 문구 없음");
+            Assert.True(LanguageCatalog.IsKnown(info.Code), $"{info.Code} has no strings");
         }
 
         Assert.Equal(Expected.Length, LanguageCatalog.Codes.Count);
@@ -56,15 +56,15 @@ public sealed class LocalizationTests
             foreach (var prop in textProps)
             {
                 var value = (string?)prop.GetValue(strings);
-                Assert.False(string.IsNullOrWhiteSpace(value), $"{code}.{prop.Name} 이(가) 비었다");
+                Assert.False(string.IsNullOrWhiteSpace(value), $"{code}.{prop.Name} is empty");
             }
 
             foreach (var prop in optionProps)
             {
                 var option = (OptionText?)prop.GetValue(strings);
                 Assert.NotNull(option);
-                Assert.False(string.IsNullOrWhiteSpace(option!.Title), $"{code}.{prop.Name}.Title 이(가) 비었다");
-                Assert.All(option.Choices, c => Assert.False(string.IsNullOrWhiteSpace(c), $"{code}.{prop.Name} 선택지가 비었다"));
+                Assert.False(string.IsNullOrWhiteSpace(option!.Title), $"{code}.{prop.Name}.Title is empty");
+                Assert.All(option.Choices, c => Assert.False(string.IsNullOrWhiteSpace(c), $"{code}.{prop.Name} has an empty choice"));
             }
 
             Assert.Equal(LaunchOptionDefs.SessionChoices.Count, strings.Session.Choices.Count);
@@ -176,7 +176,7 @@ public sealed class LocalizationTests
             foreach (var option in new[] { strings.Session, strings.Model, strings.Effort, strings.Perm })
             {
                 Assert.All(option.Choices, c => Assert.DoesNotContain('.', c.TrimEnd('.')));
-                Assert.All(option.Choices, c => Assert.True(c.Length <= 12, $"{code} 선택지가 너무 길다: {c}"));
+                Assert.All(option.Choices, c => Assert.True(c.Length <= 12, $"{code} choice is too long: {c}"));
             }
         }
     }
@@ -215,7 +215,7 @@ public sealed class LocalizationTests
         Assert.Equal("de", LanguageResolver.Resolve("de", 0x0412));
         Assert.Equal("ko", LanguageResolver.Resolve("auto", 0x0412));
         Assert.Equal("ko", LanguageResolver.Resolve(null, 0x0412));
-        Assert.Equal("ko", LanguageResolver.Resolve("스웨덴어", 0x0412));   // unknown value → automatic
+        Assert.Equal("ko", LanguageResolver.Resolve("Swedish", 0x0412));   // unknown value → automatic
     }
 
     // ---------------- Fonts ----------------

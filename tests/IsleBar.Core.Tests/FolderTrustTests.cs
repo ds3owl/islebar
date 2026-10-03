@@ -55,7 +55,7 @@ public class FolderTrustTests
 
     [Theory]
     [InlineData("")]
-    [InlineData("{깨짐")]
+    [InlineData("{broken")]
     [InlineData("[1,2]")]
     public void Does_nothing_when_file_missing_or_broken(string content)
     {

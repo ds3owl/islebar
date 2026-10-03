@@ -343,30 +343,9 @@ IsleBar comes with **no warranty** (see the licence). Third-party parts keep the
 
 ---
 
-## 한국어 요약
-
-> [!TIP]
-> **같이 쓰면 좋은 프로그램** — [**Claude Code**](https://code.claude.com/docs/en/overview) 또는 [**Codex CLI**](https://github.com/openai/codex)(바에서 질문하고 작업 중·답변 필요·완료 보기) ·
-> [**Everything**](https://www.voidtools.com/downloads/)(voidtools, 무료 — <kbd>Tab</kbd>으로 PC의 모든 파일 바로 검색) · 웹 브라우저(웹 검색 결과). Windows 11(x64)에서 동작합니다.
-
-**IsleBar**는 윈도우 11 작업표시줄의 검색창 자리에 들어가는 라이브 바입니다. 검색창에 그대로 입력하면 되고,
-검색창 자체가 제자리에서 모양과 내용을 바꿔서 지금 하는 일을 보여 줍니다.
-
-- **Claude·Codex에게 묻기** — 바를 클릭하거나 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd>, 질문을 치고 <kbd>Enter</kbd>. 긴 질문은 위에 전체가 보이고, <kbd>Shift</kbd>+<kbd>Enter</kbd>·여러 줄 붙여 넣기는 작성 창으로.
-- **파일·웹 검색** — <kbd>Tab</kbd>으로 모드 전환(순서·켜고 끄기 설정). 빈 칸일 때 흐린 Tab 힌트.
-- **섬** — 음악(앨범 색 막대·재생 바), 타이머·뽀모도로·스톱워치(우클릭 메뉴), 전송·다운로드, Claude·Codex 완료/답변 필요(초록/주황 테두리), 충전·블루투스·인터넷·집중·복사·과부하·일정 알림, 빨간 테두리는 손봐야 할 때(배터리 부족, 사용 한도·오류로 AI가 멈춤 — 초기화 시각 표시, 90%에서 미리 알림), 마이크·카메라 사용 중 주황 점.
-- **끌어다 놓기** — 바에 파일을 놓으면 경로가 입력창에 들어가 그대로 질문할 수 있습니다. 설정에서 명령을 지정하면 다른 기능으로 바뀝니다. 제작자는 놓은 파일이 텔레그램으로 폰에 바로 가도록 직접 만든 스크립트를 연결해 씁니다.
-- **선택 기능** — Windows 알림 끌어오기(기본 꺼짐), 네이티브 모드(진짜 검색창을 탐색기 안에서 투명하게, 기본 꺼짐), 빛 테두리.
-
-> **비공식** 개인 프로젝트입니다. Anthropic·OpenAI와 아무 관련이 없습니다.
-> "Claude"·"Claude Code"는 Anthropic PBC, "OpenAI"·"Codex"는 OpenAI의 상표입니다.
-
-## Trademarks / 상표
+## Trademarks
 
 - Claude and Claude Code are trademarks of Anthropic. The Claude icon shown in the bar is read at runtime from your own installed `claude.exe`; IsleBar does not ship it.
 - OpenAI and Codex are trademarks of OpenAI. IsleBar ships no OpenAI logo — like the Claude icon, the Codex mark is read at runtime from your own installed Codex extension for VS Code/Cursor; without it a plain Windows glyph is used. IsleBar is not affiliated with or endorsed by OpenAI or Anthropic.
 - Everything and the Everything SDK are by voidtools.
 - Pretendard font by Kil Hyung-jin (orioncactus), bundled under the SIL Open Font License 1.1 — see `Assets/Fonts/Pretendard-OFL.txt`.
-
-- Claude·Claude Code는 Anthropic의 상표입니다. 바의 Claude 아이콘은 사용자 PC에 설치된 `claude.exe`에서 실행 중에 읽어 오며, IsleBar는 이 그림을 싣지 않습니다.
-- OpenAI·Codex는 OpenAI의 상표입니다. IsleBar는 OpenAI 로고를 싣지 않습니다. Claude 아이콘처럼 사용자 PC에 설치된 VS Code/Cursor용 Codex 확장에서 실행 중에 읽어 오고, 없으면 Windows 기본 아이콘을 씁니다.
