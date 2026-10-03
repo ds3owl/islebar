@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Microsoft Store (MSIX) package for IsleBar. scripts\build-msix.ps1 fills in the {{…}} values:
+     Identity Name / Publisher come from Partner Center (Product › Product identity) once the app name is reserved. -->
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  xmlns:desktop6="http://schemas.microsoft.com/appx/manifest/desktop/windows10/6"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap uap3 desktop desktop6 rescap">
+
+  <Identity Name="{{IdentityName}}" Publisher="{{Publisher}}" Version="{{Version}}" ProcessorArchitecture="x64" />
+
+  <Properties>
+    <DisplayName>IsleBar</DisplayName>
+    <PublisherDisplayName>{{PublisherDisplayName}}</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <!-- IsleBar shares %LOCALAPPDATA%\IsleBar and HKCU\Software\IsleBar with the hook CLI that Claude Code / Codex run, so
+         neither may be redirected into a private copy (needs the unvirtualizedResources capability below). -->
+    <desktop6:FileSystemWriteVirtualization>disabled</desktop6:FileSystemWriteVirtualization>
+    <desktop6:RegistryWriteVirtualization>disabled</desktop6:RegistryWriteVirtualization>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.22000.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en-us" />
+    <Resource Language="ko-kr" />
+    <Resource Language="ja-jp" />
+    <Resource Language="zh-cn" />
+    <Resource Language="zh-tw" />
+    <Resource Language="fr-fr" />
+    <Resource Language="de-de" />
+    <Resource Language="it-it" />
+    <Resource Language="pt-br" />
+    <Resource Language="es-es" />
+  </Resources>
+
+  <Applications>
+    <Application Id="IsleBar" Executable="IsleBar.App.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements DisplayName="IsleBar" Description="A live island in the Windows 11 taskbar search box."
+                          BackgroundColor="transparent" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
+      </uap:VisualElements>
+      <Extensions>
+        <!-- start at sign-in (the person can turn it off in Settings › Apps › Startup) -->
+        <desktop:Extension Category="windows.startupTask" Executable="IsleBar.App.exe" EntryPoint="Windows.FullTrustApplication">
+          <desktop:StartupTask TaskId="IsleBarStartup" Enabled="true" DisplayName="IsleBar" />
+        </desktop:Extension>
+      </Extensions>
+    </Application>
+
+    <!-- the hook CLI: Claude Code / Codex call "islebar.exe hook" through this alias (%LOCALAPPDATA%\Microsoft\WindowsApps) -->
+    <Application Id="IsleBarCli" Executable="cli\islebar.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements DisplayName="IsleBar CLI" Description="IsleBar's command line for Claude Code / Codex hooks."
+                          BackgroundColor="transparent" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png"
+                          AppListEntry="none" />
+      <Extensions>
+        <uap3:Extension Category="windows.appExecutionAlias" Executable="cli\islebar.exe" EntryPoint="Windows.FullTrustApplication">
+          <uap3:AppExecutionAlias>
+            <desktop:ExecutionAlias Alias="islebar.exe" />
+          </uap3:AppExecutionAlias>
+        </uap3:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+    <rescap:Capability Name="unvirtualizedResources" />
+  </Capabilities>
+</Package>

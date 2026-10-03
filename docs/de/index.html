@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IsleBar – Dynamic-Island-Stil für die Windows-11-Taskleiste</title>
+<meta name="description" content="Kostenlos & Open Source: eine Live-Leiste im Dynamic-Island-Stil in der Windows-11-Taskleiste. Claude-Code/Codex-Status, Musik, Timer, Dateisuche.">
+<meta name="keywords" content="Dynamic Island Windows 11, Windows 11 Taskleiste anpassen, Claude Code Benachrichtigung, Codex CLI, Taskleiste Widget, Pomodoro Timer Taskleiste, Now Playing Taskleiste, kostenlose Software">
+<link rel="canonical" href="https://ds3owl.github.io/islebar/de/">
+<link rel="alternate" hreflang="en" href="https://ds3owl.github.io/islebar/">
+<link rel="alternate" hreflang="ko" href="https://ds3owl.github.io/islebar/ko/">
+<link rel="alternate" hreflang="ja" href="https://ds3owl.github.io/islebar/ja/">
+<link rel="alternate" hreflang="zh-Hans" href="https://ds3owl.github.io/islebar/zh/">
+<link rel="alternate" hreflang="zh-Hant" href="https://ds3owl.github.io/islebar/zh-tw/">
+<link rel="alternate" hreflang="fr" href="https://ds3owl.github.io/islebar/fr/">
+<link rel="alternate" hreflang="de" href="https://ds3owl.github.io/islebar/de/">
+<link rel="alternate" hreflang="it" href="https://ds3owl.github.io/islebar/it/">
+<link rel="alternate" hreflang="pt-BR" href="https://ds3owl.github.io/islebar/pt/">
+<link rel="alternate" hreflang="es" href="https://ds3owl.github.io/islebar/es/">
+<link rel="alternate" hreflang="x-default" href="https://ds3owl.github.io/islebar/">
+<meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#07070b" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:title" content="IsleBar — eine Leiste im Dynamic-Island-Stil für Windows 11">
+<meta property="og:description" content="Sieh direkt in der Taskleiste, ob Claude Code oder Codex arbeitet, dich braucht oder fertig ist. Dazu Musik, Timer, Dateien und Downloads. Kostenlos.">
+<meta property="og:image" content="https://ds3owl.github.io/islebar/media/og.png">
+<meta property="og:url" content="https://ds3owl.github.io/islebar/de/">
+<meta property="og:locale" content="de_DE">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://ds3owl.github.io/islebar/media/og.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "IsleBar",
+  "operatingSystem": "Windows 11",
+  "applicationCategory": "UtilitiesApplication",
+  "inLanguage": "de",
+  "description": "Eine lebendige Insel im Suchfeld der Windows-11-Taskleiste: Status von Claude Code und Codex (arbeitet, braucht dich, fertig), Musik, Timer, Dateisuche und Downloads.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "license": "https://opensource.org/license/mit",
+  "downloadUrl": "https://github.com/ds3owl/islebar/releases/latest",
+  "image": "https://ds3owl.github.io/islebar/media/og.png",
+  "url": "https://ds3owl.github.io/islebar/de/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "de",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Ist es kostenlos?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ja — kostenlos und Open Source unter der MIT-Lizenz. Fixes, Ideen und Feedback sind auf GitHub jederzeit willkommen."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Ist das eine Dynamic Island für Windows?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Im Geist schon: eine Live-Leiste im Dynamic-Island-Stil, aber sie sitzt in der Windows-11-Taskleiste, wo das Suchfeld war, statt über dem Bildschirm zu schweben. Eine eigenständige App, kein Apple-Produkt."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Wie werde ich unter Windows benachrichtigt, wenn Claude Code oder Codex fertig ist?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "IsleBar installieren und Claude Code / Codex verbinden (ein Häkchen im Setup). Die Leiste wird orange, wenn der Agent deine Antwort braucht, und grün mit einem leisen Ton, wenn er fertig ist."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Brauche ich Claude Code oder Codex?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nur für den KI-Teil — Fragen aus der Leiste und die Anzeige arbeitet · braucht dich · fertig. Musik, Timer, Downloads und Hinweise funktionieren auch ohne; die Dateisuche braucht Everything."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Werden meine Daten irgendwohin gesendet?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nein. Es läuft auf deinem PC. Absturzberichte sind optional und enthalten nur den Fehler, die Versionen und Basisdaten zum Gerät — niemals Fenstertitel, Dateien, Prompts oder deine IP. Datenschutzerklärung."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Windows meldet „Der Computer wurde durch Windows geschützt“.",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Wähle Weitere Informationen → Trotzdem ausführen. Die Code-Signierung ist in Arbeit."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Wie entferne ich es?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Einstellungen › Apps › IsleBar › Deinstallieren. Das normale Suchfeld kehrt zurück, und die Hooks von IsleBar werden entfernt (Store-Version: zuerst die Claude-Code-/Codex-Verbindung in den IsleBar-Einstellungen ausschalten)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Welche Sprachen?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "English, 简体中文, 繁體中文, Français, Deutsch, Italiano, 日本語, 한국어, Português, Español — IsleBar folgt deiner Windows-Sprache."
+      }
+    }
+  ]
+}
+</script>
+
+<style>
+:root { --bg:#fbfbfd; --ink:#1d1d1f; --muted:#6e6e73; --card:#ffffff; --line:#e5e5ea; --accent:#0a66d6; --warn:#c77700; --ok:#1f8a3b; --bad:#c42b1c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#07070b; --ink:#f5f5f7; --muted:#a1a1aa; --card:#121219; --line:#26262f; --accent:#6aa8ff; --warn:#f0a541; --ok:#5fd17a; --bad:#ff5f57; } }
+:root[data-theme="dark"] { --bg:#07070b; --ink:#f5f5f7; --muted:#a1a1aa; --card:#121219; --line:#26262f; --accent:#6aa8ff; --warn:#f0a541; --ok:#5fd17a; --bad:#ff5f57; }
+* { box-sizing:border-box; }
+html, body { margin:0; background:var(--bg); color:var(--ink); }
+body { font-family:"Segoe UI Variable Display","Segoe UI",system-ui,-apple-system,sans-serif; line-height:1.55; }
+html:lang(ja) body { font-family:"Segoe UI Variable Display","Segoe UI","Yu Gothic UI","Meiryo","Hiragino Sans",system-ui,sans-serif; }
+html:lang(zh-Hans) body { font-family:"Segoe UI Variable Display","Segoe UI","Microsoft YaHei UI","PingFang SC",system-ui,sans-serif; }
+html:lang(zh-Hant) body { font-family:"Segoe UI Variable Display","Segoe UI","Microsoft JhengHei UI","PingFang TC",system-ui,sans-serif; }
+html:lang(ko) body { font-family:"Segoe UI Variable Display","Segoe UI","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif; word-break:keep-all; }
+a { color:var(--accent); text-decoration:none; }
+.wrap { max-width:1080px; margin:0 auto; padding:0 16px; }
+header { text-align:center; padding:72px 0 28px; }
+h1 { font-size:clamp(44px,8vw,88px); line-height:1; margin:0; letter-spacing:-.02em; }
+.lede { font-size:clamp(19px,2.6vw,26px); color:var(--muted); margin:16px auto 0; max-width:760px; }
+.cta { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin:30px 0 8px; }
+.btn { display:inline-block; padding:13px 26px; border-radius:999px; font-weight:600; font-size:17px; }
+.btn.primary { background:var(--ink); color:var(--bg); }
+.film video { background:var(--bg); }
+.btn.ghost { border:1px solid var(--line); color:var(--ink); }
+.small { color:var(--muted); font-size:14px; }
+.film { margin:34px auto 0; border-radius:18px; overflow:hidden; border:1px solid var(--line); background:#000; }
+.film video { display:block; width:100%; height:auto; }
+.need { margin:44px auto 0; background:var(--card); border:1px solid var(--line); border-left:4px solid var(--warn); border-radius:14px; padding:18px 22px; }
+.need h2 { font-size:19px; margin:0 0 8px; }
+.need ul { margin:0; padding-left:20px; }
+.need li { margin:4px 0; }
+section h2.big { font-size:clamp(30px,4.6vw,46px); text-align:center; margin:84px 0 8px; letter-spacing:-.01em; }
+section p.sub { text-align:center; color:var(--muted); margin:0 auto 30px; max-width:640px; font-size:18px; }
+.grid { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; }
+.tile { background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+.tile img { display:block; width:100%; height:auto; }
+.tile div { padding:14px 18px 18px; }
+.tile b { font-size:18px; }
+.tile span { display:block; color:var(--muted); font-size:15px; margin-top:2px; }
+.feats { display:flex; flex-direction:column; gap:56px; margin-top:12px; }
+.feat { display:grid; grid-template-columns:1.25fr 1fr; gap:36px; align-items:center; }
+.feat:nth-child(even) .media { order:2; }
+.feat .media { background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+.feat > * { min-width:0; }
+.feat .media img { display:block; width:100%; max-width:100%; height:auto; }
+.feat h3 { font-size:clamp(24px,3vw,32px); margin:0 0 10px; letter-spacing:-.01em; }
+.feat p { margin:0 0 10px; color:var(--muted); font-size:17px; }
+.feat ul { margin:0; padding-left:20px; color:var(--muted); font-size:16px; }
+.feat li { margin:5px 0; }
+kbd { font:600 13px/1 "Segoe UI",system-ui,sans-serif; border:1px solid var(--line); border-bottom-width:2px; border-radius:6px; padding:2px 6px; background:var(--card); color:var(--ink); }
+code { font-size:15px; background:var(--card); border:1px solid var(--line); border-radius:6px; padding:1px 5px; color:var(--ink); }
+@media (max-width:720px) { .feat { grid-template-columns:1fr; gap:16px; } .feat:nth-child(even) .media { order:0; } }
+.faq { max-width:760px; margin:0 auto; }
+.faq h3 { font-size:18px; margin:26px 0 4px; }
+.faq p { margin:0; color:var(--muted); }
+nav.langs { margin:0 0 14px; line-height:2; }
+nav.langs a, nav.langs b { white-space:nowrap; }
+footer { text-align:center; color:var(--muted); font-size:13px; padding:70px 0 40px; }
+@media (max-width:720px) { .grid { grid-template-columns:1fr; } header { padding-top:48px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>IsleBar</h1>
+    <p class="lede">Deine Windows&nbsp;11-Taskleiste, lebendig. Frag Claude Code oder Codex direkt im Suchfeld — und sieh, ob es arbeitet, dich braucht oder fertig ist.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/ds3owl/islebar/releases/latest">Für Windows 11 herunterladen</a>
+      <a class="btn ghost" href="https://github.com/ds3owl/islebar">Auf GitHub ansehen</a>
+    </div>
+    <div class="small">Kostenlos · Open Source (MIT) · Kein Konto · Privat von Anfang an</div>
+    <div class="film">
+      <video id="film" src="../media/films/IsleBar-de-light.mp4" poster="../media/poster-light.jpg" autoplay muted loop playsinline controls preload="metadata"
+             aria-label="IsleBar-Film: ein Screenshot auf die Leiste gezogen, eine lange Frage, Claude arbeitet im Terminal, braucht dich, fertig, Codex, Timer, Dateien, Downloads, Hinweise, Musik, heller und dunkler Modus"></video>
+    </div>
+  </header>
+
+  <div class="need">
+    <h2>Passt perfekt zu</h2>
+    <ul>
+      <li><b><a href="https://code.claude.com/docs/en/overview">Claude Code</a></b> oder <b><a href="https://github.com/openai/codex">Codex CLI</a></b> — frag direkt aus der Leiste und sieh: arbeitet · braucht dich · fertig.</li>
+      <li><b><a href="https://www.voidtools.com/downloads/">Everything</a></b> (voidtools, kostenlos) — drück Tab und durchsuche sofort jede Datei auf deinem PC.</li>
+      <li><b>Jeder Webbrowser</b> — dort öffnen sich die Ergebnisse der Websuche.</li>
+    </ul>
+    <p class="small" style="margin:8px 0 0">IsleBar läuft unter Windows 11 (x64), wenn das Suchfeld der Taskleiste als Feld oder Symbol angezeigt wird.</p>
+  </div>
+
+  <section>
+    <h2 class="big">Wisse, wo dein Agent steht.</h2>
+    <p class="sub">Arbeitet. Braucht dich. Fertig. Das Suchfeld sagt es dir — so kannst du wegschauen, während Claude Code oder Codex arbeitet. Ein orangefarbener Rand heißt: Es wartet auf deine Antwort. Grün heißt: fertig.</p>
+    <div class="tile"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/de/hero-dark.webp"><img src="../media/de/hero-light.webp" alt="Claude arbeitet, braucht dich (orange), dann fertig (grün)" loading="lazy" width="960" height="540"></picture></div>
+  </section>
+
+  <section>
+    <h2 class="big">Ein Feld. Und alles andere auch.</h2>
+    <p class="sub">Die Pille bleibt, wo das Suchfeld immer war. Nur der Inhalt ändert sich.</p>
+    <div class="feats">
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/de/ask-dark.webp"><img src="../media/de/ask-light.webp" alt="Eine Frage in die Taskleiste tippen" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>Frag direkt aus der Taskleiste.</h3><p>Klick auf die Pille oder drück <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd>, tipp ein, was erledigt werden soll, und drück <kbd>Enter</kbd>. Ein Terminal öffnet sich und startet Claude Code oder Codex mit deiner Frage.</p><ul><li><kbd>↑</kbd> <kbd>↓</kbd> holen deine letzten 50 Fragen zurück.</li><li>Lange Fragen erscheinen als Vorschau über der Leiste; <kbd>Shift</kbd>+<kbd>Enter</kbd> öffnet ein mehrzeiliges Feld.</li><li>Der ⌄-Button merkt sich deine Optionen: Sitzung, Modell, Aufwand, Berechtigungen, Fernsteuerung.</li></ul></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/de/drop-dark.webp"><img src="../media/de/drop-light.webp" alt="Ein Screenshot, auf die Leiste gezogen und an die Frage angehängt" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>Datei ablegen, dann fragen.</h3><p>Zieh einen Screenshot oder ein Log auf die Pille — der Pfad landet im Feld, bereit für deine Frage.</p><ul><li>Leg in den Einstellungen einen <i>Ablege-Befehl</i> fest, damit das Ablegen etwas anderes tut.</li><li>So nutze ich es: Abgelegte Dateien gehen über ein kleines eigenes Skript per Telegram direkt auf mein Handy.</li></ul></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/de/codex-dark.webp"><img src="../media/de/codex-light.webp" alt="Codex arbeitet, dann fertig" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>Codex auch.</h3><p>Codex CLI bekommt genau dasselbe <i>arbeitet · braucht dich · fertig</i>. Das Logo wird aus der Codex-Erweiterung gelesen, die schon auf deinem PC ist — IsleBar liefert kein OpenAI-Logo mit.</p><ul><li><b style="color:var(--warn)">Orange</b> — der Agent fragt dich etwas. Antworte im Terminal, und er arbeitet weiter.</li><li><b style="color:var(--ok)">Grün</b> — fertig, mit einem sanften Ton. Bleibt, bis du hinschaust, klickst oder die Sitzung schließt.</li><li>Mehrere Sitzungen? Die dringendste wird angezeigt, ein kleiner Punkt zeigt, dass es noch mehr gibt.</li><li><b style="color:var(--bad)">Rot</b> — das Nutzungslimit des Tarifs ist erreicht (mit Uhrzeit des Zurücksetzens) oder ein Durchlauf brach mit einem Fehler ab, samt Grund. Bei 90 % eines Zeitfensters kommt vorher ein Hinweis.</li></ul></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/de/timer-dark.webp"><img src="../media/de/timer-light.webp" alt="25m tippen, um einen Timer zu starten" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>Timer mit zwei Tastendrücken.</h3><p>Tipp <code>25m</code>, <code>90s</code> oder <code>1h 30m</code> und drück <kbd>Enter</kbd>. Nur die Ziffern, die sich ändern, rollen weiter.</p><ul><li>Mit der Maus darüber: Pause und Stopp. Am Ende ertönt ein Ton und die Pille wird grün.</li><li>Rechtsklick für Schnell-Timer, <b>Pomodoro</b> (25 / 5 / 15 Minuten, anpassbar) und eine <b>Stoppuhr</b>.</li></ul></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/files-dark.webp"><img src="../media/files-light.webp" alt="Sofortige Dateisuche über der Taskleiste" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>Jede Datei, sofort.</h3><p>Drück <kbd>Tab</kbd> und tipp los — Treffer von allen Laufwerken erscheinen schon beim Tippen über der Taskleiste, angetrieben von <a href="https://www.voidtools.com/">Everything</a>.</p><ul><li><kbd>Enter</kbd> öffnet, <kbd>Ctrl</kbd>+<kbd>Enter</kbd> zeigt die Datei im Explorer, <kbd>Esc</kbd> bringt dich zurück.</li><li>Noch einmal <kbd>Tab</kbd> für die Websuche, mit einer Suchmaschine passend zu deiner Sprache.</li></ul></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/de/downloads-dark.webp"><img src="../media/de/downloads-light.webp" alt="Ein Download läuft, dann fertig" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>Downloads auf einen Blick.</h3><p>Downloads aus Chrome, Edge, Firefox und anderen Browsern werden angezeigt, solange sie laufen, und am Ende mit <i>Fertig</i> und dem Dateinamen. Ein Klick zeigt die Datei im Explorer.</p></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/music-dark.webp"><img src="../media/music-light.webp" alt="Aktuelle Wiedergabe mit Albumcover und Steuerung" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>Musik in den Farben des Albums.</h3><p>Spotify, YouTube im Browser und die meisten Player erscheinen mit Albumcover, Pegelbalken und einer Fortschrittslinie in der Farbe des Albums. Mit der Maus darüber: ⏮ ⏯ ⏭.</p><p>Wird ein Agent mitten im Song fertig, leuchtet der grüne Rand auf, ohne die Musik zu verdecken.</p></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/de/notices-dark.webp"><img src="../media/de/notices-light.webp" alt="Kopfhörer verbunden" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>Leise Hinweise.</h3><p>Kopfhörer, Laden, Internet, kopierter Text, hohe CPU- oder Speicherlast, Fokussitzungen, Termine, Mikrofon oder Kamera in Benutzung — alles erscheint kurz und macht dann wieder Platz. Keine Pop-ups.</p><p>Jede Farbe hat genau eine Bedeutung: <b style="color:var(--warn)">Orange</b>, wenn ein Agent auf deine Antwort wartet, <b style="color:var(--bad)">Rot</b>, wenn etwas zu tun ist — Akku fast leer oder ein Agent wegen Nutzungslimit oder Fehler gestoppt — und <b style="color:var(--ok)">Grün</b>, wenn etwas fertig ist. Bei „Nicht stören“ bleibt der Ton aus, und bei Spielen und Videos im Vollbild lässt er sich stummschalten.</p></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/theme-dark.webp"><img src="../media/theme-light.webp" alt="Heller und dunkler Modus" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>Hell und dunkel.</h3><p>IsleBar folgt deinem Windows-Design und färbt sich sofort um, wenn du wechselst — ganz ohne Neustart.</p></div></div>
+    </div>
+  </section>
+
+  <section class="faq">
+    <h2 class="big">Fragen</h2>
+    <h3>Ist es kostenlos?</h3><p>Ja — kostenlos und Open Source unter der MIT-Lizenz. Fixes, Ideen und Feedback sind auf GitHub jederzeit willkommen.</p>
+    <h3>Ist das eine Dynamic Island für Windows?</h3><p>Im Geist schon: eine Live-Leiste im Dynamic-Island-Stil, aber sie sitzt in der Windows-11-Taskleiste, wo das Suchfeld war, statt über dem Bildschirm zu schweben. Eine eigenständige App, kein Apple-Produkt.</p>
+    <h3>Wie werde ich unter Windows benachrichtigt, wenn Claude Code oder Codex fertig ist?</h3><p>IsleBar installieren und Claude Code / Codex verbinden (ein Häkchen im Setup). Die Leiste wird orange, wenn der Agent deine Antwort braucht, und grün mit einem leisen Ton, wenn er fertig ist.</p>
+    <h3>Brauche ich Claude Code oder Codex?</h3><p>Nur für den KI-Teil — Fragen aus der Leiste und die Anzeige arbeitet · braucht dich · fertig. Musik, Timer, Downloads und Hinweise funktionieren auch ohne; die Dateisuche braucht Everything.</p>
+    <h3>Werden meine Daten irgendwohin gesendet?</h3><p>Nein. Es läuft auf deinem PC. Absturzberichte sind optional und enthalten nur den Fehler, die Versionen und Basisdaten zum Gerät — niemals Fenstertitel, Dateien, Prompts oder deine IP. <a href="../privacy.html">Datenschutzerklärung</a>.</p>
+    <h3>Windows meldet „Der Computer wurde durch Windows geschützt“.</h3><p>Wähle <i>Weitere Informationen → Trotzdem ausführen</i>. Die Code-Signierung ist in Arbeit.</p>
+    <h3>Wie entferne ich es?</h3><p>Einstellungen › Apps › IsleBar › Deinstallieren. Das normale Suchfeld kehrt zurück, und die Hooks von IsleBar werden entfernt (Store-Version: zuerst die Claude-Code-/Codex-Verbindung in den IsleBar-Einstellungen ausschalten).</p>
+    <h3>Welche Sprachen?</h3><p>English, 简体中文, 繁體中文, Français, Deutsch, Italiano, 日本語, 한국어, Português, Español — IsleBar folgt deiner Windows-Sprache.</p>
+  </section>
+
+  <section class="faq">
+    <h2 class="big">Brauchst du Hilfe?</h2>
+    <p class="sub">Etwas kaputt, eine Idee oder eine Frage — sag es uns auf GitHub oder per E-Mail.</p>
+    <div class="cta">
+      <a class="btn ghost" href="https://github.com/ds3owl/islebar/issues/new?template=bug_report.yml">Fehler melden</a>
+      <a class="btn ghost" href="https://github.com/ds3owl/islebar/issues/new?template=feature_request.yml">Funktion vorschlagen</a>
+      <a class="btn ghost" href="https://github.com/ds3owl/islebar/discussions">Frage stellen</a>
+      <a class="btn ghost" href="mailto:imchangwoo@outlook.com">E-Mail</a>
+<!--SPONSOR-->
+    </div>
+  </section>
+
+  <footer>
+    <nav class="langs" aria-label="Language"><a href="../" data-lang="en" hreflang="en">English</a> · <a href="../ko/" data-lang="ko" hreflang="ko">한국어</a> · <a href="../ja/" data-lang="ja" hreflang="ja">日本語</a> · <a href="../zh/" data-lang="zh" hreflang="zh-Hans">简体中文</a> · <a href="../zh-tw/" data-lang="zht" hreflang="zh-Hant">繁體中文</a> · <a href="../fr/" data-lang="fr" hreflang="fr">Français</a> · <b>Deutsch</b> · <a href="../it/" data-lang="it" hreflang="it">Italiano</a> · <a href="../pt/" data-lang="pt" hreflang="pt-BR">Português</a> · <a href="../es/" data-lang="es" hreflang="es">Español</a></nav>
+    <a href="../privacy.html">Datenschutz</a> ·
+    IsleBar ist ein inoffizielles Hobbyprojekt und steht in keiner Verbindung zu Microsoft, Anthropic oder OpenAI und wird von diesen nicht unterstützt.<br>
+    Windows ist eine Marke von Microsoft. „Claude“ und „Claude Code“ sind Marken von Anthropic PBC; „OpenAI“ und „Codex“ sind Marken von OpenAI. Die in der Leiste angezeigten Logos werden aus Software gelesen, die bereits auf dem PC des Nutzers installiert ist. „Dynamic Island“ ist eine Marke von Apple Inc.; IsleBar steht in keiner Verbindung zu Apple.
+  </footer>
+</div>
+<script>
+// The film follows the visitor's light / dark setting; the language is this page's own.
+(function () {
+  var q = window.matchMedia('(prefers-color-scheme: dark)');
+  function apply() {
+    var t = q.matches ? 'dark' : 'light', v = document.getElementById('film');
+    var src = '../media/films/IsleBar-de-' + t + '.mp4';
+    if (v && v.getAttribute('src') !== src) {
+      v.setAttribute('poster', '../media/poster-' + t + '.jpg'); v.setAttribute('src', src);
+      var p = v.play(); if (p && p.catch) p.catch(function () {});
+    }
+  }
+  apply(); if (q.addEventListener) q.addEventListener('change', apply);
+  // remember a language picked from the footer, so the English page doesn't send the visitor away again
+  var links = document.querySelectorAll('nav.langs a');
+  for (var i = 0; i < links.length; i++) links[i].addEventListener('click', function () { try { localStorage.setItem('islebar-lang', this.getAttribute('data-lang')); } catch (e) {} });
+})();
+</script>
+</body>
+</html>

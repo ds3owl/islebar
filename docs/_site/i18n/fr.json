@@ -1,0 +1,127 @@
+{
+  "title": "IsleBar – barre style Dynamic Island pour Windows 11",
+  "description": "Gratuit et open source : une barre live style Dynamic Island dans la barre des tâches de Windows 11. Statut Claude Code/Codex, musique, minuteurs.",
+  "keywords": "Dynamic Island Windows 11, barre des tâches Windows 11, personnaliser barre des tâches, notification Claude Code, Codex CLI notification, minuteur pomodoro, widget barre des tâches, logiciel gratuit",
+  "og_title": "IsleBar — une barre style Dynamic Island pour Windows 11",
+  "og_description": "Voyez si Claude Code ou Codex travaille, attend votre réponse ou a terminé — directement dans la barre des tâches. Musique, minuteurs, fichiers et téléchargements aussi. Gratuit.",
+  "ld_description": "Une île vivante dans la zone de recherche de la barre des tâches de Windows 11 : statut de Claude Code et Codex (au travail, vous attend, terminé), musique, minuteurs, recherche de fichiers et téléchargements.",
+  "lede": "Votre barre des tâches Windows&nbsp;11, bien vivante. Interrogez Claude Code ou Codex depuis la zone de recherche — et voyez s'il travaille, vous attend ou a terminé.",
+  "cta_download": "Télécharger pour Windows 11",
+  "cta_github": "Voir sur GitHub",
+  "tagline": "Gratuit · Open source (MIT) · Sans compte · Privé par défaut",
+  "film_label": "Vidéo IsleBar : une capture d'écran déposée sur la barre, une longue question, Claude au travail dans un terminal, vous attend, terminé, Codex, minuteurs, fichiers, téléchargements, notifications, musique, modes clair et sombre",
+  "works_title": "Idéal avec",
+  "or": "ou",
+  "works_agents": "posez votre question depuis la barre et suivez au travail · vous attend · terminé.",
+  "everything_note": "voidtools, gratuit",
+  "works_everything": "appuyez sur Tab pour chercher instantanément n'importe quel fichier de votre PC.",
+  "works_browser_name": "N'importe quel navigateur",
+  "works_browser": "les résultats de recherche web s'y ouvrent.",
+  "works_os": "IsleBar fonctionne sous Windows 11 (x64), avec la recherche de la barre des tâches affichée en zone ou en icône.",
+  "agent_title": "Sachez où en est votre agent.",
+  "agent_sub": "Au travail. Vous attend. Terminé. La zone de recherche vous le dit — vous pouvez faire autre chose pendant que Claude Code ou Codex travaille. Un bord orange signifie qu'il attend votre réponse ; vert, qu'il a terminé.",
+  "hero_alt": "Claude au travail, puis vous attend (orange), puis terminé (vert)",
+  "box_title": "Une seule zone. Et tout le reste.",
+  "box_sub": "La pilule reste là où se trouvait la zone de recherche. Seul son contenu change.",
+  "features": [
+    {
+      "media": "ask",
+      "alt": "Saisie d'une question dans la barre des tâches",
+      "title": "Demandez depuis la barre des tâches.",
+      "body": "<p>Cliquez sur la pilule ou appuyez sur <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd>, tapez ce que vous voulez faire, puis <kbd>Enter</kbd>. Un terminal s'ouvre et lance Claude Code ou Codex avec votre question.</p><ul><li><kbd>↑</kbd> <kbd>↓</kbd> rappellent vos 50 dernières questions.</li><li>Les longues questions s'affichent en aperçu au-dessus de la barre ; <kbd>Shift</kbd>+<kbd>Enter</kbd> ouvre une zone multiligne.</li><li>Le bouton ⌄ garde vos options : session, modèle, effort de réflexion, autorisations, contrôle à distance.</li></ul>"
+    },
+    {
+      "media": "drop",
+      "alt": "Une capture d'écran déposée sur la barre, jointe à la question",
+      "title": "Déposez un fichier, puis demandez.",
+      "body": "<p>Déposez une capture d'écran ou un journal sur la pilule — son chemin s'inscrit dans la zone, prêt pour votre question.</p><ul><li>Définissez une <i>Commande de dépôt</i> dans les Paramètres pour que le dépôt fasse autre chose.</li><li>Mon usage à moi : les fichiers déposés partent directement sur mon téléphone via Telegram, grâce à un petit script maison.</li></ul>"
+    },
+    {
+      "media": "codex",
+      "alt": "Codex au travail, puis terminé",
+      "title": "Codex aussi.",
+      "body": "<p>Codex CLI a droit exactement aux mêmes états <i>au travail · vous attend · terminé</i>. Son logo est lu depuis l'extension Codex déjà installée sur votre PC — IsleBar n'embarque aucun logo OpenAI.</p><ul><li><b style=\"color:var(--warn)\">Orange</b> — l'agent vous pose une question. Répondez dans le terminal et il se remet au travail.</li><li><b style=\"color:var(--ok)\">Vert</b> — terminé, avec un léger carillon. Il reste affiché jusqu'à ce que vous regardiez, cliquiez ou fermiez la session.</li><li>Plusieurs sessions ? La plus urgente s'affiche, et un petit point signale qu'il y en a d'autres.</li><li><b style=\"color:var(--bad)\">Rouge</b> — la limite d'utilisation du forfait est atteinte (avec l'heure de réinitialisation) ou le tour s'est arrêté sur une erreur, avec la raison. À 90 % d'une période, un avertissement arrive d'abord.</li></ul>"
+    },
+    {
+      "media": "timer",
+      "alt": "Taper 25m pour lancer un minuteur",
+      "title": "Un minuteur en un instant.",
+      "body": "<p>Tapez <code>25m</code>, <code>90s</code> ou <code>1h 30m</code> et appuyez sur <kbd>Enter</kbd>. Seuls les chiffres qui changent défilent.</p><ul><li>Survolez pour mettre en pause ou arrêter. À la fin, un son retentit et la pilule passe au vert.</li><li>Clic droit pour des minuteurs rapides, le <b>Pomodoro</b> (25 / 5 / 15 minutes, réglables) et un <b>Chronomètre</b>.</li></ul>"
+    },
+    {
+      "media": "files",
+      "alt": "Recherche de fichiers instantanée au-dessus de la barre des tâches",
+      "title": "Tous vos fichiers, instantanément.",
+      "body": "<p>Appuyez sur <kbd>Tab</kbd> et tapez — les résultats de tous vos disques apparaissent au-dessus de la barre des tâches au fil de la frappe, grâce à <a href=\"https://www.voidtools.com/\">Everything</a>.</p><ul><li><kbd>Enter</kbd> ouvre, <kbd>Ctrl</kbd>+<kbd>Enter</kbd> affiche dans l'Explorateur de fichiers, <kbd>Esc</kbd> vous ramène en arrière.</li><li><kbd>Tab</kbd> encore une fois pour la recherche web, avec un moteur adapté à votre langue.</li></ul>"
+    },
+    {
+      "media": "downloads",
+      "alt": "Un téléchargement en cours, puis terminé",
+      "title": "Vos téléchargements, d'un coup d'œil.",
+      "body": "<p>Les téléchargements de Chrome, Edge, Firefox et d'autres navigateurs s'affichent pendant qu'ils avancent, puis <i>Terminé</i> avec le nom du fichier. Cliquez pour voir le fichier dans l'Explorateur de fichiers.</p>"
+    },
+    {
+      "media": "music",
+      "alt": "Lecture en cours avec pochette et commandes",
+      "title": "La musique, aux couleurs de l'album.",
+      "body": "<p>Spotify, YouTube dans votre navigateur et la plupart des lecteurs s'affichent avec la pochette, des barres de niveau et une ligne de progression aux couleurs de l'album. Survolez pour ⏮ ⏯ ⏭.</p><p>Si un agent termine en plein morceau, le bord vert s'allume sans masquer la musique.</p>"
+    },
+    {
+      "media": "notices",
+      "alt": "Casque connecté",
+      "title": "Des notifications discrètes.",
+      "body": "<p>Casque, charge, connexion Internet, texte copié, processeur ou mémoire très sollicités, sessions de concentration, événements du calendrier, micro ou caméra en cours d'utilisation — chacun s'affiche un instant, puis s'efface. Aucune fenêtre surgissante.</p><p>Chaque couleur a un seul sens : <b style=\"color:var(--warn)\">orange</b> quand un agent attend votre réponse, <b style=\"color:var(--bad)\">rouge</b> quand il faut agir — batterie faible, ou agent arrêté par sa limite d'utilisation ou une erreur — et <b style=\"color:var(--ok)\">vert</b> quand quelque chose est terminé. Le son reste muet en mode Ne pas déranger et peut être coupé pendant les jeux et vidéos en plein écran.</p>"
+    },
+    {
+      "media": "theme",
+      "alt": "Modes clair et sombre",
+      "title": "Clair et sombre.",
+      "body": "<p>IsleBar suit votre thème Windows et change de couleurs dès que vous basculez — sans redémarrage.</p>"
+    }
+  ],
+  "faq_title": "Questions",
+  "faq": [
+    [
+      "C'est gratuit ?",
+      "Oui — gratuit et open source sous licence MIT. Corrections, idées et retours sont les bienvenus sur GitHub."
+    ],
+    [
+      "Est-ce une Dynamic Island pour Windows ?",
+      "Dans l'esprit, oui : une barre live style Dynamic Island, mais logée dans la barre des tâches de Windows 11, à la place de la zone de recherche, au lieu de flotter sur l'écran. C'est une application indépendante, pas un produit Apple."
+    ],
+    [
+      "Comment être prévenu quand Claude Code ou Codex a fini sous Windows ?",
+      "Installez IsleBar et connectez Claude Code / Codex (une case à cocher à l'installation). La barre passe à l'orange quand l'agent attend votre réponse, et au vert avec un léger son quand il a terminé."
+    ],
+    [
+      "Faut-il Claude Code ou Codex ?",
+      "Seulement pour la partie IA — poser une question depuis la barre et voir au travail · vous attend · terminé. Musique, minuteurs, téléchargements et notifications fonctionnent sans eux ; la recherche de fichiers nécessite Everything."
+    ],
+    [
+      "Mes données sont-elles envoyées quelque part ?",
+      "Non. Tout se passe sur votre PC. Les rapports de plantage sont facultatifs et ne contiennent que l'erreur, les versions et des infos de base sur l'appareil — jamais de titres, fichiers, prompts ni votre adresse IP. <a href=\"{{root}}privacy.html\">Politique de confidentialité</a>."
+    ],
+    [
+      "Windows affiche « Windows a protégé votre ordinateur ».",
+      "Choisissez <i>Informations complémentaires → Exécuter quand même</i>. La signature du code est en préparation."
+    ],
+    [
+      "Comment le désinstaller ?",
+      "Paramètres › Applications › IsleBar › Désinstaller. La zone de recherche habituelle revient et les hooks d'IsleBar sont supprimés (version Store : désactivez d'abord la connexion Claude Code / Codex dans les paramètres d'IsleBar)."
+    ],
+    [
+      "Quelles langues ?",
+      "English, 简体中文, 繁體中文, Français, Deutsch, Italiano, 日本語, 한국어, Português, Español — IsleBar suit la langue de Windows."
+    ]
+  ],
+  "help_title": "Besoin d'aide ?",
+  "help_sub": "Un problème, une idée ou une question — dites-le-nous sur GitHub ou par e-mail.",
+  "help_bug": "Signaler un bug",
+  "help_idea": "Proposer une fonctionnalité",
+  "help_question": "Poser une question",
+  "help_email": "E-mail",
+  "help_sponsor": "Soutenir",
+  "privacy": "Confidentialité",
+  "footer_unofficial": "IsleBar est un projet personnel non officiel, sans lien avec Microsoft, Anthropic ou OpenAI, ni approuvé par eux.",
+  "footer_trademarks": "Windows est une marque de Microsoft. « Claude » et « Claude Code » sont des marques d'Anthropic PBC ; « OpenAI » et « Codex » sont des marques d'OpenAI. Les logos affichés dans la barre sont lus depuis des logiciels déjà installés sur le PC de l'utilisateur. « Dynamic Island » est une marque d'Apple Inc. ; IsleBar n'est pas affilié à Apple."
+}

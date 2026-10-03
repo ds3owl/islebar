@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="{{html_lang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+<meta name="keywords" content="{{keywords}}">
+<link rel="canonical" href="{{canonical}}">
+{{hreflang}}
+<meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#07070b" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{og_title}}">
+<meta property="og:description" content="{{og_description}}">
+<meta property="og:image" content="https://ds3owl.github.io/islebar/media/og.png">
+<meta property="og:url" content="{{canonical}}">
+<meta property="og:locale" content="{{og_locale}}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://ds3owl.github.io/islebar/media/og.png">
+<script type="application/ld+json">
+{{ld_app}}
+</script>
+<script type="application/ld+json">
+{{ld_faq}}
+</script>
+{{redirect}}
+{{style}}
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>IsleBar</h1>
+    <p class="lede">{{lede}}</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/ds3owl/islebar/releases/latest">{{cta_download}}</a>
+      <a class="btn ghost" href="https://github.com/ds3owl/islebar">{{cta_github}}</a>
+    </div>
+    <div class="small">{{tagline}}</div>
+    <div class="film">
+      <video id="film" src="{{root}}media/films/IsleBar-{{film}}-light.mp4" poster="{{root}}media/poster-light.jpg" autoplay muted loop playsinline controls preload="metadata"
+             aria-label="{{film_label}}"></video>
+    </div>
+  </header>
+
+  <div class="need">
+    <h2>{{works_title}}</h2>
+    <ul>
+      <li><b><a href="https://code.claude.com/docs/en/overview">Claude Code</a></b> {{or}} <b><a href="https://github.com/openai/codex">Codex CLI</a></b> — {{works_agents}}</li>
+      <li><b><a href="https://www.voidtools.com/downloads/">Everything</a></b> ({{everything_note}}) — {{works_everything}}</li>
+      <li><b>{{works_browser_name}}</b> — {{works_browser}}</li>
+    </ul>
+    <p class="small" style="margin:8px 0 0">{{works_os}}</p>
+  </div>
+
+  <section>
+    <h2 class="big">{{agent_title}}</h2>
+    <p class="sub">{{agent_sub}}</p>
+    <div class="tile">{{pic:hero:960:540:hero_alt}}</div>
+  </section>
+
+  <section>
+    <h2 class="big">{{box_title}}</h2>
+    <p class="sub">{{box_sub}}</p>
+    <div class="feats">
+{{features}}
+    </div>
+  </section>
+
+  <section class="faq">
+    <h2 class="big">{{faq_title}}</h2>
+{{faq_html}}
+  </section>
+
+  <section class="faq">
+    <h2 class="big">{{help_title}}</h2>
+    <p class="sub">{{help_sub}}</p>
+    <div class="cta">
+      <a class="btn ghost" href="https://github.com/ds3owl/islebar/issues/new?template=bug_report.yml">{{help_bug}}</a>
+      <a class="btn ghost" href="https://github.com/ds3owl/islebar/issues/new?template=feature_request.yml">{{help_idea}}</a>
+      <a class="btn ghost" href="https://github.com/ds3owl/islebar/discussions">{{help_question}}</a>
+      <a class="btn ghost" href="mailto:imchangwoo@outlook.com">{{help_email}}</a>
+<!--SPONSOR-->
+    </div>
+  </section>
+
+  <footer>
+    <nav class="langs" aria-label="Language">{{lang_links}}</nav>
+    <a href="{{root}}privacy.html">{{privacy}}</a> ·
+    {{footer_unofficial}}<br>
+    {{footer_trademarks}}
+  </footer>
+</div>
+<script>
+// The film follows the visitor's light / dark setting; the language is this page's own.
+(function () {
+  var q = window.matchMedia('(prefers-color-scheme: dark)');
+  function apply() {
+    var t = q.matches ? 'dark' : 'light', v = document.getElementById('film');
+    var src = '{{root}}media/films/IsleBar-{{film}}-' + t + '.mp4';
+    if (v && v.getAttribute('src') !== src) {
+      v.setAttribute('poster', '{{root}}media/poster-' + t + '.jpg'); v.setAttribute('src', src);
+      var p = v.play(); if (p && p.catch) p.catch(function () {});
+    }
+  }
+  apply(); if (q.addEventListener) q.addEventListener('change', apply);
+  // remember a language picked from the footer, so the English page doesn't send the visitor away again
+  var links = document.querySelectorAll('nav.langs a');
+  for (var i = 0; i < links.length; i++) links[i].addEventListener('click', function () { try { localStorage.setItem('islebar-lang', this.getAttribute('data-lang')); } catch (e) {} });
+})();
+</script>
+</body>
+</html>

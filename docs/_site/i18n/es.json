@@ -1,0 +1,127 @@
+{
+  "title": "IsleBar – barra estilo Dynamic Island para Windows 11",
+  "description": "Gratis y de código abierto: una barra en vivo estilo Dynamic Island en la barra de tareas de Windows 11. Estado de Claude Code/Codex, música y más.",
+  "keywords": "Dynamic Island en Windows 11, barra de tareas Windows 11, personalizar barra de tareas, notificación Claude Code, Codex CLI, temporizador pomodoro, widget barra de tareas, programa gratis",
+  "og_title": "IsleBar — una barra estilo Dynamic Island para Windows 11",
+  "og_description": "Mira si Claude Code o Codex está trabajando, te necesita o ha terminado — directamente en la barra de tareas. También música, temporizadores, archivos y descargas. Gratis.",
+  "ld_description": "Una isla viva en el cuadro de búsqueda de la barra de tareas de Windows 11: estado de Claude Code y Codex (trabajando, te necesita, listo), música, temporizadores, búsqueda de archivos y descargas.",
+  "lede": "Tu barra de tareas de Windows&nbsp;11, viva. Pregunta a Claude Code o Codex desde el cuadro de búsqueda — y mira cuándo está trabajando, te necesita o ha terminado.",
+  "cta_download": "Descargar para Windows 11",
+  "cta_github": "Ver en GitHub",
+  "tagline": "Gratis · Código abierto (MIT) · Sin cuenta · Privado por defecto",
+  "film_label": "Vídeo de IsleBar: una captura soltada en la barra, una pregunta larga, Claude trabajando en un terminal, te necesita, listo, Codex, temporizadores, archivos, descargas, avisos, música, modo claro y oscuro",
+  "works_title": "Funciona genial con",
+  "or": "o",
+  "works_agents": "pregunta desde la barra y mira: trabajando · te necesita · listo.",
+  "everything_note": "voidtools, gratis",
+  "works_everything": "pulsa Tab para buscar al instante cualquier archivo de tu PC.",
+  "works_browser_name": "Cualquier navegador",
+  "works_browser": "ahí se abren los resultados de la búsqueda web.",
+  "works_os": "IsleBar funciona en Windows 11 (x64), con el cuadro de búsqueda de la barra de tareas mostrado como cuadro o como icono.",
+  "agent_title": "Sabe en qué está tu agente.",
+  "agent_sub": "Trabajando. Te necesita. Listo. El cuadro de búsqueda te lo dice — así puedes apartar la vista mientras Claude Code o Codex trabaja. Un borde naranja significa que espera tu respuesta; verde, que ha terminado.",
+  "hero_alt": "Claude trabajando, luego te necesita (naranja), luego listo (verde)",
+  "box_title": "Un cuadro. Y todo lo demás.",
+  "box_sub": "La píldora se queda donde siempre estuvo el cuadro de búsqueda. Solo cambia lo que hay dentro.",
+  "features": [
+    {
+      "media": "ask",
+      "alt": "Escribiendo una pregunta en la barra de tareas",
+      "title": "Pregunta desde la barra de tareas.",
+      "body": "<p>Haz clic en la píldora o pulsa <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd>, escribe lo que quieres hacer y pulsa <kbd>Enter</kbd>. Se abre un terminal que ejecuta Claude Code o Codex con tu pregunta.</p><ul><li><kbd>↑</kbd> <kbd>↓</kbd> recuperan tus últimas 50 preguntas.</li><li>Las preguntas largas tienen una vista previa sobre la barra; <kbd>Shift</kbd>+<kbd>Enter</kbd> abre un cuadro de varias líneas.</li><li>El botón ⌄ guarda tus opciones: sesión, modelo, esfuerzo, permisos, control remoto.</li></ul>"
+    },
+    {
+      "media": "drop",
+      "alt": "Una captura soltada en la barra, adjunta a la pregunta",
+      "title": "Suelta un archivo y pregunta.",
+      "body": "<p>Suelta una captura o un log en la píldora — su ruta aparece en el cuadro, lista para tu pregunta.</p><ul><li>Define un <i>Comando al soltar</i> en Configuración para que soltar haga otra cosa.</li><li>Cómo lo uso yo: los archivos que suelto van directos a mi móvil por Telegram, mediante un pequeño script que hice yo mismo.</li></ul>"
+    },
+    {
+      "media": "codex",
+      "alt": "Codex trabajando, luego listo",
+      "title": "Codex, también.",
+      "body": "<p>Codex CLI tiene exactamente el mismo <i>trabajando · te necesita · listo</i>. Su icono se lee de la extensión de Codex que ya tienes en tu PC — IsleBar no incluye ningún logo de OpenAI.</p><ul><li><b style=\"color:var(--warn)\">Naranja</b> — el agente te está preguntando algo. Responde en el terminal y vuelve a trabajar.</li><li><b style=\"color:var(--ok)\">Verde</b> — listo, con un sonido suave. Se queda hasta que miras, haces clic o cierras la sesión.</li><li>¿Varias sesiones? Se muestra la más urgente, y un puntito indica que hay más.</li><li><b style=\"color:var(--bad)\">Rojo</b> — se alcanzó el límite de uso del plan (con la hora en que se restablece) o un turno se detuvo por un error, con el motivo. Al 90 % de un periodo recibes antes un aviso.</li></ul>"
+    },
+    {
+      "media": "timer",
+      "alt": "Escribe 25m para iniciar un temporizador",
+      "title": "Temporizadores en dos teclas.",
+      "body": "<p>Escribe <code>25m</code>, <code>90s</code> o <code>1h 30m</code> y pulsa <kbd>Enter</kbd>. Solo giran los dígitos que cambian.</p><ul><li>Pasa el ratón por encima para pausar y detener. Al terminar suena un aviso y la píldora se pone verde.</li><li>Clic derecho para temporizadores rápidos, <b>Pomodoro</b> (25 / 5 / 15 minutos, ajustables) y un <b>Cronómetro</b>.</li></ul>"
+    },
+    {
+      "media": "files",
+      "alt": "Búsqueda instantánea de archivos sobre la barra de tareas",
+      "title": "Cualquier archivo, al instante.",
+      "body": "<p>Pulsa <kbd>Tab</kbd> y escribe — los resultados de todas las unidades aparecen sobre la barra de tareas mientras escribes, gracias a <a href=\"https://www.voidtools.com/\">Everything</a>.</p><ul><li><kbd>Enter</kbd> abre, <kbd>Ctrl</kbd>+<kbd>Enter</kbd> lo muestra en el Explorador de archivos, <kbd>Esc</kbd> te devuelve.</li><li><kbd>Tab</kbd> otra vez para buscar en la web, con un buscador acorde a tu idioma.</li></ul>"
+    },
+    {
+      "media": "downloads",
+      "alt": "Una descarga en curso, luego completada",
+      "title": "Descargas, de un vistazo.",
+      "body": "<p>Las descargas de Chrome, Edge, Firefox y otros navegadores se muestran mientras avanzan, y con <i>Listo</i> y el nombre del archivo al terminar. Haz clic para ver el archivo en el Explorador de archivos.</p>"
+    },
+    {
+      "media": "music",
+      "alt": "Música sonando con carátula y controles",
+      "title": "Música con los colores del álbum.",
+      "body": "<p>Spotify, YouTube en tu navegador y la mayoría de reproductores aparecen con carátula, barras de nivel y una línea de progreso del color del álbum. Pasa el ratón para ⏮ ⏯ ⏭.</p><p>Si un agente termina a mitad de canción, el borde verde se enciende sin ocultar la música.</p>"
+    },
+    {
+      "media": "notices",
+      "alt": "Auriculares conectados",
+      "title": "Avisos discretos.",
+      "body": "<p>Auriculares, carga, internet, texto copiado, CPU o memoria al límite, sesiones de concentración, eventos del calendario, micrófono o cámara en uso — cada uno aparece un momento y luego se aparta. Sin ventanas emergentes.</p><p>Cada color significa una sola cosa: <b style=\"color:var(--warn)\">naranja</b> cuando un agente espera tu respuesta, <b style=\"color:var(--bad)\">rojo</b> cuando hay que actuar — batería baja, o un agente detenido por su límite de uso o un error — y <b style=\"color:var(--ok)\">verde</b> cuando algo terminó. El sonido se silencia en No molestar y puede silenciarse en juegos y vídeos a pantalla completa.</p>"
+    },
+    {
+      "media": "theme",
+      "alt": "Modo claro y oscuro",
+      "title": "Claro y oscuro.",
+      "body": "<p>IsleBar sigue el tema de Windows y cambia de color en cuanto lo cambias — sin reiniciar.</p>"
+    }
+  ],
+  "faq_title": "Preguntas",
+  "faq": [
+    [
+      "¿Es gratis?",
+      "Sí — gratis y de código abierto bajo la Licencia MIT. Correcciones, ideas y comentarios son bienvenidos en GitHub."
+    ],
+    [
+      "¿Es una Dynamic Island para Windows?",
+      "En espíritu, sí: una barra en vivo estilo Dynamic Island, pero vive en la barra de tareas de Windows 11, donde estaba el cuadro de búsqueda, en lugar de flotar sobre la pantalla. Es una app independiente, no un producto de Apple."
+    ],
+    [
+      "¿Cómo recibo un aviso en Windows cuando Claude Code o Codex termina?",
+      "Instala IsleBar y conecta Claude Code / Codex (una casilla en el instalador). La barra se pone naranja cuando el agente necesita tu respuesta y verde con un sonido suave cuando termina."
+    ],
+    [
+      "¿Necesito Claude Code o Codex?",
+      "Solo para la parte de IA — preguntar desde la barra y ver trabajando · te necesita · listo. La música, los temporizadores, las descargas y los avisos funcionan sin ellos; la búsqueda de archivos necesita Everything."
+    ],
+    [
+      "¿Envía mis datos a algún sitio?",
+      "No. Funciona en tu PC. Los informes de errores son opcionales y solo incluyen el error, las versiones y datos básicos del equipo — nunca títulos, archivos, prompts ni tu IP. <a href=\"{{root}}privacy.html\">Política de privacidad</a>."
+    ],
+    [
+      "Windows dice “Windows protegió su PC”.",
+      "Elige <i>Más información → Ejecutar de todas formas</i>. La firma de código está en camino."
+    ],
+    [
+      "¿Cómo lo desinstalo?",
+      "Configuración › Aplicaciones › IsleBar › Desinstalar. Vuelve el cuadro de búsqueda normal y se eliminan los hooks de IsleBar (versión de Store: desactiva antes la conexión Claude Code / Codex en la configuración de IsleBar)."
+    ],
+    [
+      "¿Qué idiomas?",
+      "English, 简体中文, 繁體中文, Français, Deutsch, Italiano, 日本語, 한국어, Português, Español — sigue el idioma de tu Windows."
+    ]
+  ],
+  "help_title": "¿Necesitas ayuda?",
+  "help_sub": "Algo no funciona, una idea o una pregunta — cuéntanoslo en GitHub o por correo.",
+  "help_bug": "Informar de un error",
+  "help_idea": "Sugerir una función",
+  "help_question": "Hacer una pregunta",
+  "help_email": "Correo",
+  "help_sponsor": "Patrocinar",
+  "privacy": "Privacidad",
+  "footer_unofficial": "IsleBar es un proyecto personal no oficial, sin afiliación ni respaldo de Microsoft, Anthropic ni OpenAI.",
+  "footer_trademarks": "Windows es una marca comercial de Microsoft. “Claude” y “Claude Code” son marcas comerciales de Anthropic PBC; “OpenAI” y “Codex” son marcas comerciales de OpenAI. Los logotipos que se muestran en la barra se leen de software ya instalado en el PC del usuario. “Dynamic Island” es una marca comercial de Apple Inc.; IsleBar no está afiliado a Apple."
+}

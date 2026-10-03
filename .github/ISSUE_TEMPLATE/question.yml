@@ -1,0 +1,13 @@
+name: Ask a question
+description: Not sure how something works? Ask here.
+labels: [question]
+body:
+  - type: markdown
+    attributes:
+      value: The [FAQ](https://github.com/ds3owl/islebar#faq) may already have the answer.
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+    validations:
+      required: true

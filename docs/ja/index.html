@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IsleBar – Dynamic Island風 Windows 11 タスクバー</title>
+<meta name="description" content="Windows 11のタスクバー検索をDynamic Island風のライブバーに。Claude Code・Codexの完了通知、再生中の曲、タイマー、ファイル検索。無料・オープンソース。">
+<meta name="keywords" content="Windows ダイナミックアイランド, Dynamic Island Windows, Claude Code 通知, Claude Code 完了 通知 Windows, Codex 通知, タスクバー カスタマイズ, Windows 11 タスクバー, タスクバー 再生中 曲, ポモドーロ タスクバー, 無料 フリーソフト">
+<link rel="canonical" href="https://ds3owl.github.io/islebar/ja/">
+<link rel="alternate" hreflang="en" href="https://ds3owl.github.io/islebar/">
+<link rel="alternate" hreflang="ko" href="https://ds3owl.github.io/islebar/ko/">
+<link rel="alternate" hreflang="ja" href="https://ds3owl.github.io/islebar/ja/">
+<link rel="alternate" hreflang="zh-Hans" href="https://ds3owl.github.io/islebar/zh/">
+<link rel="alternate" hreflang="zh-Hant" href="https://ds3owl.github.io/islebar/zh-tw/">
+<link rel="alternate" hreflang="fr" href="https://ds3owl.github.io/islebar/fr/">
+<link rel="alternate" hreflang="de" href="https://ds3owl.github.io/islebar/de/">
+<link rel="alternate" hreflang="it" href="https://ds3owl.github.io/islebar/it/">
+<link rel="alternate" hreflang="pt-BR" href="https://ds3owl.github.io/islebar/pt/">
+<link rel="alternate" hreflang="es" href="https://ds3owl.github.io/islebar/es/">
+<link rel="alternate" hreflang="x-default" href="https://ds3owl.github.io/islebar/">
+<meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#07070b" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:title" content="IsleBar — Windows 11 タスクバーを Dynamic Island 風に">
+<meta property="og:description" content="Claude Code や Codex が作業中か、応答待ちか、完了したかをタスクバーでそのまま確認。音楽、タイマー、ファイル、ダウンロードも。無料。">
+<meta property="og:image" content="https://ds3owl.github.io/islebar/media/og.png">
+<meta property="og:url" content="https://ds3owl.github.io/islebar/ja/">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://ds3owl.github.io/islebar/media/og.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "IsleBar",
+  "operatingSystem": "Windows 11",
+  "applicationCategory": "UtilitiesApplication",
+  "inLanguage": "ja",
+  "description": "Windows 11 のタスクバー検索ボックスに住む、生きたアイランド：Claude Code・Codex の状態（作業中、応答待ち、完了）、音楽、タイマー、ファイル検索、ダウンロード。",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "license": "https://opensource.org/license/mit",
+  "downloadUrl": "https://github.com/ds3owl/islebar/releases/latest",
+  "image": "https://ds3owl.github.io/islebar/media/og.png",
+  "url": "https://ds3owl.github.io/islebar/ja/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "ja",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "無料ですか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "はい — MIT ライセンスの無料オープンソースです。修正、アイデア、フィードバックは GitHub でいつでも歓迎します。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Windows版のダイナミックアイランドですか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "発想は近いです。Dynamic Island風のライブバーですが、画面の上に浮かぶのではなく、Windows 11 タスクバーの検索ボックスの位置に収まります。Apple 製品ではなく独立したアプリです。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Windows で Claude Code や Codex の完了通知を受け取れますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "はい。IsleBar をインストールして Claude Code / Codex の連携（セットアップのチェック1つ）をオンにすると、返答が必要なときはオレンジの枠、完了すると緑の枠と通知音でお知らせします。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Claude Code や Codex は必須ですか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "AI 機能（バーから頼む、作業中 · 応答待ち · 完了 を見る）にだけ必要です。音楽、タイマー、ダウンロード、通知はなくても使えます。ファイル検索には Everything が必要です。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "データをどこかに送りますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "いいえ。PC の中だけで動きます。クラッシュレポートはオンにした場合のみ、エラー・バージョンと基本的な機器情報だけを送ります — ウィンドウのタイトル、ファイル、プロンプト、IP アドレスは決して送りません。プライバシーポリシー。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "「Windows によって PC が保護されました」と表示されます。",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "詳細情報 → 実行 を選んでください。コード署名を準備中です。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "アンインストールするには？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "設定 › アプリ › IsleBar › アンインストール。元の検索ボックスが戻り、IsleBar のフックも削除されます(ストア版は先に IsleBar の設定で Claude Code / Codex の接続をオフにしてください)。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "対応言語は？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "English, 简体中文, 繁體中文, Français, Deutsch, Italiano, 日本語, 한국어, Português, Español — Windows の表示言語に合わせます。"
+      }
+    }
+  ]
+}
+</script>
+
+<style>
+:root { --bg:#fbfbfd; --ink:#1d1d1f; --muted:#6e6e73; --card:#ffffff; --line:#e5e5ea; --accent:#0a66d6; --warn:#c77700; --ok:#1f8a3b; --bad:#c42b1c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#07070b; --ink:#f5f5f7; --muted:#a1a1aa; --card:#121219; --line:#26262f; --accent:#6aa8ff; --warn:#f0a541; --ok:#5fd17a; --bad:#ff5f57; } }
+:root[data-theme="dark"] { --bg:#07070b; --ink:#f5f5f7; --muted:#a1a1aa; --card:#121219; --line:#26262f; --accent:#6aa8ff; --warn:#f0a541; --ok:#5fd17a; --bad:#ff5f57; }
+* { box-sizing:border-box; }
+html, body { margin:0; background:var(--bg); color:var(--ink); }
+body { font-family:"Segoe UI Variable Display","Segoe UI",system-ui,-apple-system,sans-serif; line-height:1.55; }
+html:lang(ja) body { font-family:"Segoe UI Variable Display","Segoe UI","Yu Gothic UI","Meiryo","Hiragino Sans",system-ui,sans-serif; }
+html:lang(zh-Hans) body { font-family:"Segoe UI Variable Display","Segoe UI","Microsoft YaHei UI","PingFang SC",system-ui,sans-serif; }
+html:lang(zh-Hant) body { font-family:"Segoe UI Variable Display","Segoe UI","Microsoft JhengHei UI","PingFang TC",system-ui,sans-serif; }
+html:lang(ko) body { font-family:"Segoe UI Variable Display","Segoe UI","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif; word-break:keep-all; }
+a { color:var(--accent); text-decoration:none; }
+.wrap { max-width:1080px; margin:0 auto; padding:0 16px; }
+header { text-align:center; padding:72px 0 28px; }
+h1 { font-size:clamp(44px,8vw,88px); line-height:1; margin:0; letter-spacing:-.02em; }
+.lede { font-size:clamp(19px,2.6vw,26px); color:var(--muted); margin:16px auto 0; max-width:760px; }
+.cta { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin:30px 0 8px; }
+.btn { display:inline-block; padding:13px 26px; border-radius:999px; font-weight:600; font-size:17px; }
+.btn.primary { background:var(--ink); color:var(--bg); }
+.film video { background:var(--bg); }
+.btn.ghost { border:1px solid var(--line); color:var(--ink); }
+.small { color:var(--muted); font-size:14px; }
+.film { margin:34px auto 0; border-radius:18px; overflow:hidden; border:1px solid var(--line); background:#000; }
+.film video { display:block; width:100%; height:auto; }
+.need { margin:44px auto 0; background:var(--card); border:1px solid var(--line); border-left:4px solid var(--warn); border-radius:14px; padding:18px 22px; }
+.need h2 { font-size:19px; margin:0 0 8px; }
+.need ul { margin:0; padding-left:20px; }
+.need li { margin:4px 0; }
+section h2.big { font-size:clamp(30px,4.6vw,46px); text-align:center; margin:84px 0 8px; letter-spacing:-.01em; }
+section p.sub { text-align:center; color:var(--muted); margin:0 auto 30px; max-width:640px; font-size:18px; }
+.grid { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; }
+.tile { background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+.tile img { display:block; width:100%; height:auto; }
+.tile div { padding:14px 18px 18px; }
+.tile b { font-size:18px; }
+.tile span { display:block; color:var(--muted); font-size:15px; margin-top:2px; }
+.feats { display:flex; flex-direction:column; gap:56px; margin-top:12px; }
+.feat { display:grid; grid-template-columns:1.25fr 1fr; gap:36px; align-items:center; }
+.feat:nth-child(even) .media { order:2; }
+.feat .media { background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+.feat > * { min-width:0; }
+.feat .media img { display:block; width:100%; max-width:100%; height:auto; }
+.feat h3 { font-size:clamp(24px,3vw,32px); margin:0 0 10px; letter-spacing:-.01em; }
+.feat p { margin:0 0 10px; color:var(--muted); font-size:17px; }
+.feat ul { margin:0; padding-left:20px; color:var(--muted); font-size:16px; }
+.feat li { margin:5px 0; }
+kbd { font:600 13px/1 "Segoe UI",system-ui,sans-serif; border:1px solid var(--line); border-bottom-width:2px; border-radius:6px; padding:2px 6px; background:var(--card); color:var(--ink); }
+code { font-size:15px; background:var(--card); border:1px solid var(--line); border-radius:6px; padding:1px 5px; color:var(--ink); }
+@media (max-width:720px) { .feat { grid-template-columns:1fr; gap:16px; } .feat:nth-child(even) .media { order:0; } }
+.faq { max-width:760px; margin:0 auto; }
+.faq h3 { font-size:18px; margin:26px 0 4px; }
+.faq p { margin:0; color:var(--muted); }
+nav.langs { margin:0 0 14px; line-height:2; }
+nav.langs a, nav.langs b { white-space:nowrap; }
+footer { text-align:center; color:var(--muted); font-size:13px; padding:70px 0 40px; }
+@media (max-width:720px) { .grid { grid-template-columns:1fr; } header { padding-top:48px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>IsleBar</h1>
+    <p class="lede">生きている Windows&nbsp;11 タスクバー。検索ボックスから Claude Code や Codex に頼んで — 作業中か、応答待ちか、完了したかがすぐにわかります。</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/ds3owl/islebar/releases/latest">Windows 11 版をダウンロード</a>
+      <a class="btn ghost" href="https://github.com/ds3owl/islebar">GitHub で見る</a>
+    </div>
+    <div class="small">無料 · オープンソース（MIT） · アカウント不要 · データは PC の中だけ</div>
+    <div class="film">
+      <video id="film" src="../media/films/IsleBar-ja-light.mp4" poster="../media/poster-light.jpg" autoplay muted loop playsinline controls preload="metadata"
+             aria-label="IsleBar 紹介動画：スクリーンショットをバーにドロップ、長い質問、ターミナルで作業する Claude、応答待ち、完了、Codex、タイマー、ファイル、ダウンロード、通知、音楽、ライト・ダークモード"></video>
+    </div>
+  </header>
+
+  <div class="need">
+    <h2>一緒に使うと便利なもの</h2>
+    <ul>
+      <li><b><a href="https://code.claude.com/docs/en/overview">Claude Code</a></b> または <b><a href="https://github.com/openai/codex">Codex CLI</a></b> — バーから頼んで、作業中 · 応答待ち · 完了 を確認。</li>
+      <li><b><a href="https://www.voidtools.com/downloads/">Everything</a></b> (voidtools、無料) — Tab で PC 内のすべてのファイルを瞬時に検索。</li>
+      <li><b>お好きなウェブブラウザ</b> — ウェブ検索の結果はそこで開きます。</li>
+    </ul>
+    <p class="small" style="margin:8px 0 0">IsleBar は Windows 11（x64）で、タスクバーの検索がボックスまたはアイコンとして表示されている状態で動作します。</p>
+  </div>
+
+  <section>
+    <h2 class="big">AI がいま何をしているか、ひと目で。</h2>
+    <p class="sub">作業中。応答待ち。完了。検索ボックスが教えてくれるから、Claude Code や Codex が作業している間は目を離していられます。オレンジの縁は返事を待っているしるし、緑は完了のしるしです。</p>
+    <div class="tile"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/ja/hero-dark.webp"><img src="../media/ja/hero-light.webp" alt="Claude が作業中 → 応答待ち（オレンジ） → 完了（緑）" loading="lazy" width="960" height="540"></picture></div>
+  </section>
+
+  <section>
+    <h2 class="big">ボックスはひとつ。ほかのことも、全部。</h2>
+    <p class="sub">バーはいつもの検索ボックスの場所にそのまま。変わるのは中身だけです。</p>
+    <div class="feats">
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/ja/ask-dark.webp"><img src="../media/ja/ask-light.webp" alt="タスクバーに質問を入力しているところ" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>タスクバーから、すぐ頼む。</h3><p>バーをクリックするか <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd> を押し、やりたいことを入力して <kbd>Enter</kbd>。ターミナルが開き、Claude Code や Codex がその内容で動き出します。</p><ul><li><kbd>↑</kbd> <kbd>↓</kbd> で直近 50 件の質問を呼び出せます。</li><li>長い質問はバーの上にプレビュー表示。<kbd>Shift</kbd>+<kbd>Enter</kbd> で複数行の入力欄が開きます。</li><li>⌄ ボタンにはセッション、モデル、思考の強さ、権限、リモートコントロールの設定をまとめておけます。</li></ul></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/ja/drop-dark.webp"><img src="../media/ja/drop-light.webp" alt="スクリーンショットをバーにドロップして質問に添付" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>ファイルを落として、聞く。</h3><p>スクリーンショットやログをバーにドロップすると、そのパスが入力欄に入り、すぐに質問できます。</p><ul><li>設定で <i>ドロップ時のコマンド</i> を指定すれば、別の動作にもできます。</li><li>私の使い方：自作の小さなスクリプトで、ドロップしたファイルを Telegram 経由でそのままスマホに送っています。</li></ul></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/ja/codex-dark.webp"><img src="../media/ja/codex-light.webp" alt="Codex が作業中 → 完了" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>Codex にも。</h3><p>Codex CLI にもまったく同じ <i>作業中 · 応答待ち · 完了</i> が表示されます。マークは PC にすでに入っている Codex 拡張機能から読み込むので、IsleBar 自体は OpenAI のロゴを同梱していません。</p><ul><li><b style="color:var(--warn)">オレンジ</b> — エージェントが何か質問しています。ターミナルで答えれば作業中に戻ります。</li><li><b style="color:var(--ok)">緑</b> — 完了。やさしいチャイムでお知らせ。見るか、クリックするか、セッションを閉じるまで残ります。</li><li>セッションが複数あるときは、いちばん急ぎのものを表示。小さな点はほかにもあるという合図です。</li><li><b style="color:var(--bad)">赤</b> — プランの利用上限に達したとき（リセット時刻つき）や、エラーで止まったとき（理由つき）。使用量が 90% を超えると先にお知らせします。</li></ul></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/ja/timer-dark.webp"><img src="../media/ja/timer-light.webp" alt="25m と入力してタイマーを開始" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>タイマーは、ほんの数打で。</h3><p><code>25m</code>、<code>90s</code>、<code>1h 30m</code> と入力して <kbd>Enter</kbd>。変わる数字だけがくるりと回ります。</p><ul><li>マウスを乗せると一時停止と停止。終わると音が鳴り、バーが緑になります。</li><li>右クリックでクイックタイマー、<b>ポモドーロ</b>（25 / 5 / 15 分、変更可）、<b>ストップウォッチ</b>。</li></ul></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/files-dark.webp"><img src="../media/files-light.webp" alt="タスクバーの上に瞬時に出るファイル検索" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>すべてのファイルを、瞬時に。</h3><p><kbd>Tab</kbd> を押して入力するだけ。すべてのドライブから見つかったファイルが、入力に合わせてタスクバーの上に表示されます。検索エンジンは <a href="https://www.voidtools.com/">Everything</a>。</p><ul><li><kbd>Enter</kbd> で開く、<kbd>Ctrl</kbd>+<kbd>Enter</kbd> でエクスプローラーに表示、<kbd>Esc</kbd> で元に戻る。</li><li>もう一度 <kbd>Tab</kbd> でウェブ検索。言語に合った検索エンジンを使います。</li></ul></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/ja/downloads-dark.webp"><img src="../media/ja/downloads-light.webp" alt="ダウンロード中 → 完了" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>ダウンロードも、ひと目で。</h3><p>Chrome、Edge、Firefox などのブラウザでのダウンロードを進行中に表示し、終わるとファイル名と <i>完了</i> を表示。クリックするとエクスプローラーでファイルを表示します。</p></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/music-dark.webp"><img src="../media/music-light.webp" alt="アルバムアートと操作ボタンつきの再生中表示" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>アルバムの色に染まる音楽。</h3><p>Spotify、ブラウザの YouTube など、ほとんどのプレーヤーをアルバムアート、レベルバー、アルバムの色の再生バーで表示。マウスを乗せると ⏮ ⏯ ⏭。</p><p>曲の途中でエージェントが完了しても、音楽を隠さずに緑の縁だけが光ります。</p></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/ja/notices-dark.webp"><img src="../media/ja/notices-light.webp" alt="ヘッドホン接続の通知" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>静かな通知。</h3><p>ヘッドホン、充電、インターネット、コピーしたテキスト、CPU やメモリの高負荷、集中セッション、カレンダーの予定、マイクやカメラの使用中 — どれも一瞬表示して、すっと引っ込みます。ポップアップはありません。</p><p>色の意味はひとつずつ：<b style="color:var(--warn)">オレンジ</b>は AI が返答を待っているとき、<b style="color:var(--bad)">赤</b>は対処が必要なとき（バッテリー残量の低下、または利用上限やエラーで AI が止まったとき）、<b style="color:var(--ok)">緑</b>は何かが終わったとき。応答不可（おやすみモード）中は通知音を鳴らさず、全画面のゲームや動画でも消音にできます。</p></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/theme-dark.webp"><img src="../media/theme-light.webp" alt="ライトモードとダークモード" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>ライトも、ダークも。</h3><p>IsleBar は Windows のテーマに合わせ、切り替えた瞬間に色が変わります — 再起動は不要です。</p></div></div>
+    </div>
+  </section>
+
+  <section class="faq">
+    <h2 class="big">よくある質問</h2>
+    <h3>無料ですか？</h3><p>はい — MIT ライセンスの無料オープンソースです。修正、アイデア、フィードバックは GitHub でいつでも歓迎します。</p>
+    <h3>Windows版のダイナミックアイランドですか？</h3><p>発想は近いです。Dynamic Island風のライブバーですが、画面の上に浮かぶのではなく、Windows 11 タスクバーの検索ボックスの位置に収まります。Apple 製品ではなく独立したアプリです。</p>
+    <h3>Windows で Claude Code や Codex の完了通知を受け取れますか？</h3><p>はい。IsleBar をインストールして Claude Code / Codex の連携（セットアップのチェック1つ）をオンにすると、返答が必要なときはオレンジの枠、完了すると緑の枠と通知音でお知らせします。</p>
+    <h3>Claude Code や Codex は必須ですか？</h3><p>AI 機能（バーから頼む、作業中 · 応答待ち · 完了 を見る）にだけ必要です。音楽、タイマー、ダウンロード、通知はなくても使えます。ファイル検索には Everything が必要です。</p>
+    <h3>データをどこかに送りますか？</h3><p>いいえ。PC の中だけで動きます。クラッシュレポートはオンにした場合のみ、エラー・バージョンと基本的な機器情報だけを送ります — ウィンドウのタイトル、ファイル、プロンプト、IP アドレスは決して送りません。<a href="../privacy.html">プライバシーポリシー</a>。</p>
+    <h3>「Windows によって PC が保護されました」と表示されます。</h3><p><i>詳細情報 → 実行</i> を選んでください。コード署名を準備中です。</p>
+    <h3>アンインストールするには？</h3><p>設定 › アプリ › IsleBar › アンインストール。元の検索ボックスが戻り、IsleBar のフックも削除されます(ストア版は先に IsleBar の設定で Claude Code / Codex の接続をオフにしてください)。</p>
+    <h3>対応言語は？</h3><p>English, 简体中文, 繁體中文, Français, Deutsch, Italiano, 日本語, 한국어, Português, Español — Windows の表示言語に合わせます。</p>
+  </section>
+
+  <section class="faq">
+    <h2 class="big">お困りですか？</h2>
+    <p class="sub">不具合、アイデア、質問 — GitHub かメールでお知らせください。</p>
+    <div class="cta">
+      <a class="btn ghost" href="https://github.com/ds3owl/islebar/issues/new?template=bug_report.yml">不具合を報告</a>
+      <a class="btn ghost" href="https://github.com/ds3owl/islebar/issues/new?template=feature_request.yml">機能を提案</a>
+      <a class="btn ghost" href="https://github.com/ds3owl/islebar/discussions">質問する</a>
+      <a class="btn ghost" href="mailto:imchangwoo@outlook.com">メール</a>
+<!--SPONSOR-->
+    </div>
+  </section>
+
+  <footer>
+    <nav class="langs" aria-label="Language"><a href="../" data-lang="en" hreflang="en">English</a> · <a href="../ko/" data-lang="ko" hreflang="ko">한국어</a> · <b>日本語</b> · <a href="../zh/" data-lang="zh" hreflang="zh-Hans">简体中文</a> · <a href="../zh-tw/" data-lang="zht" hreflang="zh-Hant">繁體中文</a> · <a href="../fr/" data-lang="fr" hreflang="fr">Français</a> · <a href="../de/" data-lang="de" hreflang="de">Deutsch</a> · <a href="../it/" data-lang="it" hreflang="it">Italiano</a> · <a href="../pt/" data-lang="pt" hreflang="pt-BR">Português</a> · <a href="../es/" data-lang="es" hreflang="es">Español</a></nav>
+    <a href="../privacy.html">プライバシー</a> ·
+    IsleBar は非公式の個人プロジェクトであり、Microsoft、Anthropic、OpenAI とは提携しておらず、承認も受けていません。<br>
+    Windows は Microsoft の商標です。「Claude」および「Claude Code」は Anthropic PBC の、「OpenAI」および「Codex」は OpenAI の商標です。バーに表示されるロゴは、ユーザーの PC にすでにインストールされているソフトウェアから読み込んでいます。「Dynamic Island」は Apple Inc. の商標です。IsleBar は Apple とは関係ありません。
+  </footer>
+</div>
+<script>
+// The film follows the visitor's light / dark setting; the language is this page's own.
+(function () {
+  var q = window.matchMedia('(prefers-color-scheme: dark)');
+  function apply() {
+    var t = q.matches ? 'dark' : 'light', v = document.getElementById('film');
+    var src = '../media/films/IsleBar-ja-' + t + '.mp4';
+    if (v && v.getAttribute('src') !== src) {
+      v.setAttribute('poster', '../media/poster-' + t + '.jpg'); v.setAttribute('src', src);
+      var p = v.play(); if (p && p.catch) p.catch(function () {});
+    }
+  }
+  apply(); if (q.addEventListener) q.addEventListener('change', apply);
+  // remember a language picked from the footer, so the English page doesn't send the visitor away again
+  var links = document.querySelectorAll('nav.langs a');
+  for (var i = 0; i < links.length; i++) links[i].addEventListener('click', function () { try { localStorage.setItem('islebar-lang', this.getAttribute('data-lang')); } catch (e) {} });
+})();
+</script>
+</body>
+</html>

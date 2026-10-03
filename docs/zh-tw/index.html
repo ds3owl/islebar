@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IsleBar – 動態島風格的 Windows 11 工作列</title>
+<meta name="description" content="把 Windows 11 工作列搜尋框變成動態島風格的即時膠囊：Claude Code/Codex 完成通知、正在播放、番茄鐘、檔案搜尋。免費開源。">
+<meta name="keywords" content="Windows 動態島, Win11 工作列 動態島, Claude Code 通知, Claude Code 完成通知, Codex 通知, 工作列 美化, Windows 11 工作列, 番茄鐘 工作列, 工作列 音樂, 免費 開源 軟體">
+<link rel="canonical" href="https://ds3owl.github.io/islebar/zh-tw/">
+<link rel="alternate" hreflang="en" href="https://ds3owl.github.io/islebar/">
+<link rel="alternate" hreflang="ko" href="https://ds3owl.github.io/islebar/ko/">
+<link rel="alternate" hreflang="ja" href="https://ds3owl.github.io/islebar/ja/">
+<link rel="alternate" hreflang="zh-Hans" href="https://ds3owl.github.io/islebar/zh/">
+<link rel="alternate" hreflang="zh-Hant" href="https://ds3owl.github.io/islebar/zh-tw/">
+<link rel="alternate" hreflang="fr" href="https://ds3owl.github.io/islebar/fr/">
+<link rel="alternate" hreflang="de" href="https://ds3owl.github.io/islebar/de/">
+<link rel="alternate" hreflang="it" href="https://ds3owl.github.io/islebar/it/">
+<link rel="alternate" hreflang="pt-BR" href="https://ds3owl.github.io/islebar/pt/">
+<link rel="alternate" hreflang="es" href="https://ds3owl.github.io/islebar/es/">
+<link rel="alternate" hreflang="x-default" href="https://ds3owl.github.io/islebar/">
+<meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#07070b" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:title" content="IsleBar — 動態島風格的 Windows 11 工作列">
+<meta property="og:description" content="Claude Code 或 Codex 是在處理中、在等你，還是已經完成——在工作列上一眼就知道。還有音樂、計時器、檔案和下載。免費。">
+<meta property="og:image" content="https://ds3owl.github.io/islebar/media/og.png">
+<meta property="og:url" content="https://ds3owl.github.io/islebar/zh-tw/">
+<meta property="og:locale" content="zh_TW">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://ds3owl.github.io/islebar/media/og.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "IsleBar",
+  "operatingSystem": "Windows 11",
+  "applicationCategory": "UtilitiesApplication",
+  "inLanguage": "zh-Hant",
+  "description": "位於 Windows 11 工作列搜尋框的即時小島：Claude Code 與 Codex 狀態（處理中、等你回覆、已完成）、音樂、計時器、檔案搜尋和下載。",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "license": "https://opensource.org/license/mit",
+  "downloadUrl": "https://github.com/ds3owl/islebar/releases/latest",
+  "image": "https://ds3owl.github.io/islebar/media/og.png",
+  "url": "https://ds3owl.github.io/islebar/zh-tw/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "zh-Hant",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "免費嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "是的——以 MIT 授權免費開放原始碼。歡迎在 GitHub 上提供修正、想法和意見回饋。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "這是 Windows 版的動態島嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "概念相近——一個動態島風格的即時膠囊，但它位於 Windows 11 工作列搜尋框的位置，而不是浮在畫面上方。它是獨立應用程式，不是 Apple 的產品。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "在 Windows 上怎麼在 Claude Code 或 Codex 完成時收到通知？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "安裝 IsleBar 並開啟 Claude Code / Codex 連結（安裝時勾選一項）。需要你回答時膠囊顯示橘色邊框，完成時顯示綠色邊框並播放提示音，不必一直盯著終端機。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "一定要裝 Claude Code 或 Codex 嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "只有 AI 功能需要——在列上提問，以及查看處理中 · 等你回覆 · 已完成。音樂、計時器、下載和通知不需要它們也能使用；檔案搜尋需要 Everything。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "會把我的資料傳到別的地方嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會。它只在你的電腦上執行。當機報告需由你主動開啟，且只包含錯誤、版本和基本裝置資訊——絕不包含視窗標題、檔案、提示詞或你的 IP。隱私權政策。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Windows 顯示「Windows 已保護您的電腦」。",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "請選擇 其他資訊 → 仍要執行。程式碼簽章正在準備中。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "要怎麼移除？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "設定 › 應用程式 › IsleBar › 解除安裝。原本的搜尋框會恢復，IsleBar 的掛鉤也會一併移除(商店版請先在 IsleBar 設定中關閉 Claude Code / Codex 連線)。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "支援哪些語言？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "English, 简体中文, 繁體中文, Français, Deutsch, Italiano, 日本語, 한국어, Português, Español——跟隨你的 Windows 語言。"
+      }
+    }
+  ]
+}
+</script>
+
+<style>
+:root { --bg:#fbfbfd; --ink:#1d1d1f; --muted:#6e6e73; --card:#ffffff; --line:#e5e5ea; --accent:#0a66d6; --warn:#c77700; --ok:#1f8a3b; --bad:#c42b1c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#07070b; --ink:#f5f5f7; --muted:#a1a1aa; --card:#121219; --line:#26262f; --accent:#6aa8ff; --warn:#f0a541; --ok:#5fd17a; --bad:#ff5f57; } }
+:root[data-theme="dark"] { --bg:#07070b; --ink:#f5f5f7; --muted:#a1a1aa; --card:#121219; --line:#26262f; --accent:#6aa8ff; --warn:#f0a541; --ok:#5fd17a; --bad:#ff5f57; }
+* { box-sizing:border-box; }
+html, body { margin:0; background:var(--bg); color:var(--ink); }
+body { font-family:"Segoe UI Variable Display","Segoe UI",system-ui,-apple-system,sans-serif; line-height:1.55; }
+html:lang(ja) body { font-family:"Segoe UI Variable Display","Segoe UI","Yu Gothic UI","Meiryo","Hiragino Sans",system-ui,sans-serif; }
+html:lang(zh-Hans) body { font-family:"Segoe UI Variable Display","Segoe UI","Microsoft YaHei UI","PingFang SC",system-ui,sans-serif; }
+html:lang(zh-Hant) body { font-family:"Segoe UI Variable Display","Segoe UI","Microsoft JhengHei UI","PingFang TC",system-ui,sans-serif; }
+html:lang(ko) body { font-family:"Segoe UI Variable Display","Segoe UI","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif; word-break:keep-all; }
+a { color:var(--accent); text-decoration:none; }
+.wrap { max-width:1080px; margin:0 auto; padding:0 16px; }
+header { text-align:center; padding:72px 0 28px; }
+h1 { font-size:clamp(44px,8vw,88px); line-height:1; margin:0; letter-spacing:-.02em; }
+.lede { font-size:clamp(19px,2.6vw,26px); color:var(--muted); margin:16px auto 0; max-width:760px; }
+.cta { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin:30px 0 8px; }
+.btn { display:inline-block; padding:13px 26px; border-radius:999px; font-weight:600; font-size:17px; }
+.btn.primary { background:var(--ink); color:var(--bg); }
+.film video { background:var(--bg); }
+.btn.ghost { border:1px solid var(--line); color:var(--ink); }
+.small { color:var(--muted); font-size:14px; }
+.film { margin:34px auto 0; border-radius:18px; overflow:hidden; border:1px solid var(--line); background:#000; }
+.film video { display:block; width:100%; height:auto; }
+.need { margin:44px auto 0; background:var(--card); border:1px solid var(--line); border-left:4px solid var(--warn); border-radius:14px; padding:18px 22px; }
+.need h2 { font-size:19px; margin:0 0 8px; }
+.need ul { margin:0; padding-left:20px; }
+.need li { margin:4px 0; }
+section h2.big { font-size:clamp(30px,4.6vw,46px); text-align:center; margin:84px 0 8px; letter-spacing:-.01em; }
+section p.sub { text-align:center; color:var(--muted); margin:0 auto 30px; max-width:640px; font-size:18px; }
+.grid { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; }
+.tile { background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+.tile img { display:block; width:100%; height:auto; }
+.tile div { padding:14px 18px 18px; }
+.tile b { font-size:18px; }
+.tile span { display:block; color:var(--muted); font-size:15px; margin-top:2px; }
+.feats { display:flex; flex-direction:column; gap:56px; margin-top:12px; }
+.feat { display:grid; grid-template-columns:1.25fr 1fr; gap:36px; align-items:center; }
+.feat:nth-child(even) .media { order:2; }
+.feat .media { background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+.feat > * { min-width:0; }
+.feat .media img { display:block; width:100%; max-width:100%; height:auto; }
+.feat h3 { font-size:clamp(24px,3vw,32px); margin:0 0 10px; letter-spacing:-.01em; }
+.feat p { margin:0 0 10px; color:var(--muted); font-size:17px; }
+.feat ul { margin:0; padding-left:20px; color:var(--muted); font-size:16px; }
+.feat li { margin:5px 0; }
+kbd { font:600 13px/1 "Segoe UI",system-ui,sans-serif; border:1px solid var(--line); border-bottom-width:2px; border-radius:6px; padding:2px 6px; background:var(--card); color:var(--ink); }
+code { font-size:15px; background:var(--card); border:1px solid var(--line); border-radius:6px; padding:1px 5px; color:var(--ink); }
+@media (max-width:720px) { .feat { grid-template-columns:1fr; gap:16px; } .feat:nth-child(even) .media { order:0; } }
+.faq { max-width:760px; margin:0 auto; }
+.faq h3 { font-size:18px; margin:26px 0 4px; }
+.faq p { margin:0; color:var(--muted); }
+nav.langs { margin:0 0 14px; line-height:2; }
+nav.langs a, nav.langs b { white-space:nowrap; }
+footer { text-align:center; color:var(--muted); font-size:13px; padding:70px 0 40px; }
+@media (max-width:720px) { .grid { grid-template-columns:1fr; } header { padding-top:48px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>IsleBar</h1>
+    <p class="lede">讓 Windows&nbsp;11 工作列活起來。在搜尋框裡向 Claude Code 或 Codex 提問——它在處理中、在等你，還是已經完成，一眼就知道。</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/ds3owl/islebar/releases/latest">下載 Windows 11 版</a>
+      <a class="btn ghost" href="https://github.com/ds3owl/islebar">在 GitHub 上查看</a>
+    </div>
+    <div class="small">免費 · 開放原始碼（MIT） · 不需帳號 · 資料只留在你的電腦</div>
+    <div class="film">
+      <video id="film" src="../media/films/IsleBar-zht-light.mp4" poster="../media/poster-light.jpg" autoplay muted loop playsinline controls preload="metadata"
+             aria-label="IsleBar 介紹影片：把螢幕擷取畫面拖到列上、長問題、Claude 在終端機裡工作、等你回覆、已完成、Codex、計時器、檔案、下載、通知、音樂、淺色與深色模式"></video>
+    </div>
+  </header>
+
+  <div class="need">
+    <h2>搭配使用更好用</h2>
+    <ul>
+      <li><b><a href="https://code.claude.com/docs/en/overview">Claude Code</a></b> 或 <b><a href="https://github.com/openai/codex">Codex CLI</a></b> — 在列上提問，查看處理中 · 等你回覆 · 已完成。</li>
+      <li><b><a href="https://www.voidtools.com/downloads/">Everything</a></b> (voidtools，免費) — 按 Tab 即可瞬間搜尋電腦上的所有檔案。</li>
+      <li><b>任何網頁瀏覽器</b> — 網頁搜尋結果會在其中開啟。</li>
+    </ul>
+    <p class="small" style="margin:8px 0 0">IsleBar 可在 Windows 11（x64）上執行，工作列搜尋需顯示為搜尋框或圖示。</p>
+  </div>
+
+  <section>
+    <h2 class="big">AI 在做什麼，一眼就知道。</h2>
+    <p class="sub">處理中。等你回覆。已完成。搜尋框會告訴你——Claude Code 或 Codex 工作時，你大可去忙別的。橘色邊框代表它在等你回答，綠色代表已經完成。</p>
+    <div class="tile"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/zht/hero-dark.webp"><img src="../media/zht/hero-light.webp" alt="Claude 處理中 → 等你回覆（橘色）→ 已完成（綠色）" loading="lazy" width="960" height="540"></picture></div>
+  </section>
+
+  <section>
+    <h2 class="big">一個框，其他的也通通有。</h2>
+    <p class="sub">膠囊就待在搜尋框原本的位置，變的只有裡面的內容。</p>
+    <div class="feats">
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/zht/ask-dark.webp"><img src="../media/zht/ask-light.webp" alt="在工作列中輸入問題" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>在工作列直接提問。</h3><p>點一下膠囊或按 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd>，輸入你想做的事，再按 <kbd>Enter</kbd>。終端機隨即開啟，Claude Code 或 Codex 帶著你的問題開始工作。</p><ul><li><kbd>↑</kbd> <kbd>↓</kbd> 可叫回最近 50 則提問。</li><li>長問題會在列上方預覽；<kbd>Shift</kbd>+<kbd>Enter</kbd> 開啟多行輸入框。</li><li>⌄ 按鈕可保留你的選項：工作階段、模型、思考強度、權限、遠端控制。</li></ul></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/zht/drop-dark.webp"><img src="../media/zht/drop-light.webp" alt="把螢幕擷取畫面拖到列上，附加到問題中" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>拖入檔案，直接提問。</h3><p>把螢幕擷取畫面或記錄檔拖到膠囊上——檔案路徑會填進輸入框，接著提問就好。</p><ul><li>在設定中指定 <i>拖放命令</i>，可讓拖放執行別的動作。</li><li>我自己的用法：透過我寫的一支小腳本，拖進來的檔案會經由 Telegram 直接傳到我的手機。</li></ul></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/zht/codex-dark.webp"><img src="../media/zht/codex-light.webp" alt="Codex 處理中 → 已完成" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>Codex 也一樣。</h3><p>Codex CLI 同樣顯示 <i>處理中 · 等你回覆 · 已完成</i>。它的標誌讀取自你電腦上已安裝的 Codex 擴充功能——IsleBar 本身不附帶任何 OpenAI 標誌。</p><ul><li><b style="color:var(--warn)">橘色</b>——代理程式在問你問題。在終端機裡回答後，它會回到處理中。</li><li><b style="color:var(--ok)">綠色</b>——已完成，並伴隨輕柔的提示音。會一直保留，直到你查看、點擊或關閉工作階段。</li><li>有多個工作階段？顯示最緊急的那一個，小圓點代表還有更多。</li><li><b style="color:var(--bad)">紅色</b> — 方案用量已達上限（顯示重置時間），或因錯誤停止（顯示原因）。用量超過 90% 時會先提醒一次。</li></ul></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/zht/timer-dark.webp"><img src="../media/zht/timer-light.webp" alt="輸入 25m 啟動計時器" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>計時器，敲幾下就好。</h3><p>輸入 <code>25m</code>、<code>90s</code> 或 <code>1h 30m</code>，按 <kbd>Enter</kbd>。只有變動的數字會滾動。</p><ul><li>滑鼠移上去可暫停或停止。時間到會響起提示音，膠囊變成綠色。</li><li>按右鍵可使用快速計時器、<b>番茄鐘</b>（25 / 5 / 15 分鐘，可調整）和<b>碼錶</b>。</li></ul></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/files-dark.webp"><img src="../media/files-light.webp" alt="工作列上方即時顯示的檔案搜尋結果" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>所有檔案，瞬間找到。</h3><p>按 <kbd>Tab</kbd> 開始輸入——所有磁碟中的相符結果隨打隨現，顯示在工作列上方，由 <a href="https://www.voidtools.com/">Everything</a> 提供支援。</p><ul><li><kbd>Enter</kbd> 開啟，<kbd>Ctrl</kbd>+<kbd>Enter</kbd> 在檔案總管中顯示，<kbd>Esc</kbd> 返回。</li><li>再按一次 <kbd>Tab</kbd> 進行網頁搜尋，自動選用適合你語言的搜尋引擎。</li></ul></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/zht/downloads-dark.webp"><img src="../media/zht/downloads-light.webp" alt="下載進行中 → 已完成" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>下載進度，一目了然。</h3><p>Chrome、Edge、Firefox 等瀏覽器的下載會在進行時顯示，完成後顯示檔名和<i>已完成</i>。點一下即可在檔案總管中查看該檔案。</p></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/music-dark.webp"><img src="../media/music-light.webp" alt="正在播放，附專輯封面和控制按鈕" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>音樂，染上專輯的顏色。</h3><p>Spotify、瀏覽器裡的 YouTube 以及大多數播放器，都會顯示專輯封面、音量跳動條和專輯配色的進度條。滑鼠移上去即可 ⏮ ⏯ ⏭。</p><p>歌播到一半時代理程式完成了工作，綠色邊框會亮起，但不會擋住音樂。</p></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/zht/notices-dark.webp"><img src="../media/zht/notices-light.webp" alt="耳機已連線" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>安靜的通知。</h3><p>耳機、充電、網路、複製的文字、CPU 或記憶體負載過高、專注時段、行事曆活動、麥克風或相機使用中——每則都只顯示片刻，隨即讓開。沒有彈出視窗。</p><p>每種顏色只有一個意思：<b style="color:var(--warn)">橘色</b>表示 AI 在等你回答，<b style="color:var(--bad)">紅色</b>表示需要處理（電量不足，或 AI 因用量上限或錯誤而停止），<b style="color:var(--ok)">綠色</b>表示事情已完成。勿擾期間不播放提示音，全螢幕遊戲和影片時也可以靜音。</p></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/theme-dark.webp"><img src="../media/theme-light.webp" alt="淺色和深色模式" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>淺色與深色。</h3><p>IsleBar 跟隨 Windows 佈景主題，切換的瞬間就會換色——不必重新啟動。</p></div></div>
+    </div>
+  </section>
+
+  <section class="faq">
+    <h2 class="big">常見問題</h2>
+    <h3>免費嗎？</h3><p>是的——以 MIT 授權免費開放原始碼。歡迎在 GitHub 上提供修正、想法和意見回饋。</p>
+    <h3>這是 Windows 版的動態島嗎？</h3><p>概念相近——一個動態島風格的即時膠囊，但它位於 Windows 11 工作列搜尋框的位置，而不是浮在畫面上方。它是獨立應用程式，不是 Apple 的產品。</p>
+    <h3>在 Windows 上怎麼在 Claude Code 或 Codex 完成時收到通知？</h3><p>安裝 IsleBar 並開啟 Claude Code / Codex 連結（安裝時勾選一項）。需要你回答時膠囊顯示橘色邊框，完成時顯示綠色邊框並播放提示音，不必一直盯著終端機。</p>
+    <h3>一定要裝 Claude Code 或 Codex 嗎？</h3><p>只有 AI 功能需要——在列上提問，以及查看處理中 · 等你回覆 · 已完成。音樂、計時器、下載和通知不需要它們也能使用；檔案搜尋需要 Everything。</p>
+    <h3>會把我的資料傳到別的地方嗎？</h3><p>不會。它只在你的電腦上執行。當機報告需由你主動開啟，且只包含錯誤、版本和基本裝置資訊——絕不包含視窗標題、檔案、提示詞或你的 IP。<a href="../privacy.html">隱私權政策</a>。</p>
+    <h3>Windows 顯示「Windows 已保護您的電腦」。</h3><p>請選擇 <i>其他資訊 → 仍要執行</i>。程式碼簽章正在準備中。</p>
+    <h3>要怎麼移除？</h3><p>設定 › 應用程式 › IsleBar › 解除安裝。原本的搜尋框會恢復，IsleBar 的掛鉤也會一併移除(商店版請先在 IsleBar 設定中關閉 Claude Code / Codex 連線)。</p>
+    <h3>支援哪些語言？</h3><p>English, 简体中文, 繁體中文, Français, Deutsch, Italiano, 日本語, 한국어, Português, Español——跟隨你的 Windows 語言。</p>
+  </section>
+
+  <section class="faq">
+    <h2 class="big">需要協助嗎？</h2>
+    <p class="sub">遇到問題、有點子或疑問——歡迎在 GitHub 上或透過電子郵件告訴我們。</p>
+    <div class="cta">
+      <a class="btn ghost" href="https://github.com/ds3owl/islebar/issues/new?template=bug_report.yml">回報錯誤</a>
+      <a class="btn ghost" href="https://github.com/ds3owl/islebar/issues/new?template=feature_request.yml">建議功能</a>
+      <a class="btn ghost" href="https://github.com/ds3owl/islebar/discussions">提出問題</a>
+      <a class="btn ghost" href="mailto:imchangwoo@outlook.com">電子郵件</a>
+<!--SPONSOR-->
+    </div>
+  </section>
+
+  <footer>
+    <nav class="langs" aria-label="Language"><a href="../" data-lang="en" hreflang="en">English</a> · <a href="../ko/" data-lang="ko" hreflang="ko">한국어</a> · <a href="../ja/" data-lang="ja" hreflang="ja">日本語</a> · <a href="../zh/" data-lang="zh" hreflang="zh-Hans">简体中文</a> · <b>繁體中文</b> · <a href="../fr/" data-lang="fr" hreflang="fr">Français</a> · <a href="../de/" data-lang="de" hreflang="de">Deutsch</a> · <a href="../it/" data-lang="it" hreflang="it">Italiano</a> · <a href="../pt/" data-lang="pt" hreflang="pt-BR">Português</a> · <a href="../es/" data-lang="es" hreflang="es">Español</a></nav>
+    <a href="../privacy.html">隱私權</a> ·
+    IsleBar 是非官方的個人業餘專案，與 Microsoft、Anthropic 或 OpenAI 均無關聯，亦未獲其背書。<br>
+    Windows 是 Microsoft 的商標。「Claude」和「Claude Code」是 Anthropic PBC 的商標；「OpenAI」和「Codex」是 OpenAI 的商標。列上顯示的標誌讀取自使用者電腦上已安裝的軟體。「Dynamic Island（動態島）」是 Apple Inc. 的商標；IsleBar 與 Apple 無關。
+  </footer>
+</div>
+<script>
+// The film follows the visitor's light / dark setting; the language is this page's own.
+(function () {
+  var q = window.matchMedia('(prefers-color-scheme: dark)');
+  function apply() {
+    var t = q.matches ? 'dark' : 'light', v = document.getElementById('film');
+    var src = '../media/films/IsleBar-zht-' + t + '.mp4';
+    if (v && v.getAttribute('src') !== src) {
+      v.setAttribute('poster', '../media/poster-' + t + '.jpg'); v.setAttribute('src', src);
+      var p = v.play(); if (p && p.catch) p.catch(function () {});
+    }
+  }
+  apply(); if (q.addEventListener) q.addEventListener('change', apply);
+  // remember a language picked from the footer, so the English page doesn't send the visitor away again
+  var links = document.querySelectorAll('nav.langs a');
+  for (var i = 0; i < links.length; i++) links[i].addEventListener('click', function () { try { localStorage.setItem('islebar-lang', this.getAttribute('data-lang')); } catch (e) {} });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+{
+  "title": "IsleBar – 動態島風格的 Windows 11 工作列",
+  "description": "把 Windows 11 工作列搜尋框變成動態島風格的即時膠囊：Claude Code/Codex 完成通知、正在播放、番茄鐘、檔案搜尋。免費開源。",
+  "keywords": "Windows 動態島, Win11 工作列 動態島, Claude Code 通知, Claude Code 完成通知, Codex 通知, 工作列 美化, Windows 11 工作列, 番茄鐘 工作列, 工作列 音樂, 免費 開源 軟體",
+  "og_title": "IsleBar — 動態島風格的 Windows 11 工作列",
+  "og_description": "Claude Code 或 Codex 是在處理中、在等你，還是已經完成——在工作列上一眼就知道。還有音樂、計時器、檔案和下載。免費。",
+  "ld_description": "位於 Windows 11 工作列搜尋框的即時小島：Claude Code 與 Codex 狀態（處理中、等你回覆、已完成）、音樂、計時器、檔案搜尋和下載。",
+  "lede": "讓 Windows&nbsp;11 工作列活起來。在搜尋框裡向 Claude Code 或 Codex 提問——它在處理中、在等你，還是已經完成，一眼就知道。",
+  "cta_download": "下載 Windows 11 版",
+  "cta_github": "在 GitHub 上查看",
+  "tagline": "免費 · 開放原始碼（MIT） · 不需帳號 · 資料只留在你的電腦",
+  "film_label": "IsleBar 介紹影片：把螢幕擷取畫面拖到列上、長問題、Claude 在終端機裡工作、等你回覆、已完成、Codex、計時器、檔案、下載、通知、音樂、淺色與深色模式",
+  "works_title": "搭配使用更好用",
+  "or": "或",
+  "works_agents": "在列上提問，查看處理中 · 等你回覆 · 已完成。",
+  "everything_note": "voidtools，免費",
+  "works_everything": "按 Tab 即可瞬間搜尋電腦上的所有檔案。",
+  "works_browser_name": "任何網頁瀏覽器",
+  "works_browser": "網頁搜尋結果會在其中開啟。",
+  "works_os": "IsleBar 可在 Windows 11（x64）上執行，工作列搜尋需顯示為搜尋框或圖示。",
+  "agent_title": "AI 在做什麼，一眼就知道。",
+  "agent_sub": "處理中。等你回覆。已完成。搜尋框會告訴你——Claude Code 或 Codex 工作時，你大可去忙別的。橘色邊框代表它在等你回答，綠色代表已經完成。",
+  "hero_alt": "Claude 處理中 → 等你回覆（橘色）→ 已完成（綠色）",
+  "box_title": "一個框，其他的也通通有。",
+  "box_sub": "膠囊就待在搜尋框原本的位置，變的只有裡面的內容。",
+  "features": [
+    {
+      "media": "ask",
+      "alt": "在工作列中輸入問題",
+      "title": "在工作列直接提問。",
+      "body": "<p>點一下膠囊或按 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd>，輸入你想做的事，再按 <kbd>Enter</kbd>。終端機隨即開啟，Claude Code 或 Codex 帶著你的問題開始工作。</p><ul><li><kbd>↑</kbd> <kbd>↓</kbd> 可叫回最近 50 則提問。</li><li>長問題會在列上方預覽；<kbd>Shift</kbd>+<kbd>Enter</kbd> 開啟多行輸入框。</li><li>⌄ 按鈕可保留你的選項：工作階段、模型、思考強度、權限、遠端控制。</li></ul>"
+    },
+    {
+      "media": "drop",
+      "alt": "把螢幕擷取畫面拖到列上，附加到問題中",
+      "title": "拖入檔案，直接提問。",
+      "body": "<p>把螢幕擷取畫面或記錄檔拖到膠囊上——檔案路徑會填進輸入框，接著提問就好。</p><ul><li>在設定中指定 <i>拖放命令</i>，可讓拖放執行別的動作。</li><li>我自己的用法：透過我寫的一支小腳本，拖進來的檔案會經由 Telegram 直接傳到我的手機。</li></ul>"
+    },
+    {
+      "media": "codex",
+      "alt": "Codex 處理中 → 已完成",
+      "title": "Codex 也一樣。",
+      "body": "<p>Codex CLI 同樣顯示 <i>處理中 · 等你回覆 · 已完成</i>。它的標誌讀取自你電腦上已安裝的 Codex 擴充功能——IsleBar 本身不附帶任何 OpenAI 標誌。</p><ul><li><b style=\"color:var(--warn)\">橘色</b>——代理程式在問你問題。在終端機裡回答後，它會回到處理中。</li><li><b style=\"color:var(--ok)\">綠色</b>——已完成，並伴隨輕柔的提示音。會一直保留，直到你查看、點擊或關閉工作階段。</li><li>有多個工作階段？顯示最緊急的那一個，小圓點代表還有更多。</li><li><b style=\"color:var(--bad)\">紅色</b> — 方案用量已達上限（顯示重置時間），或因錯誤停止（顯示原因）。用量超過 90% 時會先提醒一次。</li></ul>"
+    },
+    {
+      "media": "timer",
+      "alt": "輸入 25m 啟動計時器",
+      "title": "計時器，敲幾下就好。",
+      "body": "<p>輸入 <code>25m</code>、<code>90s</code> 或 <code>1h 30m</code>，按 <kbd>Enter</kbd>。只有變動的數字會滾動。</p><ul><li>滑鼠移上去可暫停或停止。時間到會響起提示音，膠囊變成綠色。</li><li>按右鍵可使用快速計時器、<b>番茄鐘</b>（25 / 5 / 15 分鐘，可調整）和<b>碼錶</b>。</li></ul>"
+    },
+    {
+      "media": "files",
+      "alt": "工作列上方即時顯示的檔案搜尋結果",
+      "title": "所有檔案，瞬間找到。",
+      "body": "<p>按 <kbd>Tab</kbd> 開始輸入——所有磁碟中的相符結果隨打隨現，顯示在工作列上方，由 <a href=\"https://www.voidtools.com/\">Everything</a> 提供支援。</p><ul><li><kbd>Enter</kbd> 開啟，<kbd>Ctrl</kbd>+<kbd>Enter</kbd> 在檔案總管中顯示，<kbd>Esc</kbd> 返回。</li><li>再按一次 <kbd>Tab</kbd> 進行網頁搜尋，自動選用適合你語言的搜尋引擎。</li></ul>"
+    },
+    {
+      "media": "downloads",
+      "alt": "下載進行中 → 已完成",
+      "title": "下載進度，一目了然。",
+      "body": "<p>Chrome、Edge、Firefox 等瀏覽器的下載會在進行時顯示，完成後顯示檔名和<i>已完成</i>。點一下即可在檔案總管中查看該檔案。</p>"
+    },
+    {
+      "media": "music",
+      "alt": "正在播放，附專輯封面和控制按鈕",
+      "title": "音樂，染上專輯的顏色。",
+      "body": "<p>Spotify、瀏覽器裡的 YouTube 以及大多數播放器，都會顯示專輯封面、音量跳動條和專輯配色的進度條。滑鼠移上去即可 ⏮ ⏯ ⏭。</p><p>歌播到一半時代理程式完成了工作，綠色邊框會亮起，但不會擋住音樂。</p>"
+    },
+    {
+      "media": "notices",
+      "alt": "耳機已連線",
+      "title": "安靜的通知。",
+      "body": "<p>耳機、充電、網路、複製的文字、CPU 或記憶體負載過高、專注時段、行事曆活動、麥克風或相機使用中——每則都只顯示片刻，隨即讓開。沒有彈出視窗。</p><p>每種顏色只有一個意思：<b style=\"color:var(--warn)\">橘色</b>表示 AI 在等你回答，<b style=\"color:var(--bad)\">紅色</b>表示需要處理（電量不足，或 AI 因用量上限或錯誤而停止），<b style=\"color:var(--ok)\">綠色</b>表示事情已完成。勿擾期間不播放提示音，全螢幕遊戲和影片時也可以靜音。</p>"
+    },
+    {
+      "media": "theme",
+      "alt": "淺色和深色模式",
+      "title": "淺色與深色。",
+      "body": "<p>IsleBar 跟隨 Windows 佈景主題，切換的瞬間就會換色——不必重新啟動。</p>"
+    }
+  ],
+  "faq_title": "常見問題",
+  "faq": [
+    [
+      "免費嗎？",
+      "是的——以 MIT 授權免費開放原始碼。歡迎在 GitHub 上提供修正、想法和意見回饋。"
+    ],
+    [
+      "這是 Windows 版的動態島嗎？",
+      "概念相近——一個動態島風格的即時膠囊，但它位於 Windows 11 工作列搜尋框的位置，而不是浮在畫面上方。它是獨立應用程式，不是 Apple 的產品。"
+    ],
+    [
+      "在 Windows 上怎麼在 Claude Code 或 Codex 完成時收到通知？",
+      "安裝 IsleBar 並開啟 Claude Code / Codex 連結（安裝時勾選一項）。需要你回答時膠囊顯示橘色邊框，完成時顯示綠色邊框並播放提示音，不必一直盯著終端機。"
+    ],
+    [
+      "一定要裝 Claude Code 或 Codex 嗎？",
+      "只有 AI 功能需要——在列上提問，以及查看處理中 · 等你回覆 · 已完成。音樂、計時器、下載和通知不需要它們也能使用；檔案搜尋需要 Everything。"
+    ],
+    [
+      "會把我的資料傳到別的地方嗎？",
+      "不會。它只在你的電腦上執行。當機報告需由你主動開啟，且只包含錯誤、版本和基本裝置資訊——絕不包含視窗標題、檔案、提示詞或你的 IP。<a href=\"{{root}}privacy.html\">隱私權政策</a>。"
+    ],
+    [
+      "Windows 顯示「Windows 已保護您的電腦」。",
+      "請選擇 <i>其他資訊 → 仍要執行</i>。程式碼簽章正在準備中。"
+    ],
+    [
+      "要怎麼移除？",
+      "設定 › 應用程式 › IsleBar › 解除安裝。原本的搜尋框會恢復，IsleBar 的掛鉤也會一併移除(商店版請先在 IsleBar 設定中關閉 Claude Code / Codex 連線)。"
+    ],
+    [
+      "支援哪些語言？",
+      "English, 简体中文, 繁體中文, Français, Deutsch, Italiano, 日本語, 한국어, Português, Español——跟隨你的 Windows 語言。"
+    ]
+  ],
+  "help_title": "需要協助嗎？",
+  "help_sub": "遇到問題、有點子或疑問——歡迎在 GitHub 上或透過電子郵件告訴我們。",
+  "help_bug": "回報錯誤",
+  "help_idea": "建議功能",
+  "help_question": "提出問題",
+  "help_email": "電子郵件",
+  "help_sponsor": "贊助",
+  "privacy": "隱私權",
+  "footer_unofficial": "IsleBar 是非官方的個人業餘專案，與 Microsoft、Anthropic 或 OpenAI 均無關聯，亦未獲其背書。",
+  "footer_trademarks": "Windows 是 Microsoft 的商標。「Claude」和「Claude Code」是 Anthropic PBC 的商標；「OpenAI」和「Codex」是 OpenAI 的商標。列上顯示的標誌讀取自使用者電腦上已安裝的軟體。「Dynamic Island（動態島）」是 Apple Inc. 的商標；IsleBar 與 Apple 無關。"
+}

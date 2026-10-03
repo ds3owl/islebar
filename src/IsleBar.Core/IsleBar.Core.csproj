@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <!-- Platform-independent: does not call Windows APIs. The app (WinUI) and CLI reference this. -->
+    <AssemblyName>IsleBar.Core</AssemblyName>
+    <RootNamespace>IsleBar.Core</RootNamespace>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+</Project>

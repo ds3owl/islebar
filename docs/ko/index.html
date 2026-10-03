@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IsleBar – 다이나믹 아일랜드 스타일 윈도우 11 작업표시줄</title>
+<meta name="description" content="윈도우 11 작업표시줄 검색창을 다이나믹 아일랜드 스타일 라이브 바로. Claude Code·Codex 작업 완료 알림, 음악, 타이머, 파일 검색까지. 무료 오픈소스.">
+<meta name="keywords" content="윈도우 다이나믹 아일랜드, 다이내믹 아일랜드 윈도우, 클로드 코드 알림, Claude Code 작업 완료 알림, 코덱스 알림, 작업표시줄 꾸미기, 윈도우11 작업표시줄 커스터마이징, 뽀모도로 타이머 작업표시줄, 작업표시줄 음악, 무료 윈도우 앱">
+<link rel="canonical" href="https://ds3owl.github.io/islebar/ko/">
+<link rel="alternate" hreflang="en" href="https://ds3owl.github.io/islebar/">
+<link rel="alternate" hreflang="ko" href="https://ds3owl.github.io/islebar/ko/">
+<link rel="alternate" hreflang="ja" href="https://ds3owl.github.io/islebar/ja/">
+<link rel="alternate" hreflang="zh-Hans" href="https://ds3owl.github.io/islebar/zh/">
+<link rel="alternate" hreflang="zh-Hant" href="https://ds3owl.github.io/islebar/zh-tw/">
+<link rel="alternate" hreflang="fr" href="https://ds3owl.github.io/islebar/fr/">
+<link rel="alternate" hreflang="de" href="https://ds3owl.github.io/islebar/de/">
+<link rel="alternate" hreflang="it" href="https://ds3owl.github.io/islebar/it/">
+<link rel="alternate" hreflang="pt-BR" href="https://ds3owl.github.io/islebar/pt/">
+<link rel="alternate" hreflang="es" href="https://ds3owl.github.io/islebar/es/">
+<link rel="alternate" hreflang="x-default" href="https://ds3owl.github.io/islebar/">
+<meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#07070b" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:title" content="IsleBar — 윈도우 11 작업표시줄을 다이나믹 아일랜드처럼">
+<meta property="og:description" content="Claude Code나 Codex가 작업 중인지, 답을 기다리는지, 끝났는지 작업표시줄에서 바로 보세요. 음악, 타이머, 파일, 다운로드도. 무료.">
+<meta property="og:image" content="https://ds3owl.github.io/islebar/media/og.png">
+<meta property="og:url" content="https://ds3owl.github.io/islebar/ko/">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://ds3owl.github.io/islebar/media/og.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "IsleBar",
+  "operatingSystem": "Windows 11",
+  "applicationCategory": "UtilitiesApplication",
+  "inLanguage": "ko",
+  "description": "Windows 11 작업표시줄 검색창 자리의 살아 있는 섬: Claude Code·Codex 상태(작업 중, 답변 필요, 완료), 음악, 타이머, 파일 검색, 다운로드.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "license": "https://opensource.org/license/mit",
+  "downloadUrl": "https://github.com/ds3owl/islebar/releases/latest",
+  "image": "https://ds3owl.github.io/islebar/media/og.png",
+  "url": "https://ds3owl.github.io/islebar/ko/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "ko",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "무료인가요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "네 — MIT 라이선스의 무료 오픈소스입니다. 수정, 아이디어, 피드백은 GitHub에서 언제든 환영합니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "윈도우용 다이나믹 아일랜드인가요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "느낌은 그렇습니다 — 다이나믹 아일랜드 스타일의 살아 있는 바지만, 화면 위에 떠 있는 대신 Windows 11 작업표시줄의 검색창 자리에 들어갑니다. Apple 제품이 아닌 독립 앱입니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "윈도우에서 Claude Code나 Codex 작업이 끝나면 알림을 받을 수 있나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "네. IsleBar를 설치하고 Claude Code·Codex 연결(설치 화면 체크 하나)을 켜면, 답이 필요할 때는 주황 테두리, 끝나면 초록 테두리와 알림음으로 알려 줍니다. 터미널을 계속 지켜볼 필요가 없어요."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Claude Code나 Codex가 꼭 있어야 하나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "AI 기능(바에서 질문하기, 작업 중 · 답변 필요 · 완료 보기)에만 필요합니다. 음악, 타이머, 다운로드, 알림은 없어도 되고, 파일 검색에는 Everything이 필요합니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "제 데이터를 어디로 보내나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "아니요. PC 안에서만 동작합니다. 오류 보고는 직접 켰을 때만, 오류·버전과 기본 기기 정보만 보냅니다 — 창 제목, 파일, 질문 내용, IP는 절대 보내지 않습니다. 개인정보 처리방침."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "“Windows의 PC 보호” 창이 떠요.",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "추가 정보 → 실행을 누르세요. 코드 서명을 준비하고 있습니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "지우려면 어떻게 하나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "설정 › 앱 › IsleBar › 제거. 원래 검색창이 돌아오고 IsleBar의 연결(훅)도 지워집니다(스토어 버전은 제거 전에 IsleBar 설정에서 Claude Code / Codex 연결을 먼저 꺼 주세요)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "어떤 언어를 지원하나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "English, 简体中文, 繁體中文, Français, Deutsch, Italiano, 日本語, 한국어, Português, Español — Windows 언어를 따라갑니다."
+      }
+    }
+  ]
+}
+</script>
+
+<style>
+:root { --bg:#fbfbfd; --ink:#1d1d1f; --muted:#6e6e73; --card:#ffffff; --line:#e5e5ea; --accent:#0a66d6; --warn:#c77700; --ok:#1f8a3b; --bad:#c42b1c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#07070b; --ink:#f5f5f7; --muted:#a1a1aa; --card:#121219; --line:#26262f; --accent:#6aa8ff; --warn:#f0a541; --ok:#5fd17a; --bad:#ff5f57; } }
+:root[data-theme="dark"] { --bg:#07070b; --ink:#f5f5f7; --muted:#a1a1aa; --card:#121219; --line:#26262f; --accent:#6aa8ff; --warn:#f0a541; --ok:#5fd17a; --bad:#ff5f57; }
+* { box-sizing:border-box; }
+html, body { margin:0; background:var(--bg); color:var(--ink); }
+body { font-family:"Segoe UI Variable Display","Segoe UI",system-ui,-apple-system,sans-serif; line-height:1.55; }
+html:lang(ja) body { font-family:"Segoe UI Variable Display","Segoe UI","Yu Gothic UI","Meiryo","Hiragino Sans",system-ui,sans-serif; }
+html:lang(zh-Hans) body { font-family:"Segoe UI Variable Display","Segoe UI","Microsoft YaHei UI","PingFang SC",system-ui,sans-serif; }
+html:lang(zh-Hant) body { font-family:"Segoe UI Variable Display","Segoe UI","Microsoft JhengHei UI","PingFang TC",system-ui,sans-serif; }
+html:lang(ko) body { font-family:"Segoe UI Variable Display","Segoe UI","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif; word-break:keep-all; }
+a { color:var(--accent); text-decoration:none; }
+.wrap { max-width:1080px; margin:0 auto; padding:0 16px; }
+header { text-align:center; padding:72px 0 28px; }
+h1 { font-size:clamp(44px,8vw,88px); line-height:1; margin:0; letter-spacing:-.02em; }
+.lede { font-size:clamp(19px,2.6vw,26px); color:var(--muted); margin:16px auto 0; max-width:760px; }
+.cta { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin:30px 0 8px; }
+.btn { display:inline-block; padding:13px 26px; border-radius:999px; font-weight:600; font-size:17px; }
+.btn.primary { background:var(--ink); color:var(--bg); }
+.film video { background:var(--bg); }
+.btn.ghost { border:1px solid var(--line); color:var(--ink); }
+.small { color:var(--muted); font-size:14px; }
+.film { margin:34px auto 0; border-radius:18px; overflow:hidden; border:1px solid var(--line); background:#000; }
+.film video { display:block; width:100%; height:auto; }
+.need { margin:44px auto 0; background:var(--card); border:1px solid var(--line); border-left:4px solid var(--warn); border-radius:14px; padding:18px 22px; }
+.need h2 { font-size:19px; margin:0 0 8px; }
+.need ul { margin:0; padding-left:20px; }
+.need li { margin:4px 0; }
+section h2.big { font-size:clamp(30px,4.6vw,46px); text-align:center; margin:84px 0 8px; letter-spacing:-.01em; }
+section p.sub { text-align:center; color:var(--muted); margin:0 auto 30px; max-width:640px; font-size:18px; }
+.grid { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; }
+.tile { background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+.tile img { display:block; width:100%; height:auto; }
+.tile div { padding:14px 18px 18px; }
+.tile b { font-size:18px; }
+.tile span { display:block; color:var(--muted); font-size:15px; margin-top:2px; }
+.feats { display:flex; flex-direction:column; gap:56px; margin-top:12px; }
+.feat { display:grid; grid-template-columns:1.25fr 1fr; gap:36px; align-items:center; }
+.feat:nth-child(even) .media { order:2; }
+.feat .media { background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+.feat > * { min-width:0; }
+.feat .media img { display:block; width:100%; max-width:100%; height:auto; }
+.feat h3 { font-size:clamp(24px,3vw,32px); margin:0 0 10px; letter-spacing:-.01em; }
+.feat p { margin:0 0 10px; color:var(--muted); font-size:17px; }
+.feat ul { margin:0; padding-left:20px; color:var(--muted); font-size:16px; }
+.feat li { margin:5px 0; }
+kbd { font:600 13px/1 "Segoe UI",system-ui,sans-serif; border:1px solid var(--line); border-bottom-width:2px; border-radius:6px; padding:2px 6px; background:var(--card); color:var(--ink); }
+code { font-size:15px; background:var(--card); border:1px solid var(--line); border-radius:6px; padding:1px 5px; color:var(--ink); }
+@media (max-width:720px) { .feat { grid-template-columns:1fr; gap:16px; } .feat:nth-child(even) .media { order:0; } }
+.faq { max-width:760px; margin:0 auto; }
+.faq h3 { font-size:18px; margin:26px 0 4px; }
+.faq p { margin:0; color:var(--muted); }
+nav.langs { margin:0 0 14px; line-height:2; }
+nav.langs a, nav.langs b { white-space:nowrap; }
+footer { text-align:center; color:var(--muted); font-size:13px; padding:70px 0 40px; }
+@media (max-width:720px) { .grid { grid-template-columns:1fr; } header { padding-top:48px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>IsleBar</h1>
+    <p class="lede">살아 움직이는 Windows&nbsp;11 작업표시줄. 검색창에서 Claude Code나 Codex에게 물어보고 — 작업 중인지, 답을 기다리는지, 끝났는지 바로 확인하세요.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/ds3owl/islebar/releases/latest">Windows 11용 다운로드</a>
+      <a class="btn ghost" href="https://github.com/ds3owl/islebar">GitHub에서 보기</a>
+    </div>
+    <div class="small">무료 · 오픈소스(MIT) · 계정 필요 없음 · 개인정보는 PC 안에</div>
+    <div class="film">
+      <video id="film" src="../media/films/IsleBar-ko-light.mp4" poster="../media/poster-light.jpg" autoplay muted loop playsinline controls preload="metadata"
+             aria-label="IsleBar 소개 영상: 스크린샷을 바에 놓고 긴 질문, 터미널에서 일하는 Claude, 답변 필요, 완료, Codex, 타이머, 파일, 다운로드, 알림, 음악, 라이트·다크 모드"></video>
+    </div>
+  </header>
+
+  <div class="need">
+    <h2>같이 쓰면 좋은 프로그램</h2>
+    <ul>
+      <li><b><a href="https://code.claude.com/docs/en/overview">Claude Code</a></b> 또는 <b><a href="https://github.com/openai/codex">Codex CLI</a></b> — 바에서 질문하고 작업 중 · 답변 필요 · 완료를 볼 수 있습니다.</li>
+      <li><b><a href="https://www.voidtools.com/downloads/">Everything</a></b> (voidtools, 무료) — Tab으로 PC의 모든 파일을 바로 검색합니다.</li>
+      <li><b>웹 브라우저(아무거나)</b> — 웹 검색 결과가 열립니다.</li>
+    </ul>
+    <p class="small" style="margin:8px 0 0">IsleBar는 Windows 11(x64)에서, 작업표시줄 검색창이 상자나 아이콘으로 표시된 상태에서 동작합니다.</p>
+  </div>
+
+  <section>
+    <h2 class="big">AI가 지금 뭘 하는지, 한눈에.</h2>
+    <p class="sub">작업 중. 답변 필요. 완료. 검색창이 알려 주니 Claude Code나 Codex가 일하는 동안 다른 일을 하세요. 주황 테두리는 답을 기다린다는 뜻, 초록은 끝났다는 뜻입니다.</p>
+    <div class="tile"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/ko/hero-dark.webp"><img src="../media/ko/hero-light.webp" alt="Claude 작업 중 → 답변 필요(주황) → 완료(초록)" loading="lazy" width="960" height="540"></picture></div>
+  </section>
+
+  <section>
+    <h2 class="big">검색창 하나에, 나머지도 전부.</h2>
+    <p class="sub">바는 원래 검색창이 있던 자리에 그대로 있고, 안의 내용만 바뀝니다.</p>
+    <div class="feats">
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/ko/ask-dark.webp"><img src="../media/ko/ask-light.webp" alt="작업표시줄에 질문을 입력하는 모습" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>작업표시줄에서 바로 질문.</h3><p>바를 클릭하거나 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd>를 누르고, 할 일을 적고 <kbd>Enter</kbd>. 터미널이 열리고 Claude Code나 Codex가 그 질문으로 시작합니다.</p><ul><li><kbd>↑</kbd> <kbd>↓</kbd>로 최근 질문 50개를 다시 불러옵니다.</li><li>긴 질문은 바 위에 전체가 보이고, <kbd>Shift</kbd>+<kbd>Enter</kbd>로 여러 줄 작성 창이 열립니다.</li><li>⌄ 버튼에 세션, 모델, 생각 강도, 권한, 리모트 컨트롤 옵션을 둘 수 있습니다.</li></ul></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/ko/drop-dark.webp"><img src="../media/ko/drop-light.webp" alt="스크린샷을 바에 놓아 질문에 첨부하는 모습" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>파일을 놓고, 물어보세요.</h3><p>바에 화면 캡처나 로그를 놓으면 경로가 입력창에 들어가 바로 질문할 수 있습니다.</p><ul><li>설정에서 <i>끌어다 놓기 명령</i>을 지정하면 다른 기능으로 바꿀 수 있습니다.</li><li>제가 쓰는 방법: 직접 만든 작은 스크립트로, 놓은 파일이 텔레그램을 통해 바로 제 폰으로 갑니다.</li></ul></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/ko/codex-dark.webp"><img src="../media/ko/codex-light.webp" alt="Codex 작업 중 → 완료" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>Codex도 똑같이.</h3><p>Codex CLI도 똑같이 <i>작업 중 · 답변 필요 · 완료</i>가 표시됩니다. Codex 마크는 PC에 이미 설치된 Codex 확장에서 읽어 오며, IsleBar는 OpenAI 로고를 싣지 않습니다.</p><ul><li><b style="color:var(--warn)">주황</b> — AI가 무언가를 묻고 있습니다. 터미널에서 답하면 다시 작업 중으로 돌아갑니다.</li><li><b style="color:var(--ok)">초록</b> — 완료, 부드러운 알림음과 함께. 확인하거나 클릭하거나 세션을 닫을 때까지 남아 있습니다.</li><li>세션이 여러 개라면 가장 급한 것이 보이고, 작은 점이 더 있다는 뜻입니다.</li><li><b style="color:var(--bad)">빨강</b> — 요금제 사용 한도에 걸렸거나(초기화 시각 표시) 오류로 멈췄을 때, 그 이유까지. 사용량이 90%를 넘으면 미리 한 번 알려 줍니다.</li></ul></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/ko/timer-dark.webp"><img src="../media/ko/timer-light.webp" alt="25m을 입력해 타이머 시작" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>타이머는 두 번의 입력으로.</h3><p><code>25m</code>, <code>90s</code>, <code>1h 30m</code>처럼 입력하고 <kbd>Enter</kbd>. 바뀌는 숫자만 굴러갑니다.</p><ul><li>마우스를 올리면 일시정지와 정지. 끝나면 소리가 나고 바가 초록색이 됩니다.</li><li>우클릭하면 빠른 타이머, <b>뽀모도로</b>(25 / 5 / 15분, 조절 가능), <b>스톱워치</b>.</li></ul></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/files-dark.webp"><img src="../media/files-light.webp" alt="작업표시줄 위에 바로 뜨는 파일 검색 결과" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>모든 파일을, 바로.</h3><p><kbd>Tab</kbd>을 누르고 입력하면 모든 드라이브에서 찾은 파일이 입력하는 대로 작업표시줄 위에 나타납니다. <a href="https://www.voidtools.com/">Everything</a> 덕분입니다.</p><ul><li><kbd>Enter</kbd>는 열기, <kbd>Ctrl</kbd>+<kbd>Enter</kbd>는 파일 탐색기에서 보기, <kbd>Esc</kbd>는 원래 창으로.</li><li><kbd>Tab</kbd>을 한 번 더 누르면 언어에 맞는 검색 엔진으로 웹 검색.</li></ul></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/ko/downloads-dark.webp"><img src="../media/ko/downloads-light.webp" alt="다운로드 진행 → 완료" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>다운로드도 한눈에.</h3><p>크롬, 엣지, 파이어폭스 등 브라우저에서 받는 파일이 진행되는 동안 표시되고, 끝나면 파일 이름과 함께 <i>완료</i>가 뜹니다. 클릭하면 파일 탐색기에서 보여 줍니다.</p></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/music-dark.webp"><img src="../media/music-light.webp" alt="앨범 커버와 재생 버튼이 보이는 음악" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>앨범 색으로 물드는 음악.</h3><p>스포티파이, 브라우저의 유튜브 등 대부분의 플레이어가 앨범 커버, 소리 막대, 앨범 색 재생 바와 함께 보입니다. 마우스를 올리면 ⏮ ⏯ ⏭.</p><p>노래 도중 AI 작업이 끝나면 음악을 가리지 않고 초록 테두리만 켜집니다.</p></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/ko/notices-dark.webp"><img src="../media/ko/notices-light.webp" alt="헤드폰 연결 알림" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>조용한 알림.</h3><p>헤드폰, 충전, 인터넷, 복사, CPU·메모리 과부하, 집중 모드, 일정, 마이크·카메라 사용 — 잠깐 보였다가 비켜 줍니다. 팝업은 없습니다.</p><p>색은 하나의 뜻만: <b style="color:var(--warn)">주황</b>은 AI가 답을 기다릴 때, <b style="color:var(--bad)">빨강</b>은 손봐야 할 때(배터리 부족, 또는 사용 한도·오류로 AI가 멈췄을 때), <b style="color:var(--ok)">초록</b>은 무언가 끝났을 때. 방해 금지 중에는 알림음이 울리지 않고, 게임·영상 전체 화면에서도 끌 수 있습니다.</p></div></div>
+      <div class="feat"><div class="media"><picture><source media="(prefers-color-scheme: dark)" srcset="../media/theme-dark.webp"><img src="../media/theme-light.webp" alt="라이트·다크 모드" loading="lazy" width="800" height="450"></picture></div><div class="text"><h3>라이트와 다크.</h3><p>Windows 테마를 따라가며, 바꾸는 순간 다시 칠해집니다 — 재시작 없이.</p></div></div>
+    </div>
+  </section>
+
+  <section class="faq">
+    <h2 class="big">자주 묻는 질문</h2>
+    <h3>무료인가요?</h3><p>네 — MIT 라이선스의 무료 오픈소스입니다. 수정, 아이디어, 피드백은 GitHub에서 언제든 환영합니다.</p>
+    <h3>윈도우용 다이나믹 아일랜드인가요?</h3><p>느낌은 그렇습니다 — 다이나믹 아일랜드 스타일의 살아 있는 바지만, 화면 위에 떠 있는 대신 Windows 11 작업표시줄의 검색창 자리에 들어갑니다. Apple 제품이 아닌 독립 앱입니다.</p>
+    <h3>윈도우에서 Claude Code나 Codex 작업이 끝나면 알림을 받을 수 있나요?</h3><p>네. IsleBar를 설치하고 Claude Code·Codex 연결(설치 화면 체크 하나)을 켜면, 답이 필요할 때는 주황 테두리, 끝나면 초록 테두리와 알림음으로 알려 줍니다. 터미널을 계속 지켜볼 필요가 없어요.</p>
+    <h3>Claude Code나 Codex가 꼭 있어야 하나요?</h3><p>AI 기능(바에서 질문하기, 작업 중 · 답변 필요 · 완료 보기)에만 필요합니다. 음악, 타이머, 다운로드, 알림은 없어도 되고, 파일 검색에는 Everything이 필요합니다.</p>
+    <h3>제 데이터를 어디로 보내나요?</h3><p>아니요. PC 안에서만 동작합니다. 오류 보고는 직접 켰을 때만, 오류·버전과 기본 기기 정보만 보냅니다 — 창 제목, 파일, 질문 내용, IP는 절대 보내지 않습니다. <a href="../privacy.html">개인정보 처리방침</a>.</p>
+    <h3>“Windows의 PC 보호” 창이 떠요.</h3><p><i>추가 정보 → 실행</i>을 누르세요. 코드 서명을 준비하고 있습니다.</p>
+    <h3>지우려면 어떻게 하나요?</h3><p>설정 › 앱 › IsleBar › 제거. 원래 검색창이 돌아오고 IsleBar의 연결(훅)도 지워집니다(스토어 버전은 제거 전에 IsleBar 설정에서 Claude Code / Codex 연결을 먼저 꺼 주세요).</p>
+    <h3>어떤 언어를 지원하나요?</h3><p>English, 简体中文, 繁體中文, Français, Deutsch, Italiano, 日本語, 한국어, Português, Español — Windows 언어를 따라갑니다.</p>
+  </section>
+
+  <section class="faq">
+    <h2 class="big">도움이 필요하신가요?</h2>
+    <p class="sub">고장, 아이디어, 질문 — GitHub나 이메일로 알려 주세요.</p>
+    <div class="cta">
+      <a class="btn ghost" href="https://github.com/ds3owl/islebar/issues/new?template=bug_report.yml">버그 신고</a>
+      <a class="btn ghost" href="https://github.com/ds3owl/islebar/issues/new?template=feature_request.yml">기능 제안</a>
+      <a class="btn ghost" href="https://github.com/ds3owl/islebar/discussions">질문하기</a>
+      <a class="btn ghost" href="mailto:imchangwoo@outlook.com">이메일</a>
+<!--SPONSOR-->
+    </div>
+  </section>
+
+  <footer>
+    <nav class="langs" aria-label="Language"><a href="../" data-lang="en" hreflang="en">English</a> · <b>한국어</b> · <a href="../ja/" data-lang="ja" hreflang="ja">日本語</a> · <a href="../zh/" data-lang="zh" hreflang="zh-Hans">简体中文</a> · <a href="../zh-tw/" data-lang="zht" hreflang="zh-Hant">繁體中文</a> · <a href="../fr/" data-lang="fr" hreflang="fr">Français</a> · <a href="../de/" data-lang="de" hreflang="de">Deutsch</a> · <a href="../it/" data-lang="it" hreflang="it">Italiano</a> · <a href="../pt/" data-lang="pt" hreflang="pt-BR">Português</a> · <a href="../es/" data-lang="es" hreflang="es">Español</a></nav>
+    <a href="../privacy.html">개인정보 처리방침</a> ·
+    IsleBar는 비공식 개인 프로젝트로, Microsoft, Anthropic, OpenAI와 관련이 없으며 그들의 승인을 받지 않았습니다.<br>
+    Windows는 Microsoft의 상표입니다. “Claude”와 “Claude Code”는 Anthropic PBC, “OpenAI”와 “Codex”는 OpenAI의 상표입니다. 바에 보이는 로고는 사용자 PC에 이미 설치된 프로그램에서 읽어 옵니다. “Dynamic Island(다이나믹 아일랜드)”는 Apple Inc.의 상표이며, IsleBar는 Apple과 관련이 없습니다.
+  </footer>
+</div>
+<script>
+// The film follows the visitor's light / dark setting; the language is this page's own.
+(function () {
+  var q = window.matchMedia('(prefers-color-scheme: dark)');
+  function apply() {
+    var t = q.matches ? 'dark' : 'light', v = document.getElementById('film');
+    var src = '../media/films/IsleBar-ko-' + t + '.mp4';
+    if (v && v.getAttribute('src') !== src) {
+      v.setAttribute('poster', '../media/poster-' + t + '.jpg'); v.setAttribute('src', src);
+      var p = v.play(); if (p && p.catch) p.catch(function () {});
+    }
+  }
+  apply(); if (q.addEventListener) q.addEventListener('change', apply);
+  // remember a language picked from the footer, so the English page doesn't send the visitor away again
+  var links = document.querySelectorAll('nav.langs a');
+  for (var i = 0; i < links.length; i++) links[i].addEventListener('click', function () { try { localStorage.setItem('islebar-lang', this.getAttribute('data-lang')); } catch (e) {} });
+})();
+</script>
+</body>
+</html>

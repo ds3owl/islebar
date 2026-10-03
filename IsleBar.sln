@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8F31BF80-932E-4B16-BBF4-D392299F9B80}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IsleBar.Core", "src\IsleBar.Core\IsleBar.Core.csproj", "{FDDBF1D1-29A6-46AF-9A2C-7682CF1DF895}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IsleBar.Cli", "src\IsleBar.Cli\IsleBar.Cli.csproj", "{C21A2F1D-8930-4C8A-B605-19ACEA35BD14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IsleBar.App", "src\IsleBar.App\IsleBar.App.csproj", "{4C7AF5CF-C5FF-407D-A2B6-75ED869AB824}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B5228EC9-41A6-4A02-9A70-81F8AA822180}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IsleBar.Core.Tests", "tests\IsleBar.Core.Tests\IsleBar.Core.Tests.csproj", "{15ABB2C0-755E-420A-A215-4B7B90D91A91}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FDDBF1D1-29A6-46AF-9A2C-7682CF1DF895}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDDBF1D1-29A6-46AF-9A2C-7682CF1DF895}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDDBF1D1-29A6-46AF-9A2C-7682CF1DF895}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDDBF1D1-29A6-46AF-9A2C-7682CF1DF895}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C21A2F1D-8930-4C8A-B605-19ACEA35BD14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C21A2F1D-8930-4C8A-B605-19ACEA35BD14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C21A2F1D-8930-4C8A-B605-19ACEA35BD14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C21A2F1D-8930-4C8A-B605-19ACEA35BD14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C7AF5CF-C5FF-407D-A2B6-75ED869AB824}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C7AF5CF-C5FF-407D-A2B6-75ED869AB824}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C7AF5CF-C5FF-407D-A2B6-75ED869AB824}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C7AF5CF-C5FF-407D-A2B6-75ED869AB824}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15ABB2C0-755E-420A-A215-4B7B90D91A91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15ABB2C0-755E-420A-A215-4B7B90D91A91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15ABB2C0-755E-420A-A215-4B7B90D91A91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15ABB2C0-755E-420A-A215-4B7B90D91A91}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FDDBF1D1-29A6-46AF-9A2C-7682CF1DF895} = {8F31BF80-932E-4B16-BBF4-D392299F9B80}
+		{C21A2F1D-8930-4C8A-B605-19ACEA35BD14} = {8F31BF80-932E-4B16-BBF4-D392299F9B80}
+		{4C7AF5CF-C5FF-407D-A2B6-75ED869AB824} = {8F31BF80-932E-4B16-BBF4-D392299F9B80}
+		{15ABB2C0-755E-420A-A215-4B7B90D91A91} = {B5228EC9-41A6-4A02-9A70-81F8AA822180}
+	EndGlobalSection
+EndGlobal

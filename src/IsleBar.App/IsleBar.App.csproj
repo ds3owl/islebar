@@ -1,0 +1,74 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    WinUI 3 (Windows App SDK) app. **It cannot be built on Linux.**
+    So when not on Windows:
+      - drop TargetFramework to a net8.0 library, and
+      - remove all sources, XAML and WinUI packages from compilation,
+    so restoring/building the solution produces nothing for this project (= conditional exclusion).
+    Opened on Windows, it is a real WinUI 3 app project as-is.
+    The code in this folder is **a draft that has never been built**. See docs/PHASE0_CHECKLIST.md.
+  -->
+
+  <PropertyGroup Condition="'$(IsWindowsHost)' == 'true'">
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.26100.0</TargetFramework>
+    <!-- Program.cs owns Main directly (to hand exit codes to the supervisor) → turn off the XAML-generated Main -->
+    <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <UseWinUI>true</UseWinUI>
+    <EnableMsixTooling>true</EnableMsixTooling>
+    <WindowsPackageType>None</WindowsPackageType>
+    <!--
+      Release bundles the runtime. Debug uses the installed .NET and Windows App Runtime —
+      on a PC with Smart App Control on, the unsigned IsleBar.App.exe is blocked (measured on PC 09-29),
+      so we test by launching IsleBar.App.dll with the signed dotnet.exe (run_dev.ps1).
+    -->
+    <WindowsAppSDKSelfContained Condition="'$(Configuration)' == 'Release'">true</WindowsAppSDKSelfContained>
+    <SelfContained Condition="'$(Configuration)' == 'Release'">true</SelfContained>
+    <SelfContained Condition="'$(Configuration)' != 'Release'">false</SelfContained>
+    <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!-- SetParent onto the taskbar requires the same DPI mode as Explorer (PerMonitorV2). See app.manifest. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationIcon>Assets\islebar.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(IsWindowsHost)' != 'true'">
+    <OutputType>Library</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <NoWarn>$(NoWarn);CS2008</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(IsWindowsHost)' == 'true'">
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250602001" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.5" />
+    <!--
+      UIA uses COM IUIAutomation (WPF's System.Windows.Automation does not exist in WinUI).
+      Same API as the UIAutomationCore.dll / CUIAutomation used by the Python version.
+      Item to check in phase 0: whether the version matches.
+    -->
+    <PackageReference Include="Interop.UIAutomationClient" Version="10.19041.0" />
+    <!-- opt-in crash reports (10-01) — see Interop/CrashReports.cs and docs/privacy.html -->
+    <PackageReference Include="Sentry" Version="6.11.1" />
+    <ProjectReference Include="..\IsleBar.Core\IsleBar.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(IsWindowsHost)' != 'true'">
+    <!-- Linux: exclude everything from compilation -->
+    <Compile Remove="**\*.cs" />
+    <None Remove="**\*.xaml" />
+    <Page Remove="**\*.xaml" />
+    <ApplicationDefinition Remove="**\*.xaml" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(IsWindowsHost)' == 'true'">
+    <!-- Font: Pretendard (SIL OFL 1.1, redistributable — Assets\Fonts\Pretendard-OFL.txt). English and Korean in one font (Toss-like feel) -->
+    <Content Include="Assets\Fonts\*" CopyToOutputDirectory="PreserveNewest" />
+    <!-- File search: voidtools Everything SDK (Everything64.dll, redistribution allowed). The user installs and runs Everything itself -->
+    <Content Include="everything_sdk\Everything64.dll" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Explorer module that makes the real search box transparent (C++, native\IsleBarTap — rebuild with build.cmd) -->
+    <Content Include="..\..\native\IsleBarTap\dist\IsleBarTap.dll" Link="native\IsleBarTap.dll" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

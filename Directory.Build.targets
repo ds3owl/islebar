@@ -1,0 +1,11 @@
+<Project>
+  <!-- Sentry's package writes the build machine's project folder (C:\Users\<name>\...) into the assembly as
+       Sentry.ProjectDirectory, with no switch to turn it off. It is only used to shorten stack frame paths, and IsleBar sends
+       file names only (CrashReports.Scrub), so an empty target of the same name — imported after the package's — replaces it (10-03). -->
+  <Target Name="WriteSentryAttributes" />
+
+  <!-- The NuGet package folder (C:\Users\<name>\.nuget\packages) too — only known here, after the restore props are in. -->
+  <PropertyGroup Condition="'$(NuGetPackageRoot)' != ''">
+    <PathMap>$(PathMap),$([System.IO.Path]::GetFullPath('$(NuGetPackageRoot)'))=/_nuget/</PathMap>
+  </PropertyGroup>
+</Project>

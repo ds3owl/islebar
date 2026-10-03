@@ -1,0 +1,127 @@
+{
+  "title": "IsleBar – Dynamic-Island-Stil für die Windows-11-Taskleiste",
+  "description": "Kostenlos & Open Source: eine Live-Leiste im Dynamic-Island-Stil in der Windows-11-Taskleiste. Claude-Code/Codex-Status, Musik, Timer, Dateisuche.",
+  "keywords": "Dynamic Island Windows 11, Windows 11 Taskleiste anpassen, Claude Code Benachrichtigung, Codex CLI, Taskleiste Widget, Pomodoro Timer Taskleiste, Now Playing Taskleiste, kostenlose Software",
+  "og_title": "IsleBar — eine Leiste im Dynamic-Island-Stil für Windows 11",
+  "og_description": "Sieh direkt in der Taskleiste, ob Claude Code oder Codex arbeitet, dich braucht oder fertig ist. Dazu Musik, Timer, Dateien und Downloads. Kostenlos.",
+  "ld_description": "Eine lebendige Insel im Suchfeld der Windows-11-Taskleiste: Status von Claude Code und Codex (arbeitet, braucht dich, fertig), Musik, Timer, Dateisuche und Downloads.",
+  "lede": "Deine Windows&nbsp;11-Taskleiste, lebendig. Frag Claude Code oder Codex direkt im Suchfeld — und sieh, ob es arbeitet, dich braucht oder fertig ist.",
+  "cta_download": "Für Windows 11 herunterladen",
+  "cta_github": "Auf GitHub ansehen",
+  "tagline": "Kostenlos · Open Source (MIT) · Kein Konto · Privat von Anfang an",
+  "film_label": "IsleBar-Film: ein Screenshot auf die Leiste gezogen, eine lange Frage, Claude arbeitet im Terminal, braucht dich, fertig, Codex, Timer, Dateien, Downloads, Hinweise, Musik, heller und dunkler Modus",
+  "works_title": "Passt perfekt zu",
+  "or": "oder",
+  "works_agents": "frag direkt aus der Leiste und sieh: arbeitet · braucht dich · fertig.",
+  "everything_note": "voidtools, kostenlos",
+  "works_everything": "drück Tab und durchsuche sofort jede Datei auf deinem PC.",
+  "works_browser_name": "Jeder Webbrowser",
+  "works_browser": "dort öffnen sich die Ergebnisse der Websuche.",
+  "works_os": "IsleBar läuft unter Windows 11 (x64), wenn das Suchfeld der Taskleiste als Feld oder Symbol angezeigt wird.",
+  "agent_title": "Wisse, wo dein Agent steht.",
+  "agent_sub": "Arbeitet. Braucht dich. Fertig. Das Suchfeld sagt es dir — so kannst du wegschauen, während Claude Code oder Codex arbeitet. Ein orangefarbener Rand heißt: Es wartet auf deine Antwort. Grün heißt: fertig.",
+  "hero_alt": "Claude arbeitet, braucht dich (orange), dann fertig (grün)",
+  "box_title": "Ein Feld. Und alles andere auch.",
+  "box_sub": "Die Pille bleibt, wo das Suchfeld immer war. Nur der Inhalt ändert sich.",
+  "features": [
+    {
+      "media": "ask",
+      "alt": "Eine Frage in die Taskleiste tippen",
+      "title": "Frag direkt aus der Taskleiste.",
+      "body": "<p>Klick auf die Pille oder drück <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd>, tipp ein, was erledigt werden soll, und drück <kbd>Enter</kbd>. Ein Terminal öffnet sich und startet Claude Code oder Codex mit deiner Frage.</p><ul><li><kbd>↑</kbd> <kbd>↓</kbd> holen deine letzten 50 Fragen zurück.</li><li>Lange Fragen erscheinen als Vorschau über der Leiste; <kbd>Shift</kbd>+<kbd>Enter</kbd> öffnet ein mehrzeiliges Feld.</li><li>Der ⌄-Button merkt sich deine Optionen: Sitzung, Modell, Aufwand, Berechtigungen, Fernsteuerung.</li></ul>"
+    },
+    {
+      "media": "drop",
+      "alt": "Ein Screenshot, auf die Leiste gezogen und an die Frage angehängt",
+      "title": "Datei ablegen, dann fragen.",
+      "body": "<p>Zieh einen Screenshot oder ein Log auf die Pille — der Pfad landet im Feld, bereit für deine Frage.</p><ul><li>Leg in den Einstellungen einen <i>Ablege-Befehl</i> fest, damit das Ablegen etwas anderes tut.</li><li>So nutze ich es: Abgelegte Dateien gehen über ein kleines eigenes Skript per Telegram direkt auf mein Handy.</li></ul>"
+    },
+    {
+      "media": "codex",
+      "alt": "Codex arbeitet, dann fertig",
+      "title": "Codex auch.",
+      "body": "<p>Codex CLI bekommt genau dasselbe <i>arbeitet · braucht dich · fertig</i>. Das Logo wird aus der Codex-Erweiterung gelesen, die schon auf deinem PC ist — IsleBar liefert kein OpenAI-Logo mit.</p><ul><li><b style=\"color:var(--warn)\">Orange</b> — der Agent fragt dich etwas. Antworte im Terminal, und er arbeitet weiter.</li><li><b style=\"color:var(--ok)\">Grün</b> — fertig, mit einem sanften Ton. Bleibt, bis du hinschaust, klickst oder die Sitzung schließt.</li><li>Mehrere Sitzungen? Die dringendste wird angezeigt, ein kleiner Punkt zeigt, dass es noch mehr gibt.</li><li><b style=\"color:var(--bad)\">Rot</b> — das Nutzungslimit des Tarifs ist erreicht (mit Uhrzeit des Zurücksetzens) oder ein Durchlauf brach mit einem Fehler ab, samt Grund. Bei 90 % eines Zeitfensters kommt vorher ein Hinweis.</li></ul>"
+    },
+    {
+      "media": "timer",
+      "alt": "25m tippen, um einen Timer zu starten",
+      "title": "Timer mit zwei Tastendrücken.",
+      "body": "<p>Tipp <code>25m</code>, <code>90s</code> oder <code>1h 30m</code> und drück <kbd>Enter</kbd>. Nur die Ziffern, die sich ändern, rollen weiter.</p><ul><li>Mit der Maus darüber: Pause und Stopp. Am Ende ertönt ein Ton und die Pille wird grün.</li><li>Rechtsklick für Schnell-Timer, <b>Pomodoro</b> (25 / 5 / 15 Minuten, anpassbar) und eine <b>Stoppuhr</b>.</li></ul>"
+    },
+    {
+      "media": "files",
+      "alt": "Sofortige Dateisuche über der Taskleiste",
+      "title": "Jede Datei, sofort.",
+      "body": "<p>Drück <kbd>Tab</kbd> und tipp los — Treffer von allen Laufwerken erscheinen schon beim Tippen über der Taskleiste, angetrieben von <a href=\"https://www.voidtools.com/\">Everything</a>.</p><ul><li><kbd>Enter</kbd> öffnet, <kbd>Ctrl</kbd>+<kbd>Enter</kbd> zeigt die Datei im Explorer, <kbd>Esc</kbd> bringt dich zurück.</li><li>Noch einmal <kbd>Tab</kbd> für die Websuche, mit einer Suchmaschine passend zu deiner Sprache.</li></ul>"
+    },
+    {
+      "media": "downloads",
+      "alt": "Ein Download läuft, dann fertig",
+      "title": "Downloads auf einen Blick.",
+      "body": "<p>Downloads aus Chrome, Edge, Firefox und anderen Browsern werden angezeigt, solange sie laufen, und am Ende mit <i>Fertig</i> und dem Dateinamen. Ein Klick zeigt die Datei im Explorer.</p>"
+    },
+    {
+      "media": "music",
+      "alt": "Aktuelle Wiedergabe mit Albumcover und Steuerung",
+      "title": "Musik in den Farben des Albums.",
+      "body": "<p>Spotify, YouTube im Browser und die meisten Player erscheinen mit Albumcover, Pegelbalken und einer Fortschrittslinie in der Farbe des Albums. Mit der Maus darüber: ⏮ ⏯ ⏭.</p><p>Wird ein Agent mitten im Song fertig, leuchtet der grüne Rand auf, ohne die Musik zu verdecken.</p>"
+    },
+    {
+      "media": "notices",
+      "alt": "Kopfhörer verbunden",
+      "title": "Leise Hinweise.",
+      "body": "<p>Kopfhörer, Laden, Internet, kopierter Text, hohe CPU- oder Speicherlast, Fokussitzungen, Termine, Mikrofon oder Kamera in Benutzung — alles erscheint kurz und macht dann wieder Platz. Keine Pop-ups.</p><p>Jede Farbe hat genau eine Bedeutung: <b style=\"color:var(--warn)\">Orange</b>, wenn ein Agent auf deine Antwort wartet, <b style=\"color:var(--bad)\">Rot</b>, wenn etwas zu tun ist — Akku fast leer oder ein Agent wegen Nutzungslimit oder Fehler gestoppt — und <b style=\"color:var(--ok)\">Grün</b>, wenn etwas fertig ist. Bei „Nicht stören“ bleibt der Ton aus, und bei Spielen und Videos im Vollbild lässt er sich stummschalten.</p>"
+    },
+    {
+      "media": "theme",
+      "alt": "Heller und dunkler Modus",
+      "title": "Hell und dunkel.",
+      "body": "<p>IsleBar folgt deinem Windows-Design und färbt sich sofort um, wenn du wechselst — ganz ohne Neustart.</p>"
+    }
+  ],
+  "faq_title": "Fragen",
+  "faq": [
+    [
+      "Ist es kostenlos?",
+      "Ja — kostenlos und Open Source unter der MIT-Lizenz. Fixes, Ideen und Feedback sind auf GitHub jederzeit willkommen."
+    ],
+    [
+      "Ist das eine Dynamic Island für Windows?",
+      "Im Geist schon: eine Live-Leiste im Dynamic-Island-Stil, aber sie sitzt in der Windows-11-Taskleiste, wo das Suchfeld war, statt über dem Bildschirm zu schweben. Eine eigenständige App, kein Apple-Produkt."
+    ],
+    [
+      "Wie werde ich unter Windows benachrichtigt, wenn Claude Code oder Codex fertig ist?",
+      "IsleBar installieren und Claude Code / Codex verbinden (ein Häkchen im Setup). Die Leiste wird orange, wenn der Agent deine Antwort braucht, und grün mit einem leisen Ton, wenn er fertig ist."
+    ],
+    [
+      "Brauche ich Claude Code oder Codex?",
+      "Nur für den KI-Teil — Fragen aus der Leiste und die Anzeige arbeitet · braucht dich · fertig. Musik, Timer, Downloads und Hinweise funktionieren auch ohne; die Dateisuche braucht Everything."
+    ],
+    [
+      "Werden meine Daten irgendwohin gesendet?",
+      "Nein. Es läuft auf deinem PC. Absturzberichte sind optional und enthalten nur den Fehler, die Versionen und Basisdaten zum Gerät — niemals Fenstertitel, Dateien, Prompts oder deine IP. <a href=\"{{root}}privacy.html\">Datenschutzerklärung</a>."
+    ],
+    [
+      "Windows meldet „Der Computer wurde durch Windows geschützt“.",
+      "Wähle <i>Weitere Informationen → Trotzdem ausführen</i>. Die Code-Signierung ist in Arbeit."
+    ],
+    [
+      "Wie entferne ich es?",
+      "Einstellungen › Apps › IsleBar › Deinstallieren. Das normale Suchfeld kehrt zurück, und die Hooks von IsleBar werden entfernt (Store-Version: zuerst die Claude-Code-/Codex-Verbindung in den IsleBar-Einstellungen ausschalten)."
+    ],
+    [
+      "Welche Sprachen?",
+      "English, 简体中文, 繁體中文, Français, Deutsch, Italiano, 日本語, 한국어, Português, Español — IsleBar folgt deiner Windows-Sprache."
+    ]
+  ],
+  "help_title": "Brauchst du Hilfe?",
+  "help_sub": "Etwas kaputt, eine Idee oder eine Frage — sag es uns auf GitHub oder per E-Mail.",
+  "help_bug": "Fehler melden",
+  "help_idea": "Funktion vorschlagen",
+  "help_question": "Frage stellen",
+  "help_email": "E-Mail",
+  "help_sponsor": "Unterstützen",
+  "privacy": "Datenschutz",
+  "footer_unofficial": "IsleBar ist ein inoffizielles Hobbyprojekt und steht in keiner Verbindung zu Microsoft, Anthropic oder OpenAI und wird von diesen nicht unterstützt.",
+  "footer_trademarks": "Windows ist eine Marke von Microsoft. „Claude“ und „Claude Code“ sind Marken von Anthropic PBC; „OpenAI“ und „Codex“ sind Marken von OpenAI. Die in der Leiste angezeigten Logos werden aus Software gelesen, die bereits auf dem PC des Nutzers installiert ist. „Dynamic Island“ ist eine Marke von Apple Inc.; IsleBar steht in keiner Verbindung zu Apple."
+}

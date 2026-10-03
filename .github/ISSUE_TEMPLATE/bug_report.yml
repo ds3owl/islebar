@@ -1,0 +1,52 @@
+name: Report a bug
+description: Something doesn't work the way it should.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time! Plain words are fine — you don't need to be technical.
+        IsleBar never sends anything by itself; only what you write here is shared.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+      placeholder: "I typed 25m and pressed Enter, but no timer started."
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: IsleBar version
+      description: Windows Settings › Apps › Installed apps › IsleBar shows it (or look at the setup file name).
+      placeholder: "0.1.0"
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part?
+      options:
+        - Asking Claude Code / Codex
+        - Working · needs you · done on the bar
+        - Music
+        - Timers / pomodoro / stopwatch
+        - File search
+        - Web search
+        - Downloads / file drop
+        - Notifications / notices
+        - Install / uninstall / start-up
+        - Look and feel
+        - Something else
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      description: Settings › System › About (for example "Windows 11 24H2").
+  - type: textarea
+    id: log
+    attributes:
+      label: Log (optional)
+      description: |
+        `%LOCALAPPDATA%\IsleBar\logs\islebar.log` — the last 50 lines are usually enough.
+        **Look through it before pasting:** it can contain window titles and file names.
+      render: text

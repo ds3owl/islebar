@@ -1,0 +1,17 @@
+﻿<Project>
+  <PropertyGroup>
+    <LangVersion>12.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <NeutralLanguage>en</NeutralLanguage>
+    <!-- Switch that skips the WinUI 3 project on Linux. true on Windows. -->
+    <IsWindowsHost Condition="'$(OS)' == 'Windows_NT'">true</IsWindowsHost>
+    <IsWindowsHost Condition="'$(IsWindowsHost)' == ''">false</IsWindowsHost>
+    <!-- Shipped binaries don't carry the build machine's folders (C:\Users\<name>\...) or the private repo's commit id:
+         source paths become /_/ and the version is just the number (10-03). -->
+    <PathMap>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))=/_/</PathMap>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+  </PropertyGroup>
+</Project>

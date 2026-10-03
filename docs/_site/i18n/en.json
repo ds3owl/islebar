@@ -1,0 +1,127 @@
+{
+  "title": "IsleBar – Dynamic Island-style taskbar for Claude Code",
+  "description": "Free, open-source Windows 11 app: a Dynamic Island-style live bar in your taskbar. Claude Code & Codex status and done alerts, music, timers, file search.",
+  "keywords": "dynamic island for windows, windows dynamic island, windows 11 taskbar, claude code notification windows, claude code notify when done, codex cli notification, ai agent done notification, taskbar widget windows 11, now playing taskbar, pomodoro taskbar windows",
+  "og_title": "IsleBar — a Dynamic Island-style bar for the Windows 11 taskbar",
+  "og_description": "See when Claude Code or Codex is working, needs you, or is done — right in the taskbar. Music, timers, files and downloads too. Free.",
+  "ld_description": "A live island in the Windows 11 taskbar search box: Claude Code and Codex status (working, needs you, done), music, timers, file search and downloads.",
+  "lede": "Your Windows&nbsp;11 taskbar, alive. Ask Claude Code or Codex from the search box — and see when it is working, needs you, or is done.",
+  "cta_download": "Download for Windows 11",
+  "cta_github": "View on GitHub",
+  "tagline": "Free · Open source (MIT) · No account · Private by default",
+  "film_label": "IsleBar film: a screenshot dropped on the bar, a long question, Claude working in a terminal, needs you, done, Codex, timers, files, downloads, notifications, music, light and dark mode",
+  "works_title": "Works great with",
+  "or": "or",
+  "works_agents": "ask from the bar and see working · needs you · done.",
+  "everything_note": "voidtools, free",
+  "works_everything": "press Tab to search every file on your PC instantly.",
+  "works_browser_name": "Any web browser",
+  "works_browser": "web search results open there.",
+  "works_os": "IsleBar runs on Windows 11 (x64), with the taskbar search box shown as a box or an icon.",
+  "agent_title": "Know where your agent is.",
+  "agent_sub": "Working. Needs you. Done. The search box tells you — so you can look away while Claude Code or Codex works. An orange edge means it is waiting for your answer; green means it has finished.",
+  "hero_alt": "Claude working, then needs you (orange), then done (green)",
+  "box_title": "One box. Everything else, too.",
+  "box_sub": "The pill stays where the search box always was. Only what is inside changes.",
+  "features": [
+    {
+      "media": "ask",
+      "alt": "Typing a question into the taskbar",
+      "title": "Ask from the taskbar.",
+      "body": "<p>Click the pill or press <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd>, type what you want done, and press <kbd>Enter</kbd>. A terminal opens and runs Claude Code or Codex with your question.</p><ul><li><kbd>↑</kbd> <kbd>↓</kbd> bring back your last 50 questions.</li><li>Long questions get a preview above the bar; <kbd>Shift</kbd>+<kbd>Enter</kbd> opens a multi-line box.</li><li>The ⌄ button keeps your options: session, model, effort, permissions, remote control.</li></ul>"
+    },
+    {
+      "media": "drop",
+      "alt": "A screenshot dropped on the bar, attached to the question",
+      "title": "Drop a file, then ask.",
+      "body": "<p>Drop a screenshot or a log on the pill — its path lands in the box, ready for your question.</p><ul><li>Set a <i>Drop command</i> in Settings to make dropping do something else.</li><li>How I use it: dropped files go straight to my phone over Telegram, through a small script of my own.</li></ul>"
+    },
+    {
+      "media": "codex",
+      "alt": "Codex working, then done",
+      "title": "Codex, too.",
+      "body": "<p>Codex CLI gets exactly the same <i>working · needs you · done</i>. Its mark is read from the Codex extension already on your PC — IsleBar ships no OpenAI logo.</p><ul><li><b style=\"color:var(--warn)\">Orange</b> — the agent is asking you something. Answer in the terminal and it goes back to working.</li><li><b style=\"color:var(--ok)\">Green</b> — done, with a soft chime. It stays until you look, click, or close the session.</li><li>Several sessions? The most urgent one shows, and a small dot means there is more.</li><li><b style=\"color:var(--bad)\">Red</b> — the plan's usage limit was hit (with the time it resets) or a turn stopped on an error, and why. At 90% of a usage window you get a heads-up first.</li></ul>"
+    },
+    {
+      "media": "timer",
+      "alt": "Type 25m to start a timer",
+      "title": "Timers in two keystrokes.",
+      "body": "<p>Type <code>25m</code>, <code>90s</code> or <code>1h 30m</code> and press <kbd>Enter</kbd>. Only the digits that change roll over.</p><ul><li>Hover for pause and stop. When it ends you hear a sound and the pill turns green.</li><li>Right-click for quick timers, <b>Pomodoro</b> (25 / 5 / 15 minutes, adjustable) and a <b>Stopwatch</b>.</li></ul>"
+    },
+    {
+      "media": "files",
+      "alt": "Instant file search above the taskbar",
+      "title": "Every file, instantly.",
+      "body": "<p>Press <kbd>Tab</kbd> and type — matches from every drive appear above the taskbar as you type, powered by <a href=\"https://www.voidtools.com/\">Everything</a>.</p><ul><li><kbd>Enter</kbd> opens, <kbd>Ctrl</kbd>+<kbd>Enter</kbd> shows it in File Explorer, <kbd>Esc</kbd> takes you back.</li><li><kbd>Tab</kbd> again for web search, with an engine that fits your language.</li></ul>"
+    },
+    {
+      "media": "downloads",
+      "alt": "A download in progress, then done",
+      "title": "Downloads, at a glance.",
+      "body": "<p>Downloads from Chrome, Edge, Firefox and other browsers show while they run, and <i>Done</i> with the file name when they finish. Click to see the file in File Explorer.</p>"
+    },
+    {
+      "media": "music",
+      "alt": "Now playing with album art and controls",
+      "title": "Music, tinted to the album.",
+      "body": "<p>Spotify, YouTube in your browser and most players show with album art, level bars and a progress line in the album's colour. Hover for ⏮ ⏯ ⏭.</p><p>If an agent finishes mid-song, the green border lights up without hiding the music.</p>"
+    },
+    {
+      "media": "notices",
+      "alt": "Headphones connected",
+      "title": "Quiet notices.",
+      "body": "<p>Headphones, charging, internet, copied text, heavy CPU or memory, focus sessions, calendar events, microphone or camera in use — each shows for a moment, then gets out of the way. No pop-ups.</p><p>Colours mean one thing each: <b style=\"color:var(--warn)\">orange</b> when an agent needs your answer, <b style=\"color:var(--bad)\">red</b> when something needs fixing — a low battery, or an agent stopped by its usage limit or an error — and <b style=\"color:var(--ok)\">green</b> when something is done. The chime stays quiet during Do Not Disturb, and can be muted over full-screen games and videos.</p>"
+    },
+    {
+      "media": "theme",
+      "alt": "Light and dark mode",
+      "title": "Light and dark.",
+      "body": "<p>IsleBar follows your Windows theme and recolours itself the moment you switch — no restart.</p>"
+    }
+  ],
+  "faq_title": "Questions",
+  "faq": [
+    [
+      "Is it free?",
+      "Yes — free and open source under the MIT License. Fixes, ideas and feedback are welcome on GitHub."
+    ],
+    [
+      "Is this a Dynamic Island for Windows?",
+      "In spirit, yes — a live, Dynamic Island-style bar, but it lives in the Windows 11 taskbar where the search box was, instead of floating over your screen. It is its own app, not an Apple product."
+    ],
+    [
+      "How do I get notified when Claude Code or Codex finishes on Windows?",
+      "Install IsleBar and connect Claude Code / Codex (one checkbox in setup). The bar turns orange when the agent needs your answer and green with a soft chime when it is done — no terminal-watching."
+    ],
+    [
+      "Do I need Claude Code or Codex?",
+      "Only for the AI part — asking from the bar and seeing working · needs you · done. Music, timers, downloads and notices work without them; file search needs Everything."
+    ],
+    [
+      "Does it send my data anywhere?",
+      "No. It runs on your PC. Crash reports are opt-in and carry only the error, versions and basic device info — never titles, files, prompts or your IP. <a href=\"{{root}}privacy.html\">Privacy policy</a>."
+    ],
+    [
+      "Windows says “Windows protected your PC”.",
+      "Choose <i>More info → Run anyway</i>. Code signing is on the way."
+    ],
+    [
+      "How do I remove it?",
+      "Settings › Apps › IsleBar › Uninstall. The normal search box comes back and IsleBar's hooks are removed (Store version: turn off the Claude Code / Codex connection in IsleBar's settings first)."
+    ],
+    [
+      "Which languages?",
+      "English, 简体中文, 繁體中文, Français, Deutsch, Italiano, 日本語, 한국어, Português, Español — it follows your Windows language."
+    ]
+  ],
+  "help_title": "Need help?",
+  "help_sub": "Something broken, an idea, or a question — tell us on GitHub, or by email.",
+  "help_bug": "Report a bug",
+  "help_idea": "Suggest a feature",
+  "help_question": "Ask a question",
+  "help_email": "Email",
+  "help_sponsor": "Sponsor",
+  "privacy": "Privacy",
+  "footer_unofficial": "IsleBar is an unofficial hobby project, not affiliated with or endorsed by Microsoft, Anthropic or OpenAI.",
+  "footer_trademarks": "Windows is a trademark of Microsoft. “Claude” and “Claude Code” are trademarks of Anthropic PBC; “OpenAI” and “Codex” are trademarks of OpenAI. Logos shown in the bar are read from software already installed on the user's PC. “Dynamic Island” is a trademark of Apple Inc.; IsleBar is not affiliated with Apple."
+}

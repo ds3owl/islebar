@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IsleBar — Privacy</title>
+<meta name="description" content="What IsleBar keeps on your PC, and the only thing it can send: opt-in crash reports.">
+<style>
+:root { --bg:#fbfbfd; --ink:#1d1d1f; --muted:#6e6e73; --line:#e5e5ea; --card:#fff; --accent:#0a66d6; }
+@media (prefers-color-scheme: dark) { :root { --bg:#07070b; --ink:#f5f5f7; --muted:#a1a1aa; --line:#26262f; --card:#121219; --accent:#6aa8ff; } }
+* { box-sizing:border-box; } html, body { margin:0; background:var(--bg); color:var(--ink); }
+body { font-family:"Segoe UI Variable Text","Segoe UI","Malgun Gothic",system-ui,sans-serif; line-height:1.65; }
+main { max-width:760px; margin:0 auto; padding:48px 16px 64px; }
+h1 { font-size:34px; margin:0 0 4px; } h2 { font-size:21px; margin:34px 0 8px; } a { color:var(--accent); }
+.muted { color:var(--muted); } .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 20px; margin:14px 0; }
+table { border-collapse:collapse; width:100%; } td, th { border-bottom:1px solid var(--line); padding:8px 6px; text-align:left; vertical-align:top; }
+hr { border:0; border-top:1px solid var(--line); margin:48px 0; }
+</style>
+</head>
+<body><main>
+<h1>Privacy</h1>
+<p class="muted">IsleBar · last updated 3 October 2026</p>
+
+<div class="card"><b>In short:</b> IsleBar runs on your PC and keeps what it knows there. The one thing it can send is a
+crash report — and only if you turn that on.</div>
+
+<h2>What stays on your PC</h2>
+<p>Settings, prompt history, logs and the bar's state live in <code>%LOCALAPPDATA%\IsleBar</code> and never leave your PC.
+The state files hold what the bar is showing — for an agent, the start of your question and the session's name; they are
+deleted once they are no longer shown (within a day at most). The logs note what happened, such as which app turned the
+microphone on and the text of errors. Uninstalling keeps your settings in case you reinstall; delete that folder to remove them.</p>
+
+<h2>What IsleBar reads on your PC (and never sends)</h2>
+<p>To show what is going on, IsleBar reads these on your PC. None of it is sent anywhere; the notices can be switched off one
+by one in settings.</p>
+<ul>
+<li><b>Claude Code and Codex</b> — the status their hooks report (working, needs an answer, done, stopped), your plan's
+usage percentage and reset time (Claude's status line, Codex's own session record file), and the name of the session.
+While a task runs, IsleBar also reads the new lines of that session's record file, only to notice that you stopped it
+(Esc) or that it failed.</li>
+<li><b>Music</b> — the title, artist and album art the playing app shares with Windows.</li>
+<li><b>Downloads</b> — names and sizes of files still downloading in your Downloads folder.</li>
+<li><b>Copied text</b> (notice on by default) — the first few words, to say "Copied · …"; anything marked secret by a
+password manager, or that looks like a password, is masked.</li>
+<li><b>Microphone and camera</b> — whether one is in use and by which app (from Windows' privacy settings), for the small dot.</li>
+<li><b>Windows notifications</b> (off by default) — new notifications from Windows' local notification list, to show them on the bar.</li>
+<li><b>Keyboard and mouse activity</b> — only <i>that</i> you clicked or typed in an agent's terminal, to know you have seen a
+finished task. What you type is never read.</li>
+<li><b>File search</b> — your search text goes to Everything (voidtools) on your own PC.</li>
+<li>Battery, Bluetooth devices, network state, Focus sessions and CPU/memory load — for the short notices.</li>
+</ul>
+
+<h2>What IsleBar connects to</h2>
+<table>
+<tr><th>When</th><th>Where</th><th>What is sent</th></tr>
+<tr><td>At start and every six hours</td><td><code>code.claude.com</code></td><td>A request for Claude Code's public model list. Nothing about you.</td></tr>
+<tr><td>Once a day, or an hour later if that failed (can be turned off in settings)</td><td><code>api.github.com</code></td><td>A request for the latest IsleBar version number — the same public request your browser makes when you open the releases page.</td></tr>
+<tr><td>Only when you choose to install an update</td><td><code>github.com</code></td><td>A download of the new setup file from IsleBar's releases page.</td></tr>
+<tr><td>Only if you set a calendar link — every 10 minutes</td><td>The link you entered</td><td>A request for your calendar file.</td></tr>
+<tr><td>Only if you turn on crash reports</td><td>Sentry (EU region, Frankfurt)</td><td>See below.</td></tr>
+</table>
+<p>Web searches open in your browser; IsleBar does not see the results.</p>
+
+<h2>Crash reports (off unless you choose them)</h2>
+<p>You can turn them on in setup (“Send crash reports”, unticked by default) or later in IsleBar's settings, and turn them
+off the same way at any time. Turning them off also deletes any report still waiting to be sent.</p>
+<p><b>Sent:</b> the type of error, where in IsleBar's own code it happened, the IsleBar version, your Windows version and
+its language and region format (such as “ko-KR”), plus basic technical details that help reproduce a bug — processor type, amount of memory,
+the .NET runtime version, and the <i>names</i> (not locations) of the program files IsleBar had loaded. If the bar stops
+without an error message, the report holds its exit code and roughly how long it had run (under a minute, under an hour, or
+longer) instead of an error, with the same version and device details.</p>
+<p><b>Never sent:</b> window titles, file names or paths, what you type or ask, your music, notifications or calendar,
+log files, your computer's or user's name, or your IP address. Error messages are cleaned on your PC before sending (paths
+and quoted text are removed), and the receiving project is set to discard IP addresses and to scrub data on arrival.</p>
+<p>Reports are processed by <a href="https://sentry.io/privacy/">Sentry</a> in its EU data region and are used only to find
+and fix bugs. They are kept only as long as the Sentry plan keeps them (at most 90 days) and are then deleted automatically.</p>
+
+<h2>Questions</h2>
+<p>Open an issue on <a href="https://github.com/ds3owl/islebar/issues">GitHub</a>, or email <a href="mailto:imchangwoo@outlook.com">imchangwoo@outlook.com</a>.</p>
+
+<hr>
+
+<h1>개인정보 처리방침</h1>
+<p class="muted">IsleBar · 2026년 10월 3일 최종 수정</p>
+<div class="card"><b>요약:</b> IsleBar는 사용자의 PC에서만 동작하고, 알게 된 정보도 PC 안에만 둡니다. 밖으로 보낼 수 있는 것은
+오류 보고 하나뿐이며, 그것도 사용자가 켰을 때만 보냅니다.</div>
+
+<h2>PC에만 남는 것</h2>
+<p>설정, 질문 기록, 로그, 바의 상태는 <code>%LOCALAPPDATA%\IsleBar</code>에 저장되며 PC 밖으로 나가지 않습니다.
+상태 파일에는 바가 보여 주는 내용(에이전트라면 질문 앞부분과 세션 이름)이 담기며, 더 이상 보여 주지 않으면(늦어도 하루 안에)
+지웁니다. 로그에는 어떤 앱이 마이크를 켰는지, 오류 내용 같은 동작 기록이 남습니다. 삭제해도 다시 설치할 때를 위해 설정은
+남겨 두며, 이 폴더를 지우면 완전히 지워집니다.</p>
+
+<h2>IsleBar가 PC에서 읽는 것 (보내지 않음)</h2>
+<p>지금 일어나는 일을 보여 주려고 IsleBar는 PC 안에서 아래 정보를 읽습니다. 어디에도 보내지 않으며, 알림은 설정에서 하나씩
+끌 수 있습니다.</p>
+<ul>
+<li><b>Claude Code·Codex</b> — 훅이 알려 주는 상태(작업 중, 답변 필요, 완료, 멈춤), 요금제 사용량과 초기화 시각(Claude의 상태
+표시줄, Codex의 세션 기록 파일), 세션 이름. 작업 중에는 그 세션 기록 파일에 새로 추가되는 줄도 읽는데, 사용자가 작업을
+멈췄는지(Esc) 또는 작업이 실패했는지 알기 위해서만 씁니다.</li>
+<li><b>음악</b> — 재생 중인 앱이 Windows에 알려 주는 제목, 아티스트, 앨범 커버.</li>
+<li><b>다운로드</b> — 다운로드 폴더에서 아직 받는 중인 파일의 이름과 크기.</li>
+<li><b>복사한 내용</b>(알림 기본 켜짐) — "복사됨 · …"을 보여 줄 앞부분 몇 단어. 비밀번호 관리자가 비밀로 표시했거나 비밀번호처럼
+보이는 내용은 가립니다.</li>
+<li><b>마이크·카메라</b> — 사용 중인지, 어떤 앱이 쓰는지(Windows 개인정보 설정 기준). 작은 점을 표시하는 데 씁니다.</li>
+<li><b>Windows 알림</b>(기본 꺼짐) — Windows가 PC에 보관하는 알림 목록에서 새 알림을 읽어 바에 보여 줍니다.</li>
+<li><b>키보드·마우스 활동</b> — 에이전트 터미널에서 클릭하거나 입력했다는 <i>사실</i>만 봅니다(완료된 작업을 확인했는지 알기 위해).
+무엇을 입력했는지는 읽지 않습니다.</li>
+<li><b>파일 검색</b> — 검색어는 PC에 설치된 Everything(voidtools)으로만 갑니다.</li>
+<li>배터리, 블루투스 기기, 네트워크 상태, 집중 모드, CPU·메모리 부하 — 짧은 알림용입니다.</li>
+</ul>
+
+<h2>IsleBar가 접속하는 곳</h2>
+<table>
+<tr><th>언제</th><th>어디로</th><th>보내는 것</th></tr>
+<tr><td>시작할 때와 6시간마다</td><td><code>code.claude.com</code></td><td>Claude Code의 공개 모델 목록 요청. 사용자에 관한 정보는 없음.</td></tr>
+<tr><td>하루에 한 번, 실패하면 한 시간 뒤 다시 (설정에서 끌 수 있음)</td><td><code>api.github.com</code></td><td>IsleBar 최신 버전 번호 요청. 브라우저로 다운로드 페이지를 열 때와 같은 공개 요청입니다.</td></tr>
+<tr><td>업데이트 설치를 선택했을 때만</td><td><code>github.com</code></td><td>IsleBar 릴리스 페이지에서 새 설치 파일 다운로드.</td></tr>
+<tr><td>캘린더 주소를 넣었을 때만, 10분마다</td><td>입력한 주소</td><td>캘린더 파일 요청.</td></tr>
+<tr><td>오류 보고를 켰을 때만</td><td>Sentry (EU, 프랑크푸르트)</td><td>아래 참고.</td></tr>
+</table>
+<p>웹 검색은 브라우저에서 열리며, IsleBar는 검색 결과를 보지 않습니다.</p>
+
+<h2>오류 보고 (켜야만 보냄)</h2>
+<p>설치 화면의 "오류 보고 보내기"(기본 꺼짐)나 IsleBar 설정에서 켜고 끌 수 있습니다. 끄면 아직 보내지 않은 보고도 지웁니다.</p>
+<p><b>보내는 것:</b> 오류 종류, IsleBar 코드 안의 발생 위치, IsleBar 버전, Windows 버전과 언어·지역 형식(예: "ko-KR"), 그리고 버그를
+다시 만들어 보는 데 필요한 기본 기술 정보(프로세서 종류, 메모리 크기, .NET 런타임 버전, IsleBar가 불러온 프로그램 파일의
+<i>이름</i> — 위치는 아님). 오류 메시지 없이 바가 멈춘 경우에는 오류 내용 대신 종료 코드와 대략 얼마나 실행됐는지(1분 미만·1시간 미만·그 이상)를
+같은 버전·기기 정보와 함께 보냅니다.</p>
+<p><b>절대 보내지 않는 것:</b> 창 제목, 파일 이름이나 경로, 입력하거나 질문한 내용, 음악·알림·일정, 로그 파일,
+컴퓨터나 사용자 이름, IP 주소. 오류 메시지는 보내기 전에 PC에서 정리하고(경로와 따옴표 속 내용 제거), 받는 쪽도
+IP 주소를 저장하지 않고 민감한 정보를 지우도록 설정되어 있습니다.</p>
+<p>보고는 <a href="https://sentry.io/privacy/">Sentry</a>의 EU 데이터 지역에서 처리되며, 버그를 찾아 고치는 데에만
+쓰입니다. Sentry 요금제의 보관 기간(최대 90일)이 지나면 자동으로 삭제됩니다.</p>
+
+<h2>문의</h2>
+<p><a href="https://github.com/ds3owl/islebar/issues">GitHub</a>에 이슈를 남기거나 <a href="mailto:imchangwoo@outlook.com">imchangwoo@outlook.com</a>으로 메일을 보내 주세요.</p>
+</main></body></html>

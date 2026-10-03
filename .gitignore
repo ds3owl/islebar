@@ -1,0 +1,23 @@
+run.log
+run.json
+bin/
+obj/
+*.user
+.vs/
+artifacts/
+TestResults/
+claude_bar.json
+islebar.json
+
+# WinUI/CsWinRT 빌드 산출물
+**/Generated Files/
+.claude/
+build/
+/dist/
+
+# safety net: never publish logs, dumps or signing keys
+*.log
+*.dmp
+*.pfx
+*.cer
+native/IsleBarTap/out/

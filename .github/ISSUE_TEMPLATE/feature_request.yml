@@ -1,0 +1,16 @@
+name: Suggest a feature
+description: An idea that would make IsleBar better for you.
+labels: [idea]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea
+      description: What would you like the bar to do, and when would you use it?
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it matters to you
+      description: Optional — what are you doing today instead?

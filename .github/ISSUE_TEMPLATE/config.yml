@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Frequently asked questions
+    url: https://github.com/ds3owl/islebar#faq
+    about: Quick answers — free? privacy? "Windows protected your PC"? how to remove?
+  - name: Questions and ideas (Discussions)
+    url: https://github.com/ds3owl/islebar/discussions
+    about: Ask anything or share how you use IsleBar.
+  - name: Email
+    url: mailto:imchangwoo@outlook.com
+    about: No GitHub account? Write to imchangwoo@outlook.com.

@@ -1,0 +1,4 @@
+LIBRARY IsleBarTap
+EXPORTS
+    DllGetClassObject PRIVATE
+    DllCanUnloadNow PRIVATE

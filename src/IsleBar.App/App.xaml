@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Application
+    x:Class="IsleBar.App.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Small icon button inside the search box. No border/background, glyph only. -->
+            <Style x:Key="IslandGlyphButton" TargetType="Button">
+                <Setter Property="FontFamily" Value="Segoe Fluent Icons" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Padding" Value="4,2,4,2" />
+                <Setter Property="MinWidth" Value="0" />
+                <Setter Property="MinHeight" Value="0" />
+                <!-- Rounded hover background (a square box popping up inside the pill looked awkward, 09-30) -->
+                <Setter Property="CornerRadius" Value="11" />
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
