@@ -1,7 +1,7 @@
 {
   "title": "IsleBar – Windows 11 工作列即時膠囊",
   "description": "把 Windows 11 工作列搜尋框變成即時膠囊：Claude Code/Codex 完成通知、正在播放、番茄鐘、檔案搜尋。免費開源。",
-  "keywords": "Claude Code 通知, Claude Code 完成通知, Codex 通知, 工作列 美化, Windows 11 工作列, 番茄鐘 工作列, 工作列 音樂, 免費 開源 軟體",
+  "keywords": "Windows 動態島, Win11 工作列 動態島, Claude Code 通知, Claude Code 完成通知, Codex 通知, 工作列 美化, Windows 11 工作列, 番茄鐘 工作列, 工作列 音樂, 免費 開源 軟體",
   "og_title": "IsleBar — Windows 11 工作列裡的即時膠囊",
   "og_description": "Claude Code 或 Codex 是在處理中、在等你，還是已經完成——在工作列上一眼就知道。還有音樂、計時器、檔案和下載。免費。",
   "ld_description": "位於 Windows 11 工作列搜尋框的即時小島：Claude Code 與 Codex 狀態（處理中、等你回覆、已完成）、音樂、計時器、檔案搜尋和下載。",
@@ -86,6 +86,10 @@
       "是的——以 MIT 授權免費開放原始碼。歡迎在 GitHub 上提供修正、想法和意見回饋。"
     ],
     [
+      "這是 Windows 版的動態島嗎？",
+      "概念相近——一個動態島風格的即時膠囊，但它位於 Windows 11 工作列搜尋框的位置，而不是浮在畫面上方。"
+    ],
+    [
       "在 Windows 上怎麼在 Claude Code 或 Codex 完成時收到通知？",
       "安裝 IsleBar 並開啟 Claude Code / Codex 連結（安裝時勾選一項）。需要你回答時膠囊顯示橘色邊框，完成時顯示綠色邊框並播放提示音，不必一直盯著終端機。"
     ],
@@ -119,5 +123,5 @@
   "help_sponsor": "贊助",
   "privacy": "隱私權",
   "footer_unofficial": "IsleBar 是非官方的個人業餘專案，與 Microsoft、Anthropic 或 OpenAI 均無關聯，亦未獲其背書。",
-  "footer_trademarks": "Windows 是 Microsoft 的商標。「Claude」和「Claude Code」是 Anthropic PBC 的商標；「OpenAI」和「Codex」是 OpenAI 的商標。列上顯示的標誌讀取自使用者電腦上已安裝的軟體。"
+  "footer_trademarks": "Windows 是 Microsoft 的商標。「Claude」和「Claude Code」是 Anthropic PBC 的商標；「OpenAI」和「Codex」是 OpenAI 的商標。列上顯示的標誌讀取自使用者電腦上已安裝的軟體。「Dynamic Island（動態島）」是 Apple Inc. 的商標；IsleBar 與 Apple 無關。"
 }

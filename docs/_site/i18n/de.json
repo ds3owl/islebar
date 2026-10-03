@@ -1,7 +1,7 @@
 {
   "title": "IsleBar – eine Live-Leiste für die Windows-11-Taskleiste",
   "description": "Kostenlos & Open Source: eine Live-Leiste in der Windows-11-Taskleiste. Claude-Code/Codex-Status, Musik, Timer, Dateisuche.",
-  "keywords": "Windows 11 Taskleiste anpassen, Claude Code Benachrichtigung, Codex CLI, Taskleiste Widget, Pomodoro Timer Taskleiste, Now Playing Taskleiste, kostenlose Software",
+  "keywords": "Dynamic Island Windows 11, Windows 11 Taskleiste anpassen, Claude Code Benachrichtigung, Codex CLI, Taskleiste Widget, Pomodoro Timer Taskleiste, Now Playing Taskleiste, kostenlose Software",
   "og_title": "IsleBar — eine Live-Leiste für Windows 11",
   "og_description": "Sieh direkt in der Taskleiste, ob Claude Code oder Codex arbeitet, dich braucht oder fertig ist. Dazu Musik, Timer, Dateien und Downloads. Kostenlos.",
   "ld_description": "Eine lebendige Insel im Suchfeld der Windows-11-Taskleiste: Status von Claude Code und Codex (arbeitet, braucht dich, fertig), Musik, Timer, Dateisuche und Downloads.",
@@ -86,6 +86,10 @@
       "Ja — kostenlos und Open Source unter der MIT-Lizenz. Fixes, Ideen und Feedback sind auf GitHub jederzeit willkommen."
     ],
     [
+      "Ist das eine Dynamic Island für Windows?",
+      "Im Geist schon: eine Live-Leiste im Dynamic-Island-Stil, aber sie sitzt in der Windows-11-Taskleiste, wo das Suchfeld war, statt über dem Bildschirm zu schweben."
+    ],
+    [
       "Wie werde ich unter Windows benachrichtigt, wenn Claude Code oder Codex fertig ist?",
       "IsleBar installieren und Claude Code / Codex verbinden (ein Häkchen im Setup). Die Leiste wird orange, wenn der Agent deine Antwort braucht, und grün mit einem leisen Ton, wenn er fertig ist."
     ],
@@ -119,5 +123,5 @@
   "help_sponsor": "Unterstützen",
   "privacy": "Datenschutz",
   "footer_unofficial": "IsleBar ist ein inoffizielles Hobbyprojekt und steht in keiner Verbindung zu Microsoft, Anthropic oder OpenAI und wird von diesen nicht unterstützt.",
-  "footer_trademarks": "Windows ist eine Marke von Microsoft. „Claude“ und „Claude Code“ sind Marken von Anthropic PBC; „OpenAI“ und „Codex“ sind Marken von OpenAI. Die in der Leiste angezeigten Logos werden aus Software gelesen, die bereits auf dem PC des Nutzers installiert ist."
+  "footer_trademarks": "Windows ist eine Marke von Microsoft. „Claude“ und „Claude Code“ sind Marken von Anthropic PBC; „OpenAI“ und „Codex“ sind Marken von OpenAI. Die in der Leiste angezeigten Logos werden aus Software gelesen, die bereits auf dem PC des Nutzers installiert ist. „Dynamic Island“ ist eine Marke von Apple Inc.; IsleBar steht in keiner Verbindung zu Apple."
 }
