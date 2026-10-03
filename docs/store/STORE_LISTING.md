@@ -19,7 +19,7 @@ every language you add. Screenshots (1-terminal … 10-dark.png, 1920×1080) and
 | Additional license terms | Open source under the MIT License — source: https://github.com/ds3owl/islebar |
 | System requirements | Windows 11 (x64) · minimum: taskbar search box shown as a box or an icon |
 | Age rating (IARC questionnaire) | No violence, sexual content, gambling, profanity, user-generated content shared between users, or purchases of digital goods → expected rating **3+ / Everyone** |
-| Pricing (suggestion) | Paid, lowest tier (about US$1.99 / ₩2,500) with a **7-day free trial**; the same app stays free on GitHub (the MIT License allows selling it) |
+| Pricing | **Free** (owner's decision 10-04) — no in-app purchases, no ads |
 | Markets | All |
 
 ### Restricted capabilities — justification (Partner Center asks for these)
