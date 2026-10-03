@@ -20,7 +20,7 @@ means accepting those terms for those components. Segoe Fluent Icons and Segoe U
 redistributed.
 
 "Claude" and "Claude Code" are trademarks of Anthropic PBC; "OpenAI" and "Codex" are trademarks of OpenAI;
-"Everything" is a product of voidtools; "Dynamic Island" is a trademark of Apple Inc. IsleBar is not affiliated with
+"Everything" is a product of voidtools. IsleBar is not affiliated with
 or endorsed by any of them. The Claude and Codex marks shown in the bar are read at run time from software already
 installed on your PC; IsleBar does not ship them.
 

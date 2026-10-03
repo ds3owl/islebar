@@ -1,7 +1,7 @@
 <h1 align="center">IsleBar</h1>
 
 <p align="center">
-  <b>A Dynamic Island–style live bar for the Windows 11 taskbar.</b><br>
+  <b>A live bar in the Windows 11 taskbar.</b><br>
   Ask Claude Code or Codex, find files, and see what is happening — working, needs you, done, music, timers,
   downloads — right where the search box already is.
 </p>
@@ -40,11 +40,10 @@
 IsleBar replaces the taskbar search box with a pill you can actually type into, and the pill itself becomes the status
 display: an AI coding agent that is **working**, that **needs your answer** (orange), or that is **done** (green); the song
 that is playing; a countdown; a download. It never floats a window over your screen for status — the pill stays exactly
-where the search box already was, and only its *contents* change. Think of the island idea from phones, made for the
-Windows taskbar.
+where the search box already was, and only its *contents* change.
 
 > **Unofficial and unaffiliated.** IsleBar is a hobby project. It is not made by, endorsed by, or connected to
-> Apple, Anthropic PBC or OpenAI. "Dynamic Island" is a trademark of Apple Inc.; "Claude" and "Claude Code" are
+> Anthropic PBC or OpenAI. "Claude" and "Claude Code" are
 > trademarks of Anthropic PBC; "OpenAI" and "Codex" are trademarks of OpenAI. Glyphs come from *Segoe Fluent Icons*,
 > which is part of Windows.
 
@@ -297,9 +296,6 @@ producer can't leave a stale pill behind. Windows PowerShell's `Out-File` writes
 
 **Is it free?** Yes — free and open source (MIT). No account, no ads.
 
-**Is this a Dynamic Island for Windows?** In spirit, yes — a live, Dynamic Island–style bar. But it lives in the
-Windows 11 taskbar, where the search box was, instead of floating over your screen. It is its own app, not an Apple product.
-
 **How do I get notified when Claude Code or Codex finishes on Windows?** Install IsleBar and connect Claude Code /
 Codex (one checkbox in setup). The bar turns orange when the agent needs your answer and green with a soft chime when
 it is done — no more watching the terminal.
@@ -346,7 +342,7 @@ IsleBar comes with **no warranty** (see the licence). Third-party parts keep the
 > **같이 쓰면 좋은 프로그램** — [**Claude Code**](https://code.claude.com/docs/en/overview) 또는 [**Codex CLI**](https://github.com/openai/codex)(바에서 질문하고 작업 중·답변 필요·완료 보기) ·
 > [**Everything**](https://www.voidtools.com/downloads/)(voidtools, 무료 — <kbd>Tab</kbd>으로 PC의 모든 파일 바로 검색) · 웹 브라우저(웹 검색 결과). Windows 11(x64)에서 동작합니다.
 
-**IsleBar**는 윈도우 11 작업표시줄의 검색창 자리에 들어가는 다이나믹 아일랜드 스타일의 라이브 바입니다. 검색창에 그대로 입력하면 되고,
+**IsleBar**는 윈도우 11 작업표시줄의 검색창 자리에 들어가는 라이브 바입니다. 검색창에 그대로 입력하면 되고,
 검색창 자체가 제자리에서 모양과 내용을 바꿔서 지금 하는 일을 보여 줍니다.
 
 - **Claude·Codex에게 묻기** — 바를 클릭하거나 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd>, 질문을 치고 <kbd>Enter</kbd>. 긴 질문은 위에 전체가 보이고, <kbd>Shift</kbd>+<kbd>Enter</kbd>·여러 줄 붙여 넣기는 작성 창으로.
@@ -355,8 +351,8 @@ IsleBar comes with **no warranty** (see the licence). Third-party parts keep the
 - **끌어다 놓기** — 바에 파일을 놓으면 경로가 입력창에 들어가 그대로 질문할 수 있습니다. 설정에서 명령을 지정하면 다른 기능으로 바뀝니다. 제작자는 놓은 파일이 텔레그램으로 폰에 바로 가도록 직접 만든 스크립트를 연결해 씁니다.
 - **선택 기능** — Windows 알림 끌어오기(기본 꺼짐), 네이티브 모드(진짜 검색창을 탐색기 안에서 투명하게, 기본 꺼짐), 빛 테두리.
 
-> **비공식** 개인 프로젝트입니다. Apple·Anthropic·OpenAI와 아무 관련이 없습니다.
-> "Dynamic Island(다이나믹 아일랜드)"는 Apple Inc., "Claude"·"Claude Code"는 Anthropic PBC, "OpenAI"·"Codex"는 OpenAI의 상표입니다.
+> **비공식** 개인 프로젝트입니다. Anthropic·OpenAI와 아무 관련이 없습니다.
+> "Claude"·"Claude Code"는 Anthropic PBC, "OpenAI"·"Codex"는 OpenAI의 상표입니다.
 
 ## Trademarks / 상표
 

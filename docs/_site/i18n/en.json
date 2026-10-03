@@ -1,8 +1,8 @@
 {
-  "title": "IsleBar – Dynamic Island-style taskbar for Claude Code",
-  "description": "Free, open-source Windows 11 app: a Dynamic Island-style live bar in your taskbar. Claude Code & Codex status and done alerts, music, timers, file search.",
-  "keywords": "dynamic island for windows, windows dynamic island, windows 11 taskbar, claude code notification windows, claude code notify when done, codex cli notification, ai agent done notification, taskbar widget windows 11, now playing taskbar, pomodoro taskbar windows",
-  "og_title": "IsleBar — a Dynamic Island-style bar for the Windows 11 taskbar",
+  "title": "IsleBar – a live bar in the Windows 11 taskbar for Claude Code",
+  "description": "Free, open-source Windows 11 app: a live bar in your taskbar search box. Claude Code & Codex status and done alerts, music, timers, file search.",
+  "keywords": "windows 11 taskbar, claude code notification windows, claude code notify when done, codex cli notification, ai agent done notification, taskbar widget windows 11, now playing taskbar, pomodoro taskbar windows",
+  "og_title": "IsleBar — a live bar in the Windows 11 taskbar",
   "og_description": "See when Claude Code or Codex is working, needs you, or is done — right in the taskbar. Music, timers, files and downloads too. Free.",
   "ld_description": "A live island in the Windows 11 taskbar search box: Claude Code and Codex status (working, needs you, done), music, timers, file search and downloads.",
   "lede": "Your Windows&nbsp;11 taskbar, alive. Ask Claude Code or Codex from the search box — and see when it is working, needs you, or is done.",
@@ -86,10 +86,6 @@
       "Yes — free and open source under the MIT License. Fixes, ideas and feedback are welcome on GitHub."
     ],
     [
-      "Is this a Dynamic Island for Windows?",
-      "In spirit, yes — a live, Dynamic Island-style bar, but it lives in the Windows 11 taskbar where the search box was, instead of floating over your screen. It is its own app, not an Apple product."
-    ],
-    [
       "How do I get notified when Claude Code or Codex finishes on Windows?",
       "Install IsleBar and connect Claude Code / Codex (one checkbox in setup). The bar turns orange when the agent needs your answer and green with a soft chime when it is done — no terminal-watching."
     ],
@@ -123,5 +119,5 @@
   "help_sponsor": "Sponsor",
   "privacy": "Privacy",
   "footer_unofficial": "IsleBar is an unofficial hobby project, not affiliated with or endorsed by Microsoft, Anthropic or OpenAI.",
-  "footer_trademarks": "Windows is a trademark of Microsoft. “Claude” and “Claude Code” are trademarks of Anthropic PBC; “OpenAI” and “Codex” are trademarks of OpenAI. Logos shown in the bar are read from software already installed on the user's PC. “Dynamic Island” is a trademark of Apple Inc.; IsleBar is not affiliated with Apple."
+  "footer_trademarks": "Windows is a trademark of Microsoft. “Claude” and “Claude Code” are trademarks of Anthropic PBC; “OpenAI” and “Codex” are trademarks of OpenAI. Logos shown in the bar are read from software already installed on the user's PC."
 }

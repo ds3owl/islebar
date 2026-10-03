@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>IsleBar – 動態島風格的 Windows 11 工作列</title>
-<meta name="description" content="把 Windows 11 工作列搜尋框變成動態島風格的即時膠囊：Claude Code/Codex 完成通知、正在播放、番茄鐘、檔案搜尋。免費開源。">
-<meta name="keywords" content="Windows 動態島, Win11 工作列 動態島, Claude Code 通知, Claude Code 完成通知, Codex 通知, 工作列 美化, Windows 11 工作列, 番茄鐘 工作列, 工作列 音樂, 免費 開源 軟體">
+<title>IsleBar – Windows 11 工作列即時膠囊</title>
+<meta name="description" content="把 Windows 11 工作列搜尋框變成即時膠囊：Claude Code/Codex 完成通知、正在播放、番茄鐘、檔案搜尋。免費開源。">
+<meta name="keywords" content="Claude Code 通知, Claude Code 完成通知, Codex 通知, 工作列 美化, Windows 11 工作列, 番茄鐘 工作列, 工作列 音樂, 免費 開源 軟體">
 <link rel="canonical" href="https://ds3owl.github.io/islebar/zh-tw/">
 <link rel="alternate" hreflang="en" href="https://ds3owl.github.io/islebar/">
 <link rel="alternate" hreflang="ko" href="https://ds3owl.github.io/islebar/ko/">
@@ -21,7 +21,7 @@
 <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#07070b" media="(prefers-color-scheme: dark)">
 <meta property="og:type" content="website">
-<meta property="og:title" content="IsleBar — 動態島風格的 Windows 11 工作列">
+<meta property="og:title" content="IsleBar — Windows 11 工作列裡的即時膠囊">
 <meta property="og:description" content="Claude Code 或 Codex 是在處理中、在等你，還是已經完成——在工作列上一眼就知道。還有音樂、計時器、檔案和下載。免費。">
 <meta property="og:image" content="https://ds3owl.github.io/islebar/media/og.png">
 <meta property="og:url" content="https://ds3owl.github.io/islebar/zh-tw/">
@@ -60,14 +60,6 @@
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "是的——以 MIT 授權免費開放原始碼。歡迎在 GitHub 上提供修正、想法和意見回饋。"
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "這是 Windows 版的動態島嗎？",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "概念相近——一個動態島風格的即時膠囊，但它位於 Windows 11 工作列搜尋框的位置，而不是浮在畫面上方。它是獨立應用程式，不是 Apple 的產品。"
       }
     },
     {
@@ -231,7 +223,6 @@ footer { text-align:center; color:var(--muted); font-size:13px; padding:70px 0 4
   <section class="faq">
     <h2 class="big">常見問題</h2>
     <h3>免費嗎？</h3><p>是的——以 MIT 授權免費開放原始碼。歡迎在 GitHub 上提供修正、想法和意見回饋。</p>
-    <h3>這是 Windows 版的動態島嗎？</h3><p>概念相近——一個動態島風格的即時膠囊，但它位於 Windows 11 工作列搜尋框的位置，而不是浮在畫面上方。它是獨立應用程式，不是 Apple 的產品。</p>
     <h3>在 Windows 上怎麼在 Claude Code 或 Codex 完成時收到通知？</h3><p>安裝 IsleBar 並開啟 Claude Code / Codex 連結（安裝時勾選一項）。需要你回答時膠囊顯示橘色邊框，完成時顯示綠色邊框並播放提示音，不必一直盯著終端機。</p>
     <h3>一定要裝 Claude Code 或 Codex 嗎？</h3><p>只有 AI 功能需要——在列上提問，以及查看處理中 · 等你回覆 · 已完成。音樂、計時器、下載和通知不需要它們也能使用；檔案搜尋需要 Everything。</p>
     <h3>會把我的資料傳到別的地方嗎？</h3><p>不會。它只在你的電腦上執行。當機報告需由你主動開啟，且只包含錯誤、版本和基本裝置資訊——絕不包含視窗標題、檔案、提示詞或你的 IP。<a href="../privacy.html">隱私權政策</a>。</p>
@@ -256,7 +247,7 @@ footer { text-align:center; color:var(--muted); font-size:13px; padding:70px 0 4
     <nav class="langs" aria-label="Language"><a href="../" data-lang="en" hreflang="en">English</a> · <a href="../ko/" data-lang="ko" hreflang="ko">한국어</a> · <a href="../ja/" data-lang="ja" hreflang="ja">日本語</a> · <a href="../zh/" data-lang="zh" hreflang="zh-Hans">简体中文</a> · <b>繁體中文</b> · <a href="../fr/" data-lang="fr" hreflang="fr">Français</a> · <a href="../de/" data-lang="de" hreflang="de">Deutsch</a> · <a href="../it/" data-lang="it" hreflang="it">Italiano</a> · <a href="../pt/" data-lang="pt" hreflang="pt-BR">Português</a> · <a href="../es/" data-lang="es" hreflang="es">Español</a></nav>
     <a href="../privacy.html">隱私權</a> ·
     IsleBar 是非官方的個人業餘專案，與 Microsoft、Anthropic 或 OpenAI 均無關聯，亦未獲其背書。<br>
-    Windows 是 Microsoft 的商標。「Claude」和「Claude Code」是 Anthropic PBC 的商標；「OpenAI」和「Codex」是 OpenAI 的商標。列上顯示的標誌讀取自使用者電腦上已安裝的軟體。「Dynamic Island（動態島）」是 Apple Inc. 的商標；IsleBar 與 Apple 無關。
+    Windows 是 Microsoft 的商標。「Claude」和「Claude Code」是 Anthropic PBC 的商標；「OpenAI」和「Codex」是 OpenAI 的商標。列上顯示的標誌讀取自使用者電腦上已安裝的軟體。
   </footer>
 </div>
 <script>

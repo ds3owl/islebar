@@ -1,8 +1,8 @@
 {
-  "title": "IsleBar – Dynamic Island風 Windows 11 タスクバー",
-  "description": "Windows 11のタスクバー検索をDynamic Island風のライブバーに。Claude Code・Codexの完了通知、再生中の曲、タイマー、ファイル検索。無料・オープンソース。",
-  "keywords": "Windows ダイナミックアイランド, Dynamic Island Windows, Claude Code 通知, Claude Code 完了 通知 Windows, Codex 通知, タスクバー カスタマイズ, Windows 11 タスクバー, タスクバー 再生中 曲, ポモドーロ タスクバー, 無料 フリーソフト",
-  "og_title": "IsleBar — Windows 11 タスクバーを Dynamic Island 風に",
+  "title": "IsleBar – Windows 11 タスクバーのライブバー",
+  "description": "Windows 11のタスクバー検索をライブバーに。Claude Code・Codexの完了通知、再生中の曲、タイマー、ファイル検索。無料・オープンソース。",
+  "keywords": "Claude Code 通知, Claude Code 完了 通知 Windows, Codex 通知, タスクバー カスタマイズ, Windows 11 タスクバー, タスクバー 再生中 曲, ポモドーロ タスクバー, 無料 フリーソフト",
+  "og_title": "IsleBar — Windows 11 タスクバーのライブバー",
   "og_description": "Claude Code や Codex が作業中か、応答待ちか、完了したかをタスクバーでそのまま確認。音楽、タイマー、ファイル、ダウンロードも。無料。",
   "ld_description": "Windows 11 のタスクバー検索ボックスに住む、生きたアイランド：Claude Code・Codex の状態（作業中、応答待ち、完了）、音楽、タイマー、ファイル検索、ダウンロード。",
   "lede": "生きている Windows&nbsp;11 タスクバー。検索ボックスから Claude Code や Codex に頼んで — 作業中か、応答待ちか、完了したかがすぐにわかります。",
@@ -86,10 +86,6 @@
       "はい — MIT ライセンスの無料オープンソースです。修正、アイデア、フィードバックは GitHub でいつでも歓迎します。"
     ],
     [
-      "Windows版のダイナミックアイランドですか？",
-      "発想は近いです。Dynamic Island風のライブバーですが、画面の上に浮かぶのではなく、Windows 11 タスクバーの検索ボックスの位置に収まります。Apple 製品ではなく独立したアプリです。"
-    ],
-    [
       "Windows で Claude Code や Codex の完了通知を受け取れますか？",
       "はい。IsleBar をインストールして Claude Code / Codex の連携（セットアップのチェック1つ）をオンにすると、返答が必要なときはオレンジの枠、完了すると緑の枠と通知音でお知らせします。"
     ],
@@ -123,5 +119,5 @@
   "help_sponsor": "支援する",
   "privacy": "プライバシー",
   "footer_unofficial": "IsleBar は非公式の個人プロジェクトであり、Microsoft、Anthropic、OpenAI とは提携しておらず、承認も受けていません。",
-  "footer_trademarks": "Windows は Microsoft の商標です。「Claude」および「Claude Code」は Anthropic PBC の、「OpenAI」および「Codex」は OpenAI の商標です。バーに表示されるロゴは、ユーザーの PC にすでにインストールされているソフトウェアから読み込んでいます。「Dynamic Island」は Apple Inc. の商標です。IsleBar は Apple とは関係ありません。"
+  "footer_trademarks": "Windows は Microsoft の商標です。「Claude」および「Claude Code」は Anthropic PBC の、「OpenAI」および「Codex」は OpenAI の商標です。バーに表示されるロゴは、ユーザーの PC にすでにインストールされているソフトウェアから読み込んでいます。"
 }
