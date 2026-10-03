@@ -86,10 +86,6 @@
       "Sí — gratis y de código abierto bajo la Licencia MIT. Correcciones, ideas y comentarios son bienvenidos en GitHub."
     ],
     [
-      "¿Es una Dynamic Island para Windows?",
-      "En espíritu, sí: una barra en vivo estilo Dynamic Island, pero vive en la barra de tareas de Windows 11, donde estaba el cuadro de búsqueda, en lugar de flotar sobre la pantalla."
-    ],
-    [
       "¿Cómo recibo un aviso en Windows cuando Claude Code o Codex termina?",
       "Instala IsleBar y conecta Claude Code / Codex (una casilla en el instalador). La barra se pone naranja cuando el agente necesita tu respuesta y verde con un sonido suave cuando termina."
     ],
@@ -123,5 +119,5 @@
   "help_sponsor": "Patrocinar",
   "privacy": "Privacidad",
   "footer_unofficial": "IsleBar es un proyecto personal no oficial, sin afiliación ni respaldo de Microsoft, Anthropic ni OpenAI.",
-  "footer_trademarks": "Windows es una marca comercial de Microsoft. “Claude” y “Claude Code” son marcas comerciales de Anthropic PBC; “OpenAI” y “Codex” son marcas comerciales de OpenAI. Los logotipos que se muestran en la barra se leen de software ya instalado en el PC del usuario. “Dynamic Island” es una marca comercial de Apple Inc.; IsleBar no está afiliado a Apple."
+  "footer_trademarks": "Windows es una marca comercial de Microsoft. “Claude” y “Claude Code” son marcas comerciales de Anthropic PBC; “OpenAI” y “Codex” son marcas comerciales de OpenAI. Los logotipos que se muestran en la barra se leen de software ya instalado en el PC del usuario."
 }

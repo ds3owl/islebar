@@ -86,10 +86,6 @@
       "是的——基于 MIT 许可证免费开源。欢迎在 GitHub 上提交修复、想法和反馈。"
     ],
     [
-      "这是 Windows 版的灵动岛吗？",
-      "思路相近——一个灵动岛风格的实时胶囊，但它位于 Windows 11 任务栏搜索框的位置，而不是悬浮在屏幕上方。"
-    ],
-    [
       "在 Windows 上怎样在 Claude Code 或 Codex 完成时收到提醒？",
       "安装 IsleBar 并开启 Claude Code / Codex 连接（安装时勾选一项）。需要你回答时胶囊显示橙色边框，完成时显示绿色边框并播放提示音，无需一直盯着终端。"
     ],
@@ -123,5 +119,5 @@
   "help_sponsor": "赞助",
   "privacy": "隐私",
   "footer_unofficial": "IsleBar 是一个非官方的个人业余项目，与 Microsoft、Anthropic 或 OpenAI 均无关联，也未获得其认可。",
-  "footer_trademarks": "Windows 是 Microsoft 的商标。“Claude”和“Claude Code”是 Anthropic PBC 的商标；“OpenAI”和“Codex”是 OpenAI 的商标。栏中显示的标志读取自用户电脑上已安装的软件。“Dynamic Island（灵动岛）”是 Apple Inc. 的商标；IsleBar 与 Apple 无关。"
+  "footer_trademarks": "Windows 是 Microsoft 的商标。“Claude”和“Claude Code”是 Anthropic PBC 的商标；“OpenAI”和“Codex”是 OpenAI 的商标。栏中显示的标志读取自用户电脑上已安装的软件。"
 }

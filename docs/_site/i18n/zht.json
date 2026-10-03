@@ -86,10 +86,6 @@
       "是的——以 MIT 授權免費開放原始碼。歡迎在 GitHub 上提供修正、想法和意見回饋。"
     ],
     [
-      "這是 Windows 版的動態島嗎？",
-      "概念相近——一個動態島風格的即時膠囊，但它位於 Windows 11 工作列搜尋框的位置，而不是浮在畫面上方。"
-    ],
-    [
       "在 Windows 上怎麼在 Claude Code 或 Codex 完成時收到通知？",
       "安裝 IsleBar 並開啟 Claude Code / Codex 連結（安裝時勾選一項）。需要你回答時膠囊顯示橘色邊框，完成時顯示綠色邊框並播放提示音，不必一直盯著終端機。"
     ],
@@ -123,5 +119,5 @@
   "help_sponsor": "贊助",
   "privacy": "隱私權",
   "footer_unofficial": "IsleBar 是非官方的個人業餘專案，與 Microsoft、Anthropic 或 OpenAI 均無關聯，亦未獲其背書。",
-  "footer_trademarks": "Windows 是 Microsoft 的商標。「Claude」和「Claude Code」是 Anthropic PBC 的商標；「OpenAI」和「Codex」是 OpenAI 的商標。列上顯示的標誌讀取自使用者電腦上已安裝的軟體。「Dynamic Island（動態島）」是 Apple Inc. 的商標；IsleBar 與 Apple 無關。"
+  "footer_trademarks": "Windows 是 Microsoft 的商標。「Claude」和「Claude Code」是 Anthropic PBC 的商標；「OpenAI」和「Codex」是 OpenAI 的商標。列上顯示的標誌讀取自使用者電腦上已安裝的軟體。"
 }

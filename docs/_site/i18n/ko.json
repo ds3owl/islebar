@@ -86,10 +86,6 @@
       "네 — MIT 라이선스의 무료 오픈소스입니다. 수정, 아이디어, 피드백은 GitHub에서 언제든 환영합니다."
     ],
     [
-      "윈도우용 다이나믹 아일랜드인가요?",
-      "느낌은 그렇습니다 — 다이나믹 아일랜드 스타일의 살아 있는 바지만, 화면 위에 떠 있는 대신 Windows 11 작업표시줄의 검색창 자리에 들어갑니다."
-    ],
-    [
       "윈도우에서 Claude Code나 Codex 작업이 끝나면 알림을 받을 수 있나요?",
       "네. IsleBar를 설치하고 Claude Code·Codex 연결(설치 화면 체크 하나)을 켜면, 답이 필요할 때는 주황 테두리, 끝나면 초록 테두리와 알림음으로 알려 줍니다. 터미널을 계속 지켜볼 필요가 없어요."
     ],
@@ -123,5 +119,5 @@
   "help_sponsor": "후원하기",
   "privacy": "개인정보 처리방침",
   "footer_unofficial": "IsleBar는 비공식 개인 프로젝트로, Microsoft, Anthropic, OpenAI와 관련이 없으며 그들의 승인을 받지 않았습니다.",
-  "footer_trademarks": "Windows는 Microsoft의 상표입니다. “Claude”와 “Claude Code”는 Anthropic PBC, “OpenAI”와 “Codex”는 OpenAI의 상표입니다. 바에 보이는 로고는 사용자 PC에 이미 설치된 프로그램에서 읽어 옵니다. “Dynamic Island(다이나믹 아일랜드)”는 Apple Inc.의 상표이며, IsleBar는 Apple과 관련이 없습니다."
+  "footer_trademarks": "Windows는 Microsoft의 상표입니다. “Claude”와 “Claude Code”는 Anthropic PBC, “OpenAI”와 “Codex”는 OpenAI의 상표입니다. 바에 보이는 로고는 사용자 PC에 이미 설치된 프로그램에서 읽어 옵니다."
 }

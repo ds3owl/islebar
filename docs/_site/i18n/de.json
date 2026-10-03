@@ -86,10 +86,6 @@
       "Ja — kostenlos und Open Source unter der MIT-Lizenz. Fixes, Ideen und Feedback sind auf GitHub jederzeit willkommen."
     ],
     [
-      "Ist das eine Dynamic Island für Windows?",
-      "Im Geist schon: eine Live-Leiste im Dynamic-Island-Stil, aber sie sitzt in der Windows-11-Taskleiste, wo das Suchfeld war, statt über dem Bildschirm zu schweben."
-    ],
-    [
       "Wie werde ich unter Windows benachrichtigt, wenn Claude Code oder Codex fertig ist?",
       "IsleBar installieren und Claude Code / Codex verbinden (ein Häkchen im Setup). Die Leiste wird orange, wenn der Agent deine Antwort braucht, und grün mit einem leisen Ton, wenn er fertig ist."
     ],
@@ -123,5 +119,5 @@
   "help_sponsor": "Unterstützen",
   "privacy": "Datenschutz",
   "footer_unofficial": "IsleBar ist ein inoffizielles Hobbyprojekt und steht in keiner Verbindung zu Microsoft, Anthropic oder OpenAI und wird von diesen nicht unterstützt.",
-  "footer_trademarks": "Windows ist eine Marke von Microsoft. „Claude“ und „Claude Code“ sind Marken von Anthropic PBC; „OpenAI“ und „Codex“ sind Marken von OpenAI. Die in der Leiste angezeigten Logos werden aus Software gelesen, die bereits auf dem PC des Nutzers installiert ist. „Dynamic Island“ ist eine Marke von Apple Inc.; IsleBar steht in keiner Verbindung zu Apple."
+  "footer_trademarks": "Windows ist eine Marke von Microsoft. „Claude“ und „Claude Code“ sind Marken von Anthropic PBC; „OpenAI“ und „Codex“ sind Marken von OpenAI. Die in der Leiste angezeigten Logos werden aus Software gelesen, die bereits auf dem PC des Nutzers installiert ist."
 }

@@ -43,7 +43,7 @@ that is playing; a countdown; a download. It never floats a window over your scr
 where the search box already was, and only its *contents* change.
 
 > **Unofficial and unaffiliated.** IsleBar is a hobby project. It is not made by, endorsed by, or connected to
-> Apple, Anthropic PBC or OpenAI. "Dynamic Island" is a trademark of Apple Inc.; "Claude" and "Claude Code" are
+> Anthropic PBC or OpenAI. "Claude" and "Claude Code" are
 > trademarks of Anthropic PBC; "OpenAI" and "Codex" are trademarks of OpenAI. Glyphs come from *Segoe Fluent Icons*,
 > which is part of Windows.
 
@@ -295,9 +295,6 @@ producer can't leave a stale pill behind. Windows PowerShell's `Out-File` writes
 ## FAQ
 
 **Is it free?** Yes — free and open source (MIT). No account, no ads.
-
-**Is this a Dynamic Island for Windows?** In spirit, yes — a live, Dynamic Island–style bar. But it lives in the
-Windows 11 taskbar, where the search box was, instead of floating over your screen.
 
 **How do I get notified when Claude Code or Codex finishes on Windows?** Install IsleBar and connect Claude Code /
 Codex (one checkbox in setup). The bar turns orange when the agent needs your answer and green with a soft chime when

@@ -86,10 +86,6 @@
       "はい — MIT ライセンスの無料オープンソースです。修正、アイデア、フィードバックは GitHub でいつでも歓迎します。"
     ],
     [
-      "Windows版のダイナミックアイランドですか？",
-      "発想は近いです。Dynamic Island風のライブバーですが、画面の上に浮かぶのではなく、Windows 11 タスクバーの検索ボックスの位置に収まります。"
-    ],
-    [
       "Windows で Claude Code や Codex の完了通知を受け取れますか？",
       "はい。IsleBar をインストールして Claude Code / Codex の連携（セットアップのチェック1つ）をオンにすると、返答が必要なときはオレンジの枠、完了すると緑の枠と通知音でお知らせします。"
     ],
@@ -123,5 +119,5 @@
   "help_sponsor": "支援する",
   "privacy": "プライバシー",
   "footer_unofficial": "IsleBar は非公式の個人プロジェクトであり、Microsoft、Anthropic、OpenAI とは提携しておらず、承認も受けていません。",
-  "footer_trademarks": "Windows は Microsoft の商標です。「Claude」および「Claude Code」は Anthropic PBC の、「OpenAI」および「Codex」は OpenAI の商標です。バーに表示されるロゴは、ユーザーの PC にすでにインストールされているソフトウェアから読み込んでいます。「Dynamic Island」は Apple Inc. の商標です。IsleBar は Apple とは関係ありません。"
+  "footer_trademarks": "Windows は Microsoft の商標です。「Claude」および「Claude Code」は Anthropic PBC の、「OpenAI」および「Codex」は OpenAI の商標です。バーに表示されるロゴは、ユーザーの PC にすでにインストールされているソフトウェアから読み込んでいます。"
 }
