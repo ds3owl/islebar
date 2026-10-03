@@ -50,15 +50,9 @@
         <desktop:Extension Category="windows.startupTask" Executable="IsleBar.App.exe" EntryPoint="Windows.FullTrustApplication">
           <desktop:StartupTask TaskId="IsleBarStartup" Enabled="true" DisplayName="IsleBar" />
         </desktop:Extension>
-      </Extensions>
-    </Application>
-
-    <!-- the hook CLI: Claude Code / Codex call "islebar.exe hook" through this alias (%LOCALAPPDATA%\Microsoft\WindowsApps) -->
-    <Application Id="IsleBarCli" Executable="cli\islebar.exe" EntryPoint="Windows.FullTrustApplication">
-      <uap:VisualElements DisplayName="IsleBar CLI" Description="IsleBar's command line for Claude Code / Codex hooks."
-                          BackgroundColor="transparent" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png"
-                          AppListEntry="none" />
-      <Extensions>
+        <!-- the hook CLI: Claude Code / Codex call "islebar.exe hook" through this alias (%LOCALAPPDATA%\Microsoft\WindowsApps).
+             On the main app with its own Executable: a second, hidden app entry (AppListEntry="none") is a "headless app",
+             which the Store refuses without a special permission (certification, 10-04). -->
         <uap3:Extension Category="windows.appExecutionAlias" Executable="cli\islebar.exe" EntryPoint="Windows.FullTrustApplication">
           <uap3:AppExecutionAlias>
             <desktop:ExecutionAlias Alias="islebar.exe" />
@@ -66,6 +60,7 @@
         </uap3:Extension>
       </Extensions>
     </Application>
+
   </Applications>
 
   <Capabilities>
