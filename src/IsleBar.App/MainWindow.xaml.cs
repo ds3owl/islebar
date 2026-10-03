@@ -1829,6 +1829,13 @@ public sealed partial class MainWindow : Window
         if (_taskbar.IsAttached)
         {
             _attachFailures = 0;   // attached by another path (end of typing, menu closed) — a later run of failures counts from zero
+            if (_nativeShown && _settings.NativeSearchBox && _placement.Mode == PlacementMode.OverRealSearchBox)
+            {
+                // attached by one of those paths after a failed start: the real box was never hidden (hiding waits for an
+                // attach), so it showed behind the pill until a setting or Explorer changed (review 10-03)
+                ApplyNativeSearchBox();
+            }
+
             return;
         }
 
@@ -3252,7 +3259,11 @@ public sealed partial class MainWindow : Window
                 state.Name,
                 state.Open,
                 state.AppId);
-            _lastExpandedAt = state.UpdatedAt;
+            // never wind the mark back: a newer batch fed while this card was showing would be fed again (review 10-03)
+            if (state.UpdatedAt > _lastExpandedAt)
+            {
+                _lastExpandedAt = state.UpdatedAt;
+            }
         }
     }
 

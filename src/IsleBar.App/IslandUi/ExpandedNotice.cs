@@ -34,6 +34,7 @@ internal sealed class ExpandedNotice : Window
     {
         _stayTimer?.Stop();
         _open = false;
+        _dismissing++;   // a fade still running must not call Hide on the closed window
         UnhookOutsideClick();   // its system-wide mouse hook otherwise stayed until the process ended
         foreach (var peek in _peeks)
         {
@@ -76,10 +77,14 @@ internal sealed class ExpandedNotice : Window
     private bool _listOpen;
     private bool _dragging;
     private double _dragStartY;
-    private IntPtr _mouseHook;
-    private HookProc? _hookProc;   // kept alive so the delegate isn't collected while hooked
-    private Thread? _hookThread;
-    private uint _hookThreadId;
+    /// <summary>The running outside-click hook thread; it owns its hook handle and delegate.</summary>
+    private HookThread? _hook;
+
+    private sealed class HookThread
+    {
+        public uint Id;
+        public readonly ManualResetEventSlim Ready = new();
+    }
 
     public ExpandedNotice()
     {
@@ -120,14 +125,16 @@ internal sealed class ExpandedNotice : Window
         // most recent couple behind the front, so a new message never resurfaces old news on the pill.
         _stack.RemoveAll(m => m.When.Date != now.Date);
         var incoming = new Message(glyph, title, message, source, open, appId, now);
-        if (!_stack.Any(m => m.Title == title && m.Body == message && m.App == source))   // dedupe by content (a re-read/re-post must not add a duplicate card — box glitched when it did, user 09-30)
+        // dedupe by content (a re-read/re-post must not add a duplicate card — box glitched when it did, user 09-30), but the
+        // repeat moves to the front: kept in its old place, the front card showed whatever came after it, and a tap opened that (review 10-03)
+        _stack.RemoveAll(m => m.Title == title && m.Body == message && m.App == source);
+        _stack.Add(incoming);
+        if (_stack.Count > KeepMessages)
         {
-            _stack.Add(incoming);
-            if (_stack.Count > KeepMessages)
-            {
-                _stack.RemoveRange(0, _stack.Count - KeepMessages);
-            }
+            _stack.RemoveRange(0, _stack.Count - KeepMessages);
         }
+
+        _dismissing++;   // a fade-out under way must not hide this new message when it finishes
 
         _stayTimer?.Stop();
         int frontDip;
@@ -505,6 +512,8 @@ internal sealed class ExpandedNotice : Window
     /// <summary>Scale down and fade out, then hide and forget the deck.</summary>
     private void Dismiss()
     {
+        var generation = ++_dismissing;
+        _open = false;   // a message arriving during the fade re-grows the card instead of joining one about to hide (review 10-03)
         var visual = ElementCompositionPreview.GetElementVisual(_root);
         var batch = visual.Compositor.CreateScopedBatch(CompositionBatchTypes.Animation);
         FadeTo(visual, 0f, 0.16);
@@ -513,8 +522,17 @@ internal sealed class ExpandedNotice : Window
         scale.Duration = TimeSpan.FromSeconds(0.16);
         visual.StartAnimation("Scale", scale);
         batch.End();
-        batch.Completed += (_, _) => Hide();
+        batch.Completed += (_, _) =>
+        {
+            if (generation == _dismissing)
+            {
+                Hide();
+            }
+        };
     }
+
+    /// <summary>Bumped by every dismiss and every new message: a fade-out only hides the card if nothing came in meanwhile.</summary>
+    private int _dismissing;
 
     private void LaunchAndDismiss(string open)
     {
@@ -527,6 +545,15 @@ internal sealed class ExpandedNotice : Window
             else if (open == Interop.HookConnector.Command)
             {
                 Task.Run(() => Interop.HookConnector.Set(true));   // the Store build's "connect Claude Code / Codex" card
+            }
+            else if (open == SystemWatch.ToastWatcher.OpenNotificationCentre)
+            {
+                // a notice whose app can't be opened: Windows' notification centre, where it still is (Win+N — the
+                // "ms-actioncenter:" link did nothing on Windows 11, so tapping these cards did nothing — review 10-03)
+                Interop.NativeMethods.keybd_event(Interop.NativeMethods.VK_LWIN, 0, 0, IntPtr.Zero);
+                Interop.NativeMethods.keybd_event((byte)'N', 0, 0, IntPtr.Zero);
+                Interop.NativeMethods.keybd_event((byte)'N', 0, Interop.NativeMethods.KEYEVENTF_KEYUP, IntPtr.Zero);
+                Interop.NativeMethods.keybd_event(Interop.NativeMethods.VK_LWIN, 0, Interop.NativeMethods.KEYEVENTF_KEYUP, IntPtr.Zero);
             }
             else
             {
@@ -563,43 +590,46 @@ internal sealed class ExpandedNotice : Window
 
     private void HookOutsideClick()
     {
-        if (_hookThread is not null)
+        if (_hook is not null)
         {
             return;
         }
 
-        _hookThread = new Thread(() =>
+        var owner = new HookThread();
+        var thread = new Thread(() =>
         {
-            _hookThreadId = GetCurrentThreadId();
-            _hookProc = MouseProc;
-            _mouseHook = SetWindowsHookEx(WH_MOUSE_LL, _hookProc, GetModuleHandle(null), 0);
+            owner.Id = GetCurrentThreadId();
+            HookProc proc = MouseProc;   // local and kept alive below: the delegate must outlive the hook
+            var handle = SetWindowsHookEx(WH_MOUSE_LL, proc, GetModuleHandle(null), 0);
+            owner.Ready.Set();
             while (GetMessage(out var msg, IntPtr.Zero, 0, 0) > 0)
             {
                 TranslateMessage(ref msg);
                 DispatchMessage(ref msg);
             }
 
-            if (_mouseHook != IntPtr.Zero)
+            if (handle != IntPtr.Zero)
             {
-                UnhookWindowsHookEx(_mouseHook);
-                _mouseHook = IntPtr.Zero;
+                UnhookWindowsHookEx(handle);
             }
 
-            _hookProc = null;
+            GC.KeepAlive(proc);
         })
         { IsBackground = true, Name = "IsleBar outside-click" };
-        _hookThread.Start();
+        _hook = owner;
+        thread.Start();
     }
 
     private void UnhookOutsideClick()
     {
-        if (_hookThread is null)
+        if (_hook is not { } owner)
         {
             return;
         }
 
-        PostThreadMessage(_hookThreadId, WM_QUIT, IntPtr.Zero, IntPtr.Zero);   // ends the hook thread's message loop → it unhooks
-        _hookThread = null;
+        _hook = null;
+        owner.Ready.Wait(TimeSpan.FromSeconds(1));   // its thread id is known once the hook is in (posting before that left the thread running)
+        PostThreadMessage(owner.Id, WM_QUIT, IntPtr.Zero, IntPtr.Zero);   // ends the hook thread's message loop → it unhooks
     }
 
     private IntPtr MouseProc(int code, IntPtr wParam, IntPtr lParam)
@@ -649,7 +679,7 @@ internal sealed class ExpandedNotice : Window
             }
         }
 
-        return CallNextHookEx(_mouseHook, code, wParam, lParam);
+        return CallNextHookEx(IntPtr.Zero, code, wParam, lParam);   // the hook handle argument is ignored
     }
 
     private const int WH_MOUSE_LL = 14;

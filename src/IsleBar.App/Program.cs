@@ -70,6 +70,15 @@ public static partial class Program
                     code = ExitCodes.Abnormal;
                 }
 
+                if (code == ExitCodes.AlreadyRunning && AdoptRunningBar() is { } adopted)
+                {
+                    // A bar left without its supervisor (the supervisor was ended in Task Manager, an installer…) still runs: the
+                    // new child found it and quit. Watch that one instead of giving up — it used to stay unsupervised, so its next
+                    // restart request (theme, DPI, Explorer) ended it for good (review 10-03).
+                    started = DateTime.UtcNow;
+                    code = adopted;
+                }
+
                 Interop.TaskbarHost.Log($"supervisor: bar exited with code {code} (ran {(DateTime.UtcNow - started).TotalSeconds:0}s)");
                 if (IsleBar.Core.Diagnostics.CrashText.IsNativeCrash(code))
                 {
@@ -89,6 +98,44 @@ public static partial class Program
             mutex.ReleaseMutex();
             mutex.Dispose();
         }
+    }
+
+    /// <summary>
+    /// Waits for a bar process this supervisor didn't start (one left behind by an earlier supervisor) and returns its exit code;
+    /// null when there is none. Same executable, another process id — the supervisor mutex guarantees no other supervisor lives.
+    /// </summary>
+    private static int? AdoptRunningBar()
+    {
+        using var self = System.Diagnostics.Process.GetCurrentProcess();
+        if (self.ProcessName.Equals("dotnet", StringComparison.OrdinalIgnoreCase))
+        {
+            return null;   // a development run under dotnet.exe: other dotnet processes aren't bars
+        }
+
+        foreach (var other in System.Diagnostics.Process.GetProcessesByName(self.ProcessName))
+        {
+            using (other)
+            {
+                try
+                {
+                    if (other.Id == self.Id || other.HasExited
+                        || !string.Equals(other.MainModule?.FileName, Environment.ProcessPath, StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;   // only this install's bar — not a Store / dev build of the same name
+                    }
+
+                    Interop.TaskbarHost.Log($"supervisor: watching the bar that was already running (pid {other.Id})");
+                    other.WaitForExit();
+                    return other.ExitCode;
+                }
+                catch (Exception ex) when (ex is System.ComponentModel.Win32Exception or InvalidOperationException)
+                {
+                    // gone meanwhile, or not ours to watch
+                }
+            }
+        }
+
+        return null;
     }
 
     /// <summary>Relaunches ourselves as the child. If running under dotnet.exe (development), passes the DLL path.</summary>

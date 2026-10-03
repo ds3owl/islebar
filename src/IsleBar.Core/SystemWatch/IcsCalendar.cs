@@ -13,7 +13,8 @@ public sealed record IcsRule(
     int? Count,
     DateTimeOffset? Until,
     IReadOnlyList<DayOfWeek> ByDay,
-    bool Unsupported);
+    bool Unsupported,
+    DayOfWeek WeekStart = DayOfWeek.Monday);
 
 /// <summary>One VEVENT from an ICS file.</summary>
 public sealed class IcsEvent
@@ -54,7 +55,7 @@ public readonly record struct IcsOccurrence(string Summary, DateTimeOffset Start
 /// <item>Times: <c>…Z</c> (UTC) · <c>TZID=</c> (IANA name <c>Asia/Seoul</c> or Windows name <c>Korea Standard Time</c>) ·
 /// no time zone (this PC's) · all-day (<c>VALUE=DATE</c>).</item>
 /// <item>Recurrence: INTERVAL, COUNT, UNTIL for DAILY, WEEKLY (+BYDAY), MONTHLY, YEARLY; EXDATE; modified occurrences (RECURRENCE-ID).</item>
-/// <item><b>Not supported</b>: rules like BYMONTHDAY, BYSETPOS, "first Monday" (1MO) (only the first occurrence is used), WKST (weeks start on Monday),
+/// <item><b>Not supported</b>: rules like BYMONTHDAY, BYSETPOS, "first Monday" (1MO) (only the first occurrence is used), (WKST is honoured — weeks start on Monday unless it says otherwise),
 /// definitions inside VTIMEZONE (only the TZID name is trusted), RDATE.</item>
 /// </list>
 /// </summary>
@@ -381,6 +382,7 @@ public static class IcsParser
         DateTimeOffset? until = null;
         var byDay = new List<DayOfWeek>();
         var unsupported = false;
+        var weekStart = DayOfWeek.Monday;
 
         foreach (var part in text.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
         {
@@ -407,7 +409,8 @@ public static class IcsParser
                     if (ParseTime(val, new Dictionary<string, string>(), local) is { } u)
                     {
                         // a date alone includes the whole of that day
-                        until = ToUtc(u.AllDay ? u.Wall.AddDays(1).AddTicks(-1) : u.Wall, u.Zone);
+                        // (UNTIL=99991231 has no "next day": that threw and ended the calendar refresh — review 10-03)
+                        until = ToUtc(u.AllDay ? (u.Wall.Date == DateTime.MaxValue.Date ? DateTime.MaxValue : u.Wall.AddDays(1).AddTicks(-1)) : u.Wall, u.Zone);
                     }
 
                     break;
@@ -426,6 +429,9 @@ public static class IcsParser
 
                     break;
                 case "WKST":
+                    // the week a biweekly rule counts in: with WKST=SU a "every 2 weeks on MO,SU" Sunday falls in another week
+                    // than with Monday-start weeks — it showed a week off (review 10-03)
+                    weekStart = ParseDay(val) ?? DayOfWeek.Monday;
                     break;
                 default:
                     if (key.StartsWith("BY", StringComparison.Ordinal))
@@ -447,7 +453,7 @@ public static class IcsParser
             unsupported = true;
         }
 
-        return new IcsRule(freq, interval, count, until, byDay, unsupported);
+        return new IcsRule(freq, interval, count, until, byDay, unsupported, weekStart);
     }
 
     private static DayOfWeek? ParseDay(string token) => token.ToUpperInvariant() switch
@@ -609,7 +615,7 @@ public static class IcsSchedule
     private static DateTime PeriodStart(IcsEvent e, IcsRule rule, int step) => rule.Freq switch
     {
         "DAILY" => e.Start.AddDays((double)step * rule.Interval),
-        "WEEKLY" => WeekStart(e.Start).AddDays(7.0 * step * rule.Interval),
+        "WEEKLY" => WeekStart(e.Start, rule.WeekStart).AddDays(7.0 * step * rule.Interval),
         "MONTHLY" => e.Start.AddMonths(step * rule.Interval),
         _ => e.Start.AddYears(step * rule.Interval),
     };
@@ -627,9 +633,9 @@ public static class IcsSchedule
 
                 break;
             case "WEEKLY":
-                var week = WeekStart(e.Start).AddDays(7.0 * step * rule.Interval);
+                var week = WeekStart(e.Start, rule.WeekStart).AddDays(7.0 * step * rule.Interval);
                 IReadOnlyList<DayOfWeek> days = rule.ByDay.Count > 0 ? rule.ByDay : new[] { e.Start.DayOfWeek };
-                foreach (var offset in days.Select(MondayOffset).Distinct().Order())
+                foreach (var offset in days.Select(d => DaysAfter(d, rule.WeekStart)).Distinct().Order())
                 {
                     yield return week.AddDays(offset);
                 }
@@ -654,10 +660,10 @@ public static class IcsSchedule
         }
     }
 
-    /// <summary>Monday of that week, at the same time of day as the first occurrence.</summary>
-    private static DateTime WeekStart(DateTime start) => start.AddDays(-MondayOffset(start.DayOfWeek));
+    /// <summary>The first day of that week (WKST, Monday by default), at the same time of day as the first occurrence.</summary>
+    private static DateTime WeekStart(DateTime start, DayOfWeek weekStart) => start.AddDays(-DaysAfter(start.DayOfWeek, weekStart));
 
-    private static int MondayOffset(DayOfWeek day) => ((int)day + 6) % 7;
+    private static int DaysAfter(DayOfWeek day, DayOfWeek weekStart) => ((int)day - (int)weekStart + 7) % 7;
 }
 
 /// <summary>Calendar notice stage.</summary>

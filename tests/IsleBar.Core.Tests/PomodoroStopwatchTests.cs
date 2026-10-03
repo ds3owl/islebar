@@ -27,6 +27,18 @@ public sealed class PomodoroStopwatchTests
         => Assert.True(ActivityStore.IsAlive(TimerParser.ToStopwatch(Now, "sw"), Now, Now.AddHours(3)));
 
     [Fact]
+    public void Pomodoro_survives_a_sleep_but_a_plain_timer_does_not()
+    {
+        var pomodoro = TimerParser.ToPomodoro(1, focus: true, Now, "집중", "휴식");
+        var timer = TimerParser.ToActivity(TimeSpan.FromMinutes(25), Now);
+        var woke = Now.AddMinutes(25 + 40);   // the laptop slept through the end of the phase
+        Assert.True(ActivityStore.IsAlive(pomodoro, Now, woke));
+        Assert.False(ActivityStore.IsAlive(timer, Now, woke));
+        Assert.False(ActivityStore.IsAlive(pomodoro, Now, Now.AddHours(5)));   // not after hours away
+        Assert.Equal("휴식 1/4", TimerParser.AdvancePomodoro(pomodoro, woke, "집중", "휴식")!.Name);
+    }
+
+    [Fact]
     public void Pomodoro_runs_four_focus_break_cycles_then_ends()
     {
         var state = TimerParser.ToPomodoro(1, focus: true, Now, "집중", "휴식");

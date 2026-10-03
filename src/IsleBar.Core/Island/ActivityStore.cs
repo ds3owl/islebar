@@ -32,6 +32,9 @@ public sealed class ActivityStore
     /// <summary>How long "done" is shown after a timer ends.</summary>
     public static readonly TimeSpan TimerDoneLinger = TimeSpan.FromSeconds(10);
 
+    /// <summary>How long after its phase ended a pomodoro is still continued (a laptop closed for lunch, not overnight).</summary>
+    public static readonly TimeSpan PomodoroWakeGrace = TimeSpan.FromHours(2);
+
     /// <summary>How long a "working" notice may stay without being replaced by done (a crashed agent's notice goes away).</summary>
     public static readonly TimeSpan WorkingLinger = TimeSpan.FromHours(6);
 
@@ -54,7 +57,10 @@ public sealed class ActivityStore
 
         if (state.Due is { } due)
         {
-            return now.ToUnixTimeMilliseconds() / 1000.0 <= due + TimerDoneLinger.TotalSeconds;
+            // A pomodoro whose phase ended while the PC slept is picked up on waking (the bar starts the next phase then): it
+            // used to count as finished-and-gone, so the whole set vanished after any sleep (review 10-03). Not after hours away.
+            var grace = TimerParser.PomodoroPhase(state) is null ? TimerDoneLinger : PomodoroWakeGrace;
+            return now.ToUnixTimeMilliseconds() / 1000.0 <= due + grace.TotalSeconds;
         }
 
         var age = now - updated;

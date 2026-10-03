@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.1.1 (2026-10-04)
+
+### Fixes
+- Windows notifications on the isle: several notifications arriving together each get their card (only the last one showed);
+  a repeated message comes to the front again; a message arriving while a card faded out no longer vanishes with it; the
+  outside-click watcher can't be left running or switched off by an older one.
+- Tapping a notification card opens only safe links (no search-ms:, ms-msdt:, Office or shell: links from a notification);
+  a card whose app can't be opened shows Windows' notification centre instead of doing nothing.
+- Pomodoro keeps going after the laptop slept through a phase (the whole set used to disappear).
+- Calendar: "every 2 weeks" events whose calendar starts weeks on another day than Monday land in the right week; an event
+  repeating "until 9999" no longer stops the calendar from refreshing.
+- If IsleBar's background helper was ended (Task Manager, an installer), starting IsleBar again looks after the bar that is
+  still running instead of leaving it unattended.
+- "Hide the real search box": hidden again when the bar attaches to the taskbar late after a failed start.
+
 ## 0.1.0 — first public build (2026-10-03)
 
 ### The bar

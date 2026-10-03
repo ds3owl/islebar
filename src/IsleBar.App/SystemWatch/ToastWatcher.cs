@@ -123,7 +123,7 @@ internal sealed class ToastWatcher(Func<LanguageStrings> strings) : NoticeWatche
 
             var now = DateTimeOffset.UtcNow;
             Board.Flash(
-                "toast",
+                "toast:" + row.Id.ToString(System.Globalization.CultureInfo.InvariantCulture),   // one per toast: a shared key kept only the last of a burst (review 10-03)
                 // Content first: the notice's own title (sender, subject) in bold, then the body and the app name dim —
                 // leading with the app name meant only "Windows PowerShell" showed before the notice was gone (user feedback 09-30)
                 Expandable(SystemNotice.Make(texts[0], "", now, msg: ToastText.Line([.. texts.Skip(1)]), open: ToastText.LaunchProtocol(row.Payload) ?? AppLaunch(row.AppId)), AppName(row.AppId), row.AppId),
@@ -213,7 +213,10 @@ internal sealed class ToastWatcher(Func<LanguageStrings> strings) : NoticeWatche
     /// <summary>How to launch the app when the toast has no deep link: <c>shell:AppsFolder\{AUMID}</c> if the shell can
     /// resolve it (opens the app), otherwise the action center. Opens the app to wherever it was — not necessarily the chat.</summary>
     private static string AppLaunch(string appId)
-        => Resolvable(appId) ? @"shell:AppsFolder\" + appId : "ms-actioncenter:";
+        => Resolvable(appId) ? @"shell:AppsFolder\" + appId : OpenNotificationCentre;   // "ms-actioncenter:" did nothing on Windows 11
+
+    /// <summary>The card's open value that means "open Windows' notification centre" (Win+N).</summary>
+    public const string OpenNotificationCentre = "islebar:notifications";
 
     private static bool Resolvable(string appId)
     {

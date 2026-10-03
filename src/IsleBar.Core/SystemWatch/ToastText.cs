@@ -75,6 +75,13 @@ public static class ToastText
     /// opens for apps that publish a protocol link, and the app opens for the rest — best effort, app by app.
     /// </para>
     /// </summary>
+    private static readonly HashSet<string> BlockedSchemes = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "search-ms", "search", "ms-msdt", "ms-appinstaller", "ms-officecmd", "ms-word", "ms-excel", "ms-powerpoint", "ms-visio",
+        "ms-access", "ms-project", "ms-publisher", "ms-cxh", "ms-cxh-full", "shell", "javascript", "vbscript", "file", "ms-its",
+        "mk", "hcp", "its", "res", "onenote", "vscode", "vscode-insiders", "ldap",
+    };
+
     public static string? LaunchProtocol(string? payload)
     {
         if (string.IsNullOrWhiteSpace(payload))
@@ -92,8 +99,12 @@ public static class ToastText
                 return null;
             }
 
-            // Only real URI schemes are safe to hand to ShellExecute; a bare path or opaque token is not a deep link.
-            return Uri.TryCreate(launch, UriKind.Absolute, out var uri) && !uri.IsFile ? uri.AbsoluteUri : null;
+            // Only real URI schemes are safe to hand to ShellExecute; a bare path or opaque token is not a deep link. Schemes that
+            // can run or fetch something (search-ms showing a remote share, ms-msdt, ms-appinstaller, Office's ms-word:ofe|u|…,
+            // shell:) are never opened from a toast — the app's own icon opens instead (review 10-03).
+            return Uri.TryCreate(launch, UriKind.Absolute, out var uri) && !uri.IsFile && !BlockedSchemes.Contains(uri.Scheme)
+                ? uri.AbsoluteUri
+                : null;
         }
         catch (System.Xml.XmlException)
         {

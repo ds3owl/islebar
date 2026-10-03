@@ -465,6 +465,27 @@ public sealed class SystemWatchTests
         Assert.Equal(["09-28 10:00", "10-05 10:00", "10-07 10:00"], starts);
     }
 
+    [Theory]
+    // RFC 5545's own example, moved to 2026: every 2nd week on Tue and Sun from Tue 09-29 — the week start decides which Sunday
+    [InlineData("MO", "09-29,10-04,10-13,10-18")]
+    [InlineData("SU", "09-29,10-11,10-13,10-25")]
+    public void Biweekly_rule_counts_weeks_from_WKST(string wkst, string expected)
+    {
+        var ics = Calendar("BEGIN:VEVENT", "UID:b", "SUMMARY:b", "DTSTART;TZID=Asia/Seoul:20260929T090000",
+            $"RRULE:FREQ=WEEKLY;INTERVAL=2;COUNT=4;BYDAY=TU,SU;WKST={wkst}", "END:VEVENT");
+        var from = new DateTimeOffset(2026, 9, 28, 0, 0, 0, TimeSpan.FromHours(9));
+        var days = IcsSchedule.Occurrences(IcsParser.Parse(ics, Seoul), from, from.AddDays(40))
+            .Select(o => o.Start.ToOffset(TimeSpan.FromHours(9)).ToString("MM-dd", System.Globalization.CultureInfo.InvariantCulture));
+        Assert.Equal(expected, string.Join(",", days));
+    }
+
+    [Fact]
+    public void Until_at_the_end_of_time_does_not_throw()
+    {
+        var ics = Calendar("BEGIN:VEVENT", "UID:u", "SUMMARY:u", "DTSTART;VALUE=DATE:20261001", "RRULE:FREQ=YEARLY;UNTIL=99991231", "END:VEVENT");
+        Assert.Single(IcsParser.Parse(ics, Seoul));
+    }
+
     [Fact]
     public void Daily_recurrence_COUNT_and_UNTIL()
     {
