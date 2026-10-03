@@ -327,6 +327,11 @@ it follows your Windows language, or pick one in settings.
 
 Crash reports, if you turned them on, contain no personal data; anything else you share is your choice.
 
+## Support IsleBar
+
+IsleBar is free and stays free. If it saves you time, you can support its development through
+[GitHub Sponsors](https://github.com/sponsors/ds3owl) — one-off or monthly. Bug reports, ideas and pull requests help just as much.
+
 ## Licence
 
 Copyright (c) 2026 ds3owl. IsleBar is released under the **MIT License** — see [LICENSE](LICENSE).
