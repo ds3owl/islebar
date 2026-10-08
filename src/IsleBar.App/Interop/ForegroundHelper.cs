@@ -46,6 +46,34 @@ internal static class ForegroundHelper
                 AttachThreadInput(ours, theirs, false);
             }
         }
+
+        // Ctrl+Alt+C now and then failed to take the keyboard in front of a terminal and could not be reproduced (09-30).
+        // Log only the failures, with who was in front, so the next miss tells us why (an elevated window is the suspect:
+        // Windows refuses both AttachThreadInput and injected keys towards a higher-integrity window).
+        var now = GetForegroundWindow();
+        if (now != window)
+        {
+            AppLog.Write($"foreground: could not take focus from {Describe(foreground)} (attached={attached}, now={Describe(now)})");
+        }
+    }
+
+    private static string Describe(IntPtr window)
+    {
+        if (window == IntPtr.Zero)
+        {
+            return "none";
+        }
+
+        GetWindowThreadProcessId(window, out var pid);
+        try
+        {
+            using var process = System.Diagnostics.Process.GetProcessById((int)pid);
+            return $"{process.ProcessName} (pid {pid})";
+        }
+        catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
+        {
+            return $"pid {pid}";
+        }
     }
 
     [DllImport("user32.dll")]
@@ -53,6 +81,9 @@ internal static class ForegroundHelper
 
     [DllImport("user32.dll")]
     private static extern uint GetWindowThreadProcessId(IntPtr window, IntPtr processId);
+
+    [DllImport("user32.dll")]
+    private static extern uint GetWindowThreadProcessId(IntPtr window, out uint processId);
 
     [DllImport("kernel32.dll")]
     private static extern uint GetCurrentThreadId();

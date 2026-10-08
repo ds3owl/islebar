@@ -7,7 +7,7 @@
 # Not signed: without a code-signing certificate Windows SmartScreen warns on first run ("unknown publisher"), and a PC with
 # Smart App Control on blocks the unsigned exe. Sign build\app\IsleBar.App.exe, build\bin\islebar.exe and the setup exe with
 # signtool before publishing once a certificate is available.
-param([string]$Version = '0.1.1')
+param([string]$Version = '0.1.2')
 
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path -Parent $PSScriptRoot

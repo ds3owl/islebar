@@ -55,6 +55,35 @@ public sealed class LevelBarsTests
     }
 
     [Fact]
+    public void Bars_move_again_soon_after_a_loud_burst()
+    {
+        // 10-08: after one loud burst (notification sound) the loud envelope held the bars on the floor for seconds
+        var bars = new LevelBars();
+        float Wave(int i) => 0.002f + (0.0015f * MathF.Sin(i * 0.7f));
+        for (var i = 0; i < 90; i++)
+        {
+            bars.Update([Wave(i), Wave(i), Wave(i), Wave(i)]);
+        }
+
+        for (var i = 0; i < 3; i++)
+        {
+            bars.Update([0.04f, 0.04f, 0.04f, 0.04f]);   // 20x louder for 0.1 s
+        }
+
+        float max = 0f;
+        for (var i = 0; i < 45; i++)   // 1.5 s later
+        {
+            var h = bars.Update([Wave(i), Wave(i), Wave(i), Wave(i)]);
+            if (i >= 30)
+            {
+                max = Math.Max(max, h[0]);
+            }
+        }
+
+        Assert.True(max > 0.35f, $"still stuck near the floor: {max}");
+    }
+
+    [Fact]
     public void Heights_stay_in_range()
     {
         var bars = new LevelBars();

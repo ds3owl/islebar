@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.2 (2026-10-08)
+
+### Fixes
+- Music bars that follow the sound no longer freeze for several seconds after one loud burst (a notification sound, a loud
+  hit): the loud reference now lets go within about a second.
+- At low playback volume the high band moves again instead of sitting at the bottom most of the time.
+
 ## 0.1.1 (2026-10-04)
 
 ### Fixes
