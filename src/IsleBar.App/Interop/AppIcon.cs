@@ -25,6 +25,13 @@ internal static class AppIcon
     private static readonly Dictionary<string, ImageSource?> Cache = new(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>
+    /// The bitmaps behind the cached sources, kept open for good. XAML copies a SoftwareBitmapSource's pixels to the screen
+    /// again later (its surface is dropped and rebuilt), and reading a bitmap we had disposed failed fast with RO_E_CLOSED
+    /// inside RTMediaFrame — the bar crashed about once a day after hours of running (dumps 10-05..10-08). 48 px icons are tiny.
+    /// </summary>
+    private static readonly List<SoftwareBitmap> KeepAlive = [];
+
+    /// <summary>
     /// Calls <paramref name="apply"/> with the app's icon once it is ready (immediately if cached). Never throws; if the icon
     /// can't be had, it simply never calls back and the glyph the caller already showed stays.
     /// </summary>
@@ -53,7 +60,7 @@ internal static class AppIcon
             {
                 var wic = new SoftwareBitmapSource();
                 await wic.SetBitmapAsync(bitmap);
-                bitmap.Dispose();
+                KeepAlive.Add(bitmap);   // never Dispose: see KeepAlive
                 source = wic;
             }
         }
