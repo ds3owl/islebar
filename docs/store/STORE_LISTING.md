@@ -26,10 +26,9 @@ every language you add. Screenshots (1-terminal … 10-dark.png, 1920×1080) and
 
 - **runFullTrust**: IsleBar is a desktop (Win32/WinUI 3) app. It places its search box over the taskbar's own search box and
   reads system state (media sessions, downloads, notifications the user opts into), which requires a full-trust process.
-- **unvirtualizedResources**: Claude Code and Codex call IsleBar's command-line tool (`islebar.exe`, an app execution alias)
-  from outside the package to report progress. The app and that tool exchange small status files in
-  `%LOCALAPPDATA%\IsleBar` and read the user's crash-report choice from `HKCU\Software\IsleBar`. With write virtualization
-  on, the app would read a private copy and never see the tool's updates.
+- ~~unvirtualizedResources~~: **refused by certification 10-07 and removed** from 0.1.2. The bar and the hook CLI share
+  the package's AppData / HKCU view anyway; the Explorer module now lives in `%USERPROFILE%\.islebar\tap`, and the
+  supervisor starts the bar so that what it launches (Claude Code, Codex, apps, links) runs outside the package.
 
 ### Uninstall note (add to the description's end or the support page)
 > Before uninstalling, turn off "Claude Code / Codex connection" in IsleBar's settings — the Store gives apps no uninstall
@@ -48,15 +47,16 @@ every language you add. Screenshots (1-terminal … 10-dark.png, 1920×1080) and
 > taskbar) to set the opacity of the taskbar's own search box to 0, so it never shows through behind IsleBar's box. Nothing
 > else in Explorer is changed; the box is restored as soon as the setting is turned off or IsleBar exits (including a crash).
 > If this optional feature is not acceptable, we can ship the Store package without it. Once turned on, the small helper
-> stays loaded in that Explorer session (it is staged in %LOCALAPPDATA%\IsleBar\tap) and does nothing while IsleBar is not running.
+> stays loaded in that Explorer session (it is staged in %USERPROFILE%\.islebar\tap, a plain folder Explorer can read) and does nothing while IsleBar is not running.
 >
 > Other system behaviour, all for the taskbar pill: IsleBar's window is placed inside the taskbar (SetParent) next to the search
 > box; it reads the taskbar's layout with UI Automation to find that spot; while an agent task has just finished it uses
 > low-level keyboard/mouse hooks (WH_KEYBOARD_LL / WH_MOUSE_LL) only to notice *that* the user clicked or typed in that
 > terminal — key values are never read or stored — and a mouse hook to close an open notice on an outside click. When the
 > user clicks its "Connect" card (undone with a switch in settings) it adds its status command to Claude Code's / Codex's hook
-> settings in the user profile, and marks its own working folder (%USERPROFILE%\ClaudeBar) as trusted for Claude Code. It
-> starts with Windows through the package's StartupTask, which the user can turn off in Settings › Apps › Startup.
+> settings in the user profile, and marks its own working folder (%USERPROFILE%\ClaudeBar) as trusted for Claude Code. Programs
+> started from the pill (the agent terminal, files, links) are launched outside the package so their own data is not
+> redirected into IsleBar's container. It starts with Windows through the package's StartupTask, which the user can turn off in Settings › Apps › Startup.
 
 ---
 

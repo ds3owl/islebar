@@ -207,7 +207,11 @@ internal static class NativeSearchBox
 
         var bytes = File.ReadAllBytes(source);
         var hash = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(bytes))[..12];
-        var folder = Path.Combine(AppPaths.DataDirectory, "tap");
+        // Store build: AppData writes of a packaged app land in its private copy, which Explorer can't see — keep the module in
+        // a plain folder of the user profile instead (the reason the Store refused unvirtualizedResources, 10-07).
+        var folder = AppPaths.IsPackaged
+            ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".islebar", "tap")
+            : Path.Combine(AppPaths.DataDirectory, "tap");
         Directory.CreateDirectory(folder);
         var target = Path.Combine(folder, $"IsleBarTap-{hash}.dll");
         if (!File.Exists(target))

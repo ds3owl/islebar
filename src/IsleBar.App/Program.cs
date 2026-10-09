@@ -61,9 +61,19 @@ public static partial class Program
                 int code;
                 try
                 {
-                    using var child = System.Diagnostics.Process.Start(ChildStartInfo())!;
-                    child.WaitForExit();
-                    code = child.ExitCode;
+                    if (Interop.AppPaths.IsPackaged)
+                    {
+                        // Store build: the bar keeps the package identity, but what it starts (Claude Code, Codex, apps from
+                        // file search, links) runs outside the package and its private AppData / HKCU copy (see PackagedChild).
+                        var info = ChildStartInfo();
+                        code = Interop.PackagedChild.RunAndWait(info.FileName, [.. info.ArgumentList], info.WorkingDirectory);
+                    }
+                    else
+                    {
+                        using var child = System.Diagnostics.Process.Start(ChildStartInfo())!;
+                        child.WaitForExit();
+                        code = child.ExitCode;
+                    }
                 }
                 catch (System.ComponentModel.Win32Exception)
                 {
