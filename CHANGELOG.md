@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.3 (2026-10-09)
+
+### Fixes
+- The bar no longer closes by itself about once a day after running for hours (app icons on the isle were read again after
+  they had been released).
+
+### Microsoft Store package
+- Prepared for the Store: the optional "hide the real search box" helper and the programs the bar starts (Claude Code, Codex,
+  files, links) now work without asking Windows for the unvirtualized-resources permission. The setup build is unchanged.
+
 ## 0.1.2 (2026-10-08)
 
 ### Fixes
