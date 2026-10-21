@@ -13,7 +13,7 @@ param(
     [string]$IdentityName = 'ds3owl.IsleBar.Test',
     [string]$Publisher = 'CN=IsleBar Test',
     [string]$PublisherDisplayName = 'ds3owl',
-    [string]$Version = '0.1.3',
+    [string]$Version = '0.1.4',
     [switch]$Test,
     [switch]$NoNativeMode
 )
@@ -52,6 +52,10 @@ $v = [version]$Version
 $manifest = (Get-Content (Join-Path $repo 'msix\AppxManifest.template.xml') -Raw -Encoding UTF8).
     Replace('{{IdentityName}}', $IdentityName).Replace('{{Publisher}}', $Publisher).
     Replace('{{PublisherDisplayName}}', $PublisherDisplayName).Replace('{{Version}}', "$($v.Major).$($v.Minor).$([Math]::Max(0, $v.Build)).0")
+# the shipped manifest carries no comments: the template's notes name the refused capability, which read as a request to
+# the certification reviewer (10-10, second refusal of 0.1.2 although only runFullTrust was declared)
+$manifest = [regex]::Replace($manifest, '[ \t]*<!--.*?-->[ \t]*\r?\n?', '', 'Singleline')
+if ($manifest -match 'unvirtualized') { throw 'the manifest still names unvirtualizedResources' }
 [IO.File]::WriteAllText((Join-Path $layout 'AppxManifest.xml'), $manifest, (New-Object Text.UTF8Encoding($false)))
 
 New-Item -ItemType Directory -Force (Join-Path $repo 'dist') | Out-Null

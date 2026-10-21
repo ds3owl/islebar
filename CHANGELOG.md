@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.4 (2026-10-21)
+
+### Fixes
+- Codex now shows its own mark on PCs without OpenAI's VS Code extension: the bar also takes it from OpenAI's ChatGPT app
+  (Microsoft Store) when that is installed, painted in the bar's icon colour. IsleBar still ships no OpenAI logo.
+
 ## 0.1.3 (2026-10-09)
 
 ### Fixes
