@@ -10,11 +10,9 @@
   <picture><source media="(prefers-color-scheme: dark)" srcset="docs/media/hero-dark.webp"><img src="docs/media/hero-light.webp" width="860" alt="IsleBar in the Windows 11 taskbar: Claude working, needs you, done"></picture>
 </p>
 
-https://github.com/user-attachments/assets/9f25a46b-59fd-4983-947e-de8a450cfdd6
-
 <p align="center">
   <a href="../../releases/latest"><b>⬇&nbsp;Download for Windows&nbsp;11</b></a>
-  &nbsp;·&nbsp; <a href="https://ds3owl.github.io/islebar/">▶&nbsp;Watch the film</a>
+  &nbsp;·&nbsp; <a href="https://ds3owl.github.io/islebar/">Website</a>
   &nbsp;·&nbsp; <a href="#what-it-does">Features</a>
   &nbsp;·&nbsp; <a href="#install">Install</a>
 </p>
