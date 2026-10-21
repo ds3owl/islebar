@@ -127,6 +127,9 @@ html:lang(zh-Hant) body { font-family:"Segoe UI Variable Display","Segoe UI","Mi
 html:lang(ko) body { font-family:"Segoe UI Variable Display","Segoe UI","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif; word-break:keep-all; }
 a { color:var(--accent); text-decoration:none; }
 .wrap { max-width:1080px; margin:0 auto; padding:0 16px; }
+.home { padding:18px 0 0; font-size:14px; }
+.home a { color:var(--muted); }
+.home a:hover { color:var(--accent); }
 header { text-align:center; padding:72px 0 28px; }
 h1 { font-size:clamp(44px,8vw,88px); line-height:1; margin:0; letter-spacing:-.02em; }
 .lede { font-size:clamp(19px,2.6vw,26px); color:var(--muted); margin:16px auto 0; max-width:760px; }
@@ -174,6 +177,7 @@ footer { text-align:center; color:var(--muted); font-size:13px; padding:70px 0 4
 </head>
 <body>
 <div class="wrap">
+  <nav class="home"><a href="https://ds3owl.github.io/">← ds3owl</a></nav>
   <header>
     <h1>IsleBar</h1>
     <p class="lede">Your Windows&nbsp;11 taskbar, alive. Ask Claude Code or Codex from the search box — and see when it is working, needs you, or is done.</p>
