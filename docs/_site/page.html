@@ -24,7 +24,6 @@
 <script type="application/ld+json">
 {{ld_faq}}
 </script>
-{{redirect}}
 {{style}}
 </head>
 <body>
@@ -38,10 +37,6 @@
       <a class="btn ghost" href="https://github.com/ds3owl/islebar">{{cta_github}}</a>
     </div>
     <div class="small">{{tagline}}</div>
-    <div class="film">
-      <video id="film" src="{{root}}media/films/IsleBar-{{film}}-light.mp4" poster="{{root}}media/poster-light.jpg" autoplay muted loop playsinline controls preload="metadata"
-             aria-label="{{film_label}}"></video>
-    </div>
   </header>
 
   <div class="need">
@@ -86,29 +81,10 @@
   </section>
 
   <footer>
-    <nav class="langs" aria-label="Language">{{lang_links}}</nav>
     <a href="{{root}}privacy.html">{{privacy}}</a> ·
     {{footer_unofficial}}<br>
     {{footer_trademarks}}
   </footer>
 </div>
-<script>
-// The film follows the visitor's light / dark setting; the language is this page's own.
-(function () {
-  var q = window.matchMedia('(prefers-color-scheme: dark)');
-  function apply() {
-    var t = q.matches ? 'dark' : 'light', v = document.getElementById('film');
-    var src = '{{root}}media/films/IsleBar-{{film}}-' + t + '.mp4';
-    if (v && v.getAttribute('src') !== src) {
-      v.setAttribute('poster', '{{root}}media/poster-' + t + '.jpg'); v.setAttribute('src', src);
-      var p = v.play(); if (p && p.catch) p.catch(function () {});
-    }
-  }
-  apply(); if (q.addEventListener) q.addEventListener('change', apply);
-  // remember a language picked from the footer, so the English page doesn't send the visitor away again
-  var links = document.querySelectorAll('nav.langs a');
-  for (var i = 0; i < links.length; i++) links[i].addEventListener('click', function () { try { localStorage.setItem('islebar-lang', this.getAttribute('data-lang')); } catch (e) {} });
-})();
-</script>
 </body>
 </html>

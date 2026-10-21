@@ -1,7 +1,6 @@
-# Builds the GitHub Pages site in ten languages from one template:
-#   docs/_site/page.html + docs/_site/i18n/<lang>.json  →  docs/index.html (English) and docs/<path>/index.html
-# Every page has its own address (so search engines index each language), links to the others (hreflang), plays the film
-# in its own language and the visitor's light/dark theme, and the English page sends a first-time visitor to their language.
+# Builds the GitHub Pages site (English) from one template:
+#   docs/_site/page.html + docs/_site/i18n/en.json  →  docs/index.html, docs/sitemap.xml, docs/robots.txt
+# The LANGS table can take more languages again; each gets its own address and hreflang links.
 #   python scripts/build-site.py
 import json, os, re, html
 
@@ -11,15 +10,6 @@ SITE = 'https://ds3owl.github.io/islebar/'
 # code (films, i18n file), url path, html lang / hreflang, og locale, name in its own language
 LANGS = [
     ('en', '', 'en', 'en_US', 'English'),
-    ('ko', 'ko/', 'ko', 'ko_KR', '한국어'),
-    ('ja', 'ja/', 'ja', 'ja_JP', '日本語'),
-    ('zh', 'zh/', 'zh-Hans', 'zh_CN', '简体中文'),
-    ('zht', 'zh-tw/', 'zh-Hant', 'zh_TW', '繁體中文'),
-    ('fr', 'fr/', 'fr', 'fr_FR', 'Français'),
-    ('de', 'de/', 'de', 'de_DE', 'Deutsch'),
-    ('it', 'it/', 'it', 'it_IT', 'Italiano'),
-    ('pt', 'pt/', 'pt-BR', 'pt_BR', 'Português'),
-    ('es', 'es/', 'es', 'es_ES', 'Español'),
 ]
 
 
