@@ -12,6 +12,7 @@
 
 <p align="center">
   <a href="../../releases/latest"><b>⬇&nbsp;Download for Windows&nbsp;11</b></a>
+  &nbsp;·&nbsp; <a href="https://apps.microsoft.com/detail/9P1L4TH02NRQ">Microsoft Store</a>
   &nbsp;·&nbsp; <a href="https://ds3owl.github.io/islebar/">Website</a>
   &nbsp;·&nbsp; <a href="#what-it-does">Features</a>
   &nbsp;·&nbsp; <a href="#install">Install</a>
@@ -199,8 +200,9 @@ Ten UI languages: English · 简体中文 · 繁體中文 · Français · Deutsc
 2. Pick the options: **start IsleBar when I sign in**, and **connect Claude Code / Codex notifications** (see below).
 3. The pill appears over the taskbar search box. Right-click it for timers and to close it; ⌄ opens launch options and ⚙ settings.
 
-The installer and the app are **not code-signed yet**. Windows SmartScreen may say "Windows protected your PC" —
-choose *More info → Run anyway*. On a PC with **Smart App Control** turned on, unsigned apps are blocked outright.
+The installer here is **not code-signed**. Windows SmartScreen may say "Windows protected your PC" — choose
+*More info → Run anyway*. On a PC with **Smart App Control** turned on, unsigned apps are blocked outright.
+The [Microsoft Store version](https://apps.microsoft.com/detail/9P1L4TH02NRQ) is signed by Microsoft, so neither happens there.
 
 **Uninstall** from *Settings › Apps*. It stops the bar, gives the real search box back, restores any Windows
 notification banners IsleBar had hidden, and removes only IsleBar's own hooks. Your settings stay in
@@ -303,7 +305,8 @@ it is done — no more watching the terminal.
 **Do I need Claude Code or Codex?** Only for the AI part (asking from the bar and seeing *working · needs you · done*).
 Music, timers, downloads, notices and web search work without them; file search needs [Everything](https://www.voidtools.com/).
 
-**Windows says "Windows protected your PC".** The app isn't code-signed yet. Click *More info → Run anyway*.
+**Windows says "Windows protected your PC".** The installer isn't code-signed. Click *More info → Run anyway*, or get
+IsleBar from the [Microsoft Store](https://apps.microsoft.com/detail/9P1L4TH02NRQ), which Microsoft signs.
 
 **Does IsleBar collect or send anything?** Nothing about you leaves your PC. Crash reports are opt-in and contain only the
 error, versions and basic device info — see [Privacy](#privacy).

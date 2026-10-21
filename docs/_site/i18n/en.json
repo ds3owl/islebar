@@ -8,6 +8,7 @@
   "lede": "Your Windows&nbsp;11 taskbar, alive. Ask Claude Code or Codex from the search box — and see when it is working, needs you, or is done.",
   "cta_download": "Download for Windows 11",
   "cta_github": "View on GitHub",
+  "cta_store": "Microsoft Store",
   "tagline": "Free · Open source (MIT) · No account · Private by default",
   "film_label": "IsleBar film: a screenshot dropped on the bar, a long question, Claude working in a terminal, needs you, done, Codex, timers, files, downloads, notifications, music, light and dark mode",
   "works_title": "Works great with",
@@ -99,7 +100,7 @@
     ],
     [
       "Windows says “Windows protected your PC”.",
-      "Choose <i>More info → Run anyway</i>. Code signing is on the way."
+      "Choose <i>More info → Run anyway</i>, or get IsleBar from the <a href=\"https://apps.microsoft.com/detail/9P1L4TH02NRQ\">Microsoft Store</a>, which Microsoft signs."
     ],
     [
       "How do I remove it?",
