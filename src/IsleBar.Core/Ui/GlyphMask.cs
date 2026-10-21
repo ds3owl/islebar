@@ -72,7 +72,7 @@ public static class GlyphMask
         return Downscale(square, side, size);
     }
 
-    private static byte[] BoxBlur(byte[] src, int side, int radius)
+    internal static byte[] BoxBlur(byte[] src, int side, int radius)
     {
         var tmp = new byte[src.Length];
         var dst = new byte[src.Length];
@@ -110,7 +110,7 @@ public static class GlyphMask
         return dst;
     }
 
-    private static byte[] Threshold(byte[] src, byte level)
+    internal static byte[] Threshold(byte[] src, byte level)
     {
         var dst = new byte[src.Length];
         for (var i = 0; i < src.Length; i++)
@@ -146,7 +146,7 @@ public static class GlyphMask
         return dst;
     }
 
-    private static byte[] Downscale(byte[] src, int side, int size)
+    internal static byte[] Downscale(byte[] src, int side, int size)
     {
         var dst = new byte[size * size];
         var scale = (double)side / size;

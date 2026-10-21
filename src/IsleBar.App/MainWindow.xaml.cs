@@ -2346,6 +2346,32 @@ public sealed partial class MainWindow : Window
                 ThemeColors.FromSystem().Light) is { } blossom
             ? new Microsoft.UI.Xaml.Media.Imaging.SvgImageSource(new Uri(blossom))
             : null;
+        _codexMarkLoad++;
+        if (CodexGlyph.Source is null)
+        {
+            _ = LoadStoreCodexMarkAsync(_codexMarkLoad, _theme.Icon);
+        }
+    }
+
+    /// <summary>Counts <see cref="LoadAgentMarks"/> calls, so a slower read for an older theme doesn't land after a newer one.</summary>
+    private int _codexMarkLoad;
+
+    /// <summary>
+    /// No VS Code extension: take the mark from OpenAI's ChatGPT app (Microsoft Store) instead — read off the UI thread,
+    /// painted in the theme's icon colour like the Claude spark.
+    /// </summary>
+    private async Task LoadStoreCodexMarkAsync(int load, Windows.UI.Color color)
+    {
+        var size = DpiSetup.Px(23);   // the 20×20 image with its -1.5 margins
+        var alpha = await Task.Run(() => CodexStoreMark.ReadMask(size));
+        if (alpha is null || load != _codexMarkLoad || CodexGlyph.Source is not null)
+        {
+            return;
+        }
+
+        CodexGlyph.Source = ClaudeGlyph.Paint(alpha, size, color);
+        UpdateLeadIcon();
+        UpdateTabHint();
     }
 
     /// <summary>

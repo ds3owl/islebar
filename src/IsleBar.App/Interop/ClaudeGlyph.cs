@@ -26,6 +26,12 @@ internal static class ClaudeGlyph
             return null;
         }
 
+        return Paint(alpha, pixelSize, color);
+    }
+
+    /// <summary>Paints an alpha mask (<paramref name="pixelSize"/> square) in the single color <paramref name="color"/>. UI thread only.</summary>
+    internal static WriteableBitmap Paint(byte[] alpha, int pixelSize, Windows.UI.Color color)
+    {
         // Premultiplied BGRA
         var pixels = new byte[pixelSize * pixelSize * 4];
         for (var i = 0; i < alpha.Length; i++)
