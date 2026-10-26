@@ -15,6 +15,12 @@ public static partial class Program
     [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
     private static partial bool FreeConsole();
 
+    [System.Runtime.InteropServices.LibraryImport("user32.dll")]
+    private static partial int GetSystemMetrics(int index);
+
+    /// <summary>Nonzero while this session is signing out or shutting down.</summary>
+    private const int SmShuttingDown = 0x2000;
+
     /// <summary>Marker the supervising launcher adds when starting the search box (child).</summary>
     private const string ChildFlag = "--child";
 
@@ -90,6 +96,13 @@ public static partial class Program
                 }
 
                 Interop.TaskbarHost.Log($"supervisor: bar exited with code {code} (ran {(DateTime.UtcNow - started).TotalSeconds:0}s)");
+                if (GetSystemMetrics(SmShuttingDown) != 0 || unchecked((uint)code) == 0xC000026B)
+                {
+                    // signing out: a relaunched bar only fails again (seen 10-26, three exits in three seconds)
+                    Interop.TaskbarHost.Log("supervisor: the session is ending — not relaunching");
+                    return code;
+                }
+
                 if (IsleBar.Core.Diagnostics.CrashText.IsNativeCrash(code))
                 {
                     Interop.CrashReports.StartIfAllowed();   // the person may have opted in since the supervisor started

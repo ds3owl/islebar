@@ -35,6 +35,16 @@ public class CrashTextTests
     [InlineData(-1073741189, true)]   // 0xC000027B fail-fast
     [InlineData(-1073740940, true)]   // 0xC0000374 heap corruption
     [InlineData(-532462766, false)]   // 0xE0434352 managed crash — already reported with its exception
+    [InlineData(1073807364, false)]   // 0x40010004 Windows ended it at sign-out / shutdown
+    [InlineData(-1073741205, false)]  // 0xC000026B started while signing out
     public void Only_native_crashes_count(int code, bool report)
         => Assert.Equal(report, CrashText.IsNativeCrash(code));
+
+    [Theory]
+    [InlineData(1073807364, true)]
+    [InlineData(-1073741205, true)]
+    [InlineData(-1073741189, false)]  // 0xC000027B is a real crash
+    [InlineData(1, false)]
+    public void Session_end_codes(int code, bool sessionEnd)
+        => Assert.Equal(sessionEnd, CrashText.IsSessionEnd(code));
 }
