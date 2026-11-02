@@ -189,7 +189,7 @@ footer { text-align:center; color:var(--muted); font-size:13px; padding:70px 0 4
     </div>
     <div class="small">Free · Open source (MIT) · No account · Private by default</div>
     <div class="film">
-      <video id="film" poster="media/poster-light.jpg" autoplay muted loop playsinline controls preload="metadata"
+      <video id="film" poster="media/films/IsleBar-en-light.jpg" autoplay muted loop playsinline controls preload="metadata"
              aria-label="IsleBar film: a screenshot dropped on the bar, a long question, Claude working in a terminal, needs you, done, Codex, timers, files, downloads, notifications, music, light and dark mode">
         <source src="media/films/IsleBar-en-light.av1.mp4" type='video/mp4; codecs="av01.0.09M.08"'>
         <source src="media/films/IsleBar-en-light.mp4" type="video/mp4">
@@ -270,7 +270,7 @@ footer { text-align:center; color:var(--muted); font-size:13px; padding:70px 0 4
     var s = v.getElementsByTagName('source'), base = 'media/films/IsleBar-en-' + t;
     if (s[1].getAttribute('src') === base + '.mp4') return;
     s[0].setAttribute('src', base + '.av1.mp4'); s[1].setAttribute('src', base + '.mp4');
-    v.setAttribute('poster', 'media/poster-' + t + '.jpg'); v.load();
+    v.setAttribute('poster', base + '.jpg'); v.load();
     var p = v.play(); if (p && p.catch) p.catch(function () {});
   }
   apply(); if (q.addEventListener) q.addEventListener('change', apply);
