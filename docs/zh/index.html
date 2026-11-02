@@ -189,8 +189,11 @@ footer { text-align:center; color:var(--muted); font-size:13px; padding:70px 0 4
     </div>
     <div class="small">免费 · 开源（MIT） · 无需账号 · 数据只留在本机</div>
     <div class="film">
-      <video id="film" src="../media/films/IsleBar-zh-light.mp4" poster="../media/poster-light.jpg" autoplay muted loop playsinline controls preload="metadata"
-             aria-label="IsleBar 演示视频：把截图拖到栏上、长问题、Claude 在终端里工作、等你回复、已完成、Codex、计时器、文件、下载、通知、音乐、浅色与深色模式"></video>
+      <video id="film" poster="../media/poster-light.jpg" autoplay muted loop playsinline controls preload="metadata"
+             aria-label="IsleBar 演示视频：把截图拖到栏上、长问题、Claude 在终端里工作、等你回复、已完成、Codex、计时器、文件、下载、通知、音乐、浅色与深色模式">
+        <source src="../media/films/IsleBar-zh-light.av1.mp4" type='video/mp4; codecs="av01.0.09M.08"'>
+        <source src="../media/films/IsleBar-zh-light.mp4" type="video/mp4">
+      </video>
     </div>
   </header>
 
@@ -262,11 +265,13 @@ footer { text-align:center; color:var(--muted); font-size:13px; padding:70px 0 4
   var q = window.matchMedia('(prefers-color-scheme: dark)');
   function apply() {
     var t = q.matches ? 'dark' : 'light', v = document.getElementById('film');
-    var src = '../media/films/IsleBar-zh-' + t + '.mp4';
-    if (v && v.getAttribute('src') !== src) {
-      v.setAttribute('poster', '../media/poster-' + t + '.jpg'); v.setAttribute('src', src);
-      var p = v.play(); if (p && p.catch) p.catch(function () {});
-    }
+    if (!v) return;
+    // AV1 where the browser plays it (smaller, starts sooner), H.264 everywhere else — the <source> order picks
+    var s = v.getElementsByTagName('source'), base = '../media/films/IsleBar-zh-' + t;
+    if (s[1].getAttribute('src') === base + '.mp4') return;
+    s[0].setAttribute('src', base + '.av1.mp4'); s[1].setAttribute('src', base + '.mp4');
+    v.setAttribute('poster', '../media/poster-' + t + '.jpg'); v.load();
+    var p = v.play(); if (p && p.catch) p.catch(function () {});
   }
   apply(); if (q.addEventListener) q.addEventListener('change', apply);
   // remember a language picked from the footer, so the English page doesn't send the visitor away again

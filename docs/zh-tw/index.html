@@ -189,8 +189,11 @@ footer { text-align:center; color:var(--muted); font-size:13px; padding:70px 0 4
     </div>
     <div class="small">免費 · 開放原始碼（MIT） · 不需帳號 · 資料只留在你的電腦</div>
     <div class="film">
-      <video id="film" src="../media/films/IsleBar-zht-light.mp4" poster="../media/poster-light.jpg" autoplay muted loop playsinline controls preload="metadata"
-             aria-label="IsleBar 介紹影片：把螢幕擷取畫面拖到列上、長問題、Claude 在終端機裡工作、等你回覆、已完成、Codex、計時器、檔案、下載、通知、音樂、淺色與深色模式"></video>
+      <video id="film" poster="../media/poster-light.jpg" autoplay muted loop playsinline controls preload="metadata"
+             aria-label="IsleBar 介紹影片：把螢幕擷取畫面拖到列上、長問題、Claude 在終端機裡工作、等你回覆、已完成、Codex、計時器、檔案、下載、通知、音樂、淺色與深色模式">
+        <source src="../media/films/IsleBar-zht-light.av1.mp4" type='video/mp4; codecs="av01.0.09M.08"'>
+        <source src="../media/films/IsleBar-zht-light.mp4" type="video/mp4">
+      </video>
     </div>
   </header>
 
@@ -262,11 +265,13 @@ footer { text-align:center; color:var(--muted); font-size:13px; padding:70px 0 4
   var q = window.matchMedia('(prefers-color-scheme: dark)');
   function apply() {
     var t = q.matches ? 'dark' : 'light', v = document.getElementById('film');
-    var src = '../media/films/IsleBar-zht-' + t + '.mp4';
-    if (v && v.getAttribute('src') !== src) {
-      v.setAttribute('poster', '../media/poster-' + t + '.jpg'); v.setAttribute('src', src);
-      var p = v.play(); if (p && p.catch) p.catch(function () {});
-    }
+    if (!v) return;
+    // AV1 where the browser plays it (smaller, starts sooner), H.264 everywhere else — the <source> order picks
+    var s = v.getElementsByTagName('source'), base = '../media/films/IsleBar-zht-' + t;
+    if (s[1].getAttribute('src') === base + '.mp4') return;
+    s[0].setAttribute('src', base + '.av1.mp4'); s[1].setAttribute('src', base + '.mp4');
+    v.setAttribute('poster', '../media/poster-' + t + '.jpg'); v.load();
+    var p = v.play(); if (p && p.catch) p.catch(function () {});
   }
   apply(); if (q.addEventListener) q.addEventListener('change', apply);
   // remember a language picked from the footer, so the English page doesn't send the visitor away again
