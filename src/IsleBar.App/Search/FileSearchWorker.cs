@@ -73,7 +73,9 @@ internal sealed class FileSearchWorker : IDisposable
     public void Dispose()
     {
         _requests.CompleteAdding();
-        _thread.Join(TimeSpan.FromSeconds(2));
-        _requests.Dispose();
+        if (_thread.Join(TimeSpan.FromSeconds(2)))
+        {
+            _requests.Dispose();   // still inside a slow Everything query, the worker would touch a disposed queue on its way out (review 11-03)
+        }
     }
 }

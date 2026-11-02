@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.1.5 (2026-11-03)
+
+### Fixes
+- The long-question preview no longer flickers while you type: it used to flash a tall empty frame (covering the taskbar for
+  a moment) or a white strip, and showed an empty outline for a frame when it first appeared. It now appears fully drawn.
+- The bar no longer closes when the multi-line question box is closed right after editing (Esc just after deleting text).
+- A timer started while a finished one was still showing now rings when it ends.
+- A file dropped on the bar while the multi-line question box is open is added to that question instead of being lost.
+- While the right-click menu is open, the bar no longer moves itself back into the taskbar under the menu.
+- Tab to file or web search hides the long-question preview instead of leaving it over the results.
+- Fixed several rare cases that could close the bar: a locked settings or state folder, a key written twice inside the
+  settings file, an app icon arriving after its card closed, an audio device error, quitting during a slow file search.
+- Signing out of Windows is no longer reported as a crash.
+
 ## 0.1.4 (2026-10-21)
 
 ### Fixes

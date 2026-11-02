@@ -68,7 +68,8 @@ internal sealed class PromptPreviewWindow : Window
             DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () => Clicked?.Invoke())), handledEventsToo: true);
 
         // Blink by swapping the caret's colour (not its text), so the surrounding text never reflows.
-        _blink = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread().CreateTimer();   // the Window's own DispatcherQueue property is not set yet inside the ctor
+        _blink = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread().CreateTimer();
+        Closed += (_, _) => _blink.Stop();   // closed at exit without Hide(): the blink kept writing to a closed window (review 11-03)   // the Window's own DispatcherQueue property is not set yet inside the ctor
         _blink.Interval = TimeSpan.FromMilliseconds(530);   // the Windows caret cadence
         _blink.Tick += (_, _) => _caret.Foreground = ReferenceEquals(_caret.Foreground, _caretOn) ? _caretOff : _caretOn;
 
@@ -88,9 +89,7 @@ internal sealed class PromptPreviewWindow : Window
         _blink.Start();
 
         _scroll.MaxHeight = PopupPlacement.MaxHeightAbove(anchorX, bandTop) - HintDip;
-        PopupPlacement.SizeToContent(this, _panel, WidthDip);
-        PopupPlacement.PlaceAbove(this, anchorX, bandTop);
-        AppWindow.Show(activateWindow: false);
+        PopupPlacement.ShowDrawnAbove(this, _panel, WidthDip, anchorX, bandTop);
         FollowCaret(at, text.Length);
     }
 

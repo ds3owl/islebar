@@ -46,7 +46,7 @@ internal static class AppIcon
         {
             if (cached is not null)
             {
-                apply(cached);
+                SafeApply(apply, cached);
             }
 
             return;
@@ -72,7 +72,23 @@ internal static class AppIcon
         Cache[aumid] = source;
         if (source is not null)
         {
+            SafeApply(apply, source);
+        }
+    }
+
+    /// <summary>
+    /// The icon arrives after an await: by then the row it was meant for may be rebuilt, or its window (a notice card) closed.
+    /// This is an async void, so a throw here would take the whole bar down (review 11-03) — a late icon is simply dropped.
+    /// </summary>
+    private static void SafeApply(Action<ImageSource> apply, ImageSource source)
+    {
+        try
+        {
             apply(source);
+        }
+        catch (Exception ex) when (ex is COMException or ObjectDisposedException or InvalidOperationException)
+        {
+            AppLog.Write("app icon: dropped a late icon — " + ex.Message);
         }
     }
 

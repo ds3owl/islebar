@@ -61,9 +61,10 @@ internal sealed class AudioMeter : IDisposable
             {
                 CaptureOnce();
             }
-            catch (Exception ex) when (ex is COMException or InvalidCastException or ArgumentException)
+            catch (Exception ex) when (ex is not OutOfMemoryException)
             {
-                // device changed or unplugged — try again shortly
+                // device changed or unplugged — try again shortly. Anything else too: this is a thread of its own, so an exception
+                // escaping it ends the whole bar (E_ACCESSDENIED / E_NOTIMPL come back as other types — review 11-03)
             }
 
             _stop.Token.WaitHandle.WaitOne(300);

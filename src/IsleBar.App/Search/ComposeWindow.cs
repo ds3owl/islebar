@@ -60,6 +60,7 @@ internal sealed class ComposeWindow : Window
 
         _box.AddHandler(UIElement.PreviewKeyDownEvent, new KeyEventHandler(OnKey), handledEventsToo: true);
         _box.TextChanged += (_, _) => Refit();
+        Closed += (_, _) => _done = true;   // closed from outside too (the bar shutting down): no more refits, no Finish
 
         // Caret to the end first — characters typed while the window was opening got inserted at the front (09-30 PC: "ingsPlease … sett")
         _box.Loaded += (_, _) =>
@@ -86,6 +87,21 @@ internal sealed class ComposeWindow : Window
     private int _anchorX;
     private int _bandTop;
 
+    /// <summary>Adds dropped paths at the end of the question and brings the window forward, caret at the end.</summary>
+    public void Append(string text)
+    {
+        if (_done)
+        {
+            return;
+        }
+
+        var gap = _box.Text.Length > 0 && !_box.Text.EndsWith(' ') && !_box.Text.EndsWith('\n') && !_box.Text.EndsWith('\r') ? " " : string.Empty;
+        _box.Text += gap + text + " ";
+        _box.SelectionStart = _box.Text.Length;
+        Activate();
+        _box.Focus(FocusState.Programmatic);
+    }
+
     public void ShowAbove(int anchorX, int bandTop)
     {
         (_anchorX, _bandTop) = (anchorX, bandTop);
@@ -97,13 +113,17 @@ internal sealed class ComposeWindow : Window
     /// <summary>As lines grow, the window grows upward too (up to the top of the screen, then scrolls inside).</summary>
     private void Refit()
     {
+        if (_done)
+        {
+            return;   // a TextChanged can still arrive after Close(), and a closed window's Content throws — the bar crashed (11-03)
+        }
+
         // Set the box height even before the window's content is loaded: the handed-over text arrives in the box's Loaded, which can
         // run before the panel's, and the first sizing (ShowSized) then uses this height.
         _box.Height = TextHeight();
         if (Content is FrameworkElement content && content.IsLoaded)
         {
-            PopupPlacement.SizeToContent(this, content, WidthDip);
-            PopupPlacement.PlaceAbove(this, _anchorX, _bandTop);
+            PopupPlacement.SizeAndPlaceAbove(this, content, WidthDip, _anchorX, _bandTop);
         }
     }
 

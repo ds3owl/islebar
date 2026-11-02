@@ -74,9 +74,7 @@ internal sealed class ResultsWindow : Window
 
         Paint();
         _list.UpdateLayout();
-        PopupPlacement.SizeToContent(this, _list, WidthDip);
-        PopupPlacement.PlaceAbove(this, _anchorX, _bandTop);
-        AppWindow.Show(activateWindow: false);
+        PopupPlacement.ShowDrawnAbove(this, _list, WidthDip, _anchorX, _bandTop);
     }
 
     public void Hide() => AppWindow.Hide();

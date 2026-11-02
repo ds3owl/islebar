@@ -32,6 +32,8 @@ public sealed class ConfigStoreTests
     [InlineData("[1, 2, 3]")]          // JSON but not an object
     [InlineData("\"just a string\"")]
     [InlineData("null")]
+    [InlineData("{ \"lang\": \"ko\", \"lang\": \"en\" }")]                                  // a key written twice (hand edit)
+    [InlineData("{ \"values\": { \"model\": \"opus\", \"model\": \"sonnet\" } }")]       // twice inside "values" — crashed at start (11-03)
     public void Broken_JSON_gives_defaults_and_keeps_the_file(string content)
     {
         using var dir = new TempDir();

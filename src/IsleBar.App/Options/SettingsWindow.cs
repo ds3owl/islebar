@@ -82,8 +82,7 @@ internal sealed class SettingsWindow : Window
     private void Refit()
     {
         _body.UpdateLayout();
-        PopupPlacement.SizeToContent(this, _body, WidthDip);
-        PopupPlacement.PlaceAbove(this, _anchorX, _bandTop);
+        PopupPlacement.SizeAndPlaceAbove(this, _body, WidthDip, _anchorX, _bandTop);
     }
 
     /// <summary>When the language changes, fetch the strings again and redraw.</summary>

@@ -79,7 +79,7 @@ public sealed class ConfigStore
                 broken = node is not JsonObject;
                 if (node is JsonObject obj)
                 {
-                    _ = obj.Count;   // a repeated key only throws when the object is first used — find out here (review 10-03)
+                    Touch(obj);   // a repeated key only throws when the object is first used — find out here, nested ones too (review 10-03, 11-03)
                     return obj;
                 }
 
@@ -193,6 +193,29 @@ public sealed class ConfigStore
             try { File.Delete(tmp); } catch (IOException) { /* fine if it cannot be deleted */ }
             catch (UnauthorizedAccessException) { /* ignore */ }
             return false;
+        }
+    }
+
+    /// <summary>Walks every nested object, so a key written twice anywhere throws now, inside Load's catch, instead of at first use
+    /// (a repeated key inside "values" crashed the bar at start, in a loop — review 11-03).</summary>
+    private static void Touch(JsonNode? node)
+    {
+        switch (node)
+        {
+            case JsonObject obj:
+                foreach (var (_, child) in obj)
+                {
+                    Touch(child);
+                }
+
+                break;
+            case JsonArray array:
+                foreach (var child in array)
+                {
+                    Touch(child);
+                }
+
+                break;
         }
     }
 }

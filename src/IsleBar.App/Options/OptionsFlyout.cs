@@ -150,43 +150,161 @@ internal static class PopupPlacement
         void OnLoaded(object sender, RoutedEventArgs e)
         {
             content.Loaded -= OnLoaded;
-            SizeToContent(window, content, widthDip);
-            PlaceAbove(window, anchorX, bandTop);
+            SizeAndPlaceAbove(window, content, widthDip, anchorX, bandTop);
         }
 
         content.Loaded += OnLoaded;
         window.Activate();
     }
 
-    /// <summary>Fits to the content height (width is the larger of <paramref name="widthDip"/> and the content).</summary>
-    public static void SizeToContent(Window window, FrameworkElement content, int widthDip)
+    /// <summary>
+    /// Fits to the content height and places above the search box in one window operation. While the popup is on screen, a separate
+    /// resize and move each reached the screen as their own frame — the long-question preview flickered as you typed: a tall empty
+    /// frame, or a white strip at the bottom when a line wrapped (promo film 9.35 s / 9.40 s, user 11-03). Does nothing when the
+    /// size and place haven't changed, which is most keystrokes.
+    /// </summary>
+    public static void SizeAndPlaceAbove(Window window, FrameworkElement content, int widthDip, int anchorX, int bandTop) =>
+        _ = SizeAndPlace(window, content, widthDip, anchorX, bandTop);
+
+    /// <summary><see cref="SizeAndPlaceAbove"/>, telling whether the window actually changed.</summary>
+    private static bool SizeAndPlace(Window window, FrameworkElement content, int widthDip, int anchorX, int bandTop)
     {
+        var app = window.AppWindow;
+        var size = ContentSize(window, content, widthDip);
+        var at = AbovePosition(size, anchorX, bandTop);
+        if (app.Size.Width == size.Width && app.Size.Height == size.Height && app.Position.X == at.X && app.Position.Y == at.Y)
+        {
+            return false;
+        }
+
+        app.MoveAndResize(new Windows.Graphics.RectInt32(at.X, at.Y, size.Width, size.Height));
+        return true;
+    }
+
+    /// <summary>A popup shown cloaked, waiting for its first drawn frame: its handle and how many frames have gone by.</summary>
+    private sealed class Waiting(IntPtr hwnd)
+    {
+        public IntPtr Hwnd { get; } = hwnd;
+        public int Frames { get; set; }
+    }
+
+    private static readonly Dictionary<Window, Waiting> s_waitingForFrame = new();
+
+    [System.Runtime.InteropServices.DllImport("dwmapi.dll")]
+    private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attribute, ref int value, int size);
+
+    private const int DWMWA_CLOAK = 13;
+
+    /// <summary>Cloaked, a window is shown and drawn as usual but the system doesn't put it on screen. Takes the handle, not the
+    /// Window: the Window may be closed by the time it is uncloaked, and touching a closed Window throws.</summary>
+    private static void Cloak(IntPtr hwnd, bool on)
+    {
+        var value = on ? 1 : 0;
+        _ = DwmSetWindowAttribute(hwnd, DWMWA_CLOAK, ref value, sizeof(int));   // a destroyed handle just fails — nothing to do
+    }
+
+    /// <summary>
+    /// Shows a no-activate popup above the search box. Already on screen, it is just resized in place. Otherwise it is shown in
+    /// place but cloaked, and uncloaked once XAML has drawn it: shown straight away, the first frame was the window's empty outline
+    /// or a blank box before its content appeared (the long-question preview on paste, user 11-03). Off screen didn't help —
+    /// XAML only drew the content once the window was on a screen.
+    /// </summary>
+    public static void ShowDrawnAbove(Window window, FrameworkElement content, int widthDip, int anchorX, int bandTop)
+    {
+        var app = window.AppWindow;
+        if (s_waitingForFrame.TryGetValue(window, out var waiting))
+        {
+            // Still cloaked from a moment ago. Hidden meanwhile (the preview hides and shows as the text crosses the edge) → show
+            // it again; resized → wait for a frame drawn at the new size before it is uncloaked.
+            if (SizeAndPlace(window, content, widthDip, anchorX, bandTop))
+            {
+                waiting.Frames = 0;
+            }
+
+            if (!app.IsVisible)
+            {
+                app.Show(activateWindow: false);
+            }
+
+            return;
+        }
+
+        if (app.IsVisible && app.Position.X > -30000)
+        {
+            SizeAndPlaceAbove(window, content, widthDip, anchorX, bandTop);
+            return;
+        }
+
+        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
+        var entry = new Waiting(hwnd);
+        s_waitingForFrame[window] = entry;
+        Cloak(hwnd, true);
+        var size = ContentSize(window, content, widthDip);   // hidden, so the tall temporary layout isn't seen
+        var at = AbovePosition(size, anchorX, bandTop);
+        app.MoveAndResize(new Windows.Graphics.RectInt32(at.X, at.Y, size.Width, size.Height));
+        app.Show(activateWindow: false);
+
+        void Done()
+        {
+            CompositionTarget.Rendering -= OnRendering;
+            window.Closed -= OnClosed;
+            s_waitingForFrame.Remove(window);
+            Cloak(hwnd, false);   // also when hidden meanwhile, so the next show doesn't start cloaked
+        }
+
+        void OnRendering(object? sender, object e)
+        {
+            if (++entry.Frames >= 3)
+            {
+                Done();   // a Rendering tick comes before its frame is drawn; give the first frame time to reach the screen
+            }
+        }
+
+        void OnClosed(object sender, WindowEventArgs e) => Done();   // closed while waiting (results closed by Enter/Esc at once)
+
+        window.Closed += OnClosed;
+        CompositionTarget.Rendering += OnRendering;
+    }
+
+    /// <summary>The outer window size that fits the content (width is the larger of <paramref name="widthDip"/> and the content).</summary>
+    private static Windows.Graphics.SizeInt32 ContentSize(Window window, FrameworkElement content, int widthDip)
+    {
+        var app = window.AppWindow;
         // Width: the larger of the unconstrained content width (the minimum where buttons don't overlap) and the default width
         content.Measure(new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity));
         var width = Math.Ceiling(Math.Max(widthDip, content.DesiredSize.Width));
-        // Lay out against the height the content wants at this width (a fixed 600px here clipped long prompts at ~13 lines; sizing to
-        // the whole screen made the window flash full-height on every keystroke — user 10-01). Capped by the work area.
         content.Measure(new Windows.Foundation.Size(width, double.PositiveInfinity));
         var wanted = content.DesiredSize.Height;
-        var workArea = DisplayArea.GetFromWindowId(window.AppWindow.Id, DisplayAreaFallback.Primary).WorkArea;
-        var layoutHeight = Math.Min(workArea.Height, Math.Max(DpiSetup.Px(600), DpiSetup.Px((int)Math.Ceiling(content.DesiredSize.Height)) + DpiSetup.Px(16)));
-        window.AppWindow.ResizeClient(new Windows.Graphics.SizeInt32(DpiSetup.Px((int)width), layoutHeight));
+
+        // Off screen (hidden, or parked at -32000 before the first show) the window may be laid out against a tall client area first,
+        // so the arranged height below isn't clipped (a fixed 600px here clipped long prompts at ~13 lines; sizing to the whole screen
+        // made the window flash full-height on every keystroke — user 10-01). On screen that temporary size would itself be seen,
+        // so there the measured height alone decides.
+        var onScreen = app.IsVisible && app.Position.X > -30000;
+        if (!onScreen)
+        {
+            var workArea = DisplayArea.GetFromWindowId(app.Id, DisplayAreaFallback.Primary).WorkArea;
+            var layoutHeight = Math.Min(workArea.Height, Math.Max(DpiSetup.Px(600), DpiSetup.Px((int)Math.Ceiling(wanted)) + DpiSetup.Px(16)));
+            app.ResizeClient(new Windows.Graphics.SizeInt32(DpiSetup.Px((int)width), layoutHeight));
+        }
 
         // Height: the height actually arranged at that width (anchored at top, so leftover space isn't included)
         content.VerticalAlignment = VerticalAlignment.Top;
         content.UpdateLayout();
         // Size by the outer size: on a window without a title bar, ResizeClient grows by the height of the nonexistent title bar (measured on PC 09-29)
-        var client = window.AppWindow.ClientSize;
-        var outer = window.AppWindow.Size;
+        var client = app.ClientSize;
+        var outer = app.Size;
         var chromeW = outer.Width - client.Width;   // sum of left and right borders
-        var hasTitle = window.AppWindow.Presenter is OverlappedPresenter { HasTitleBar: true };
+        var hasTitle = app.Presenter is OverlappedPresenter { HasTitleBar: true };
         var chromeH = hasTitle ? outer.Height - client.Height : chromeW;   // includes the title bar height if there is one
-        // ActualHeight can still be clipped to the window's previous size (the resize above lands asynchronously) — the long-prompt
-        // compose window stayed ~100 tall under 40 lines (user 10-01) — so never go below the measured height.
-        var height = DpiSetup.Px((int)Math.Ceiling(Math.Max(content.ActualHeight, wanted))) + chromeH;
-        var work = DisplayArea.GetFromWindowId(window.AppWindow.Id, DisplayAreaFallback.Primary).WorkArea;
+        // ActualHeight can still be clipped to the window's previous size (the resize lands asynchronously) — the long-prompt
+        // compose window stayed ~100 tall under 40 lines (user 10-01) — so never go below the measured height. An arrangement at
+        // another width says nothing about this one, so it only counts when the window already has this width.
+        var arranged = client.Width == DpiSetup.Px((int)width) ? content.ActualHeight : 0;
+        var height = DpiSetup.Px((int)Math.Ceiling(Math.Max(arranged, wanted))) + chromeH;
+        var work = DisplayArea.GetFromWindowId(app.Id, DisplayAreaFallback.Primary).WorkArea;
         height = Math.Min(height, work.Height - DpiSetup.Px(24));   // keep within the work area (above the taskbar) — if it overflows, scroll inside the window
-        window.AppWindow.Resize(new Windows.Graphics.SizeInt32(DpiSetup.Px((int)width) + chromeW, height));
+        return new Windows.Graphics.SizeInt32(DpiSetup.Px((int)width) + chromeW, height);
     }
 
     /// <summary>
@@ -200,14 +318,13 @@ internal static class PopupPlacement
         return Math.Max(120, px / DpiSetup.Scale);
     }
 
-    /// <summary>Places above the search box, centred on <paramref name="anchorX"/> (the pill's centre), without going off-screen.</summary>
-    public static void PlaceAbove(Window window, int anchorX, int bandTop)
+    /// <summary>Where a window of <paramref name="size"/> goes above the search box: centred on <paramref name="anchorX"/> (the pill's centre), without going off-screen.</summary>
+    private static Windows.Graphics.PointInt32 AbovePosition(Windows.Graphics.SizeInt32 size, int anchorX, int bandTop)
     {
-        var size = window.AppWindow.Size;
         var area = DisplayArea.GetFromPoint(new Windows.Graphics.PointInt32(anchorX, bandTop - 1), DisplayAreaFallback.Primary);
         var right = area.OuterBounds.X + area.OuterBounds.Width;
         var x = Math.Max(area.OuterBounds.X + DpiSetup.Px(8), Math.Min(anchorX - (size.Width / 2), right - size.Width - DpiSetup.Px(8)));
         var y = Math.Max(area.OuterBounds.Y, bandTop - size.Height - DpiSetup.Px(12));
-        window.AppWindow.Move(new Windows.Graphics.PointInt32(x, y));
+        return new Windows.Graphics.PointInt32(x, y);
     }
 }

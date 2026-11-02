@@ -521,6 +521,11 @@ public sealed partial class MainWindow : Window
                 return;
             }
 
+            if (!_typing || _mode != BarMode.Claude)
+            {
+                return;   // typing ended (or Tab changed mode) while a slow source handed over the text — don't drop it into the idle box
+            }
+
             clip = clip.TrimEnd('\r', '\n') is var trimmed && !trimmed.Contains('\n') && !trimmed.Contains('\r') ? trimmed : clip;   // one line copied with its newline
             var start = Entry.SelectionStart;
             var merged = Entry.Text[..start] + clip + Entry.Text[(start + Entry.SelectionLength)..];
@@ -863,6 +868,7 @@ public sealed partial class MainWindow : Window
         Entry.PlaceholderText = Placeholders.For(_mode, _settings.Agent);
         UpdateLeadIcon();
         UpdateTabHint();
+        OpenComposeIfOverflowing();   // the long-question preview is Claude mode's: Tab to files/web stacked it on the results (review 11-03)
         if (_mode == BarMode.Files)
         {
             ScheduleSearch();
@@ -1839,9 +1845,9 @@ public sealed partial class MainWindow : Window
             return;
         }
 
-        if (_typing || DateTimeOffset.UtcNow - _lastAttachTry < TimeSpan.FromSeconds(2))
+        if (_typing || _menuOpen || DateTimeOffset.UtcNow - _lastAttachTry < TimeSpan.FromSeconds(2))
         {
-            return;
+            return;   // the right-click menu detaches the pill on purpose — attaching it back mid-menu stopped the menu taking clicks
         }
 
         _lastAttachTry = DateTimeOffset.UtcNow;
@@ -2409,7 +2415,14 @@ public sealed partial class MainWindow : Window
             msg: _text.ConnectAgentsCard, open: HookConnector.Command);
         notice.Stage = "expand";
         notice.Name = "IsleBar";
-        _activities.Write("islebar_connect", notice);
+        try
+        {
+            _activities.Write("islebar_connect", notice);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            TaskbarHost.Log("connect card: could not write — " + ex.Message);   // a locked state folder used to crash the bar here (review 11-03)
+        }
     }
 
     /// <summary>
@@ -2947,6 +2960,12 @@ public sealed partial class MainWindow : Window
         }
 
         var refs = string.Join(" ", files.Select(p => p.Contains(' ', StringComparison.Ordinal) ? $"\"{p}\"" : p));
+        if (_compose is not null)
+        {
+            _compose.Append(refs);   // the question is in the long-prompt window: paths added to the hidden one-line box were lost when it closed (review 11-03)
+            return;
+        }
+
         var gap = Entry.Text.Length > 0 && !Entry.Text.EndsWith(' ') ? " " : string.Empty;
         Entry.Text += gap + refs + " ";
         BeginTyping();
@@ -3049,7 +3068,9 @@ public sealed partial class MainWindow : Window
                 continue;   // pomodoros ring from AdvancePomodoros; stopwatches have no end
             }
 
-            var slot = Path.GetFileNameWithoutExtension(path);
+            // The slot alone isn't the timer: a new timer started within the finished one's linger reuses the slot, and it never
+            // rang (review 11-03). Its end time tells them apart.
+            var slot = Path.GetFileNameWithoutExtension(path) + "|" + state.Due?.ToString(System.Globalization.CultureInfo.InvariantCulture);
             present.Add(slot);
             var finished = !state.IsPaused && !TimerParser.IsStopwatch(state) && TimerRemaining(state, now) <= TimeSpan.Zero;
             if (finished && _chimed.Add(slot))
@@ -3528,7 +3549,14 @@ public sealed partial class MainWindow : Window
             DeleteState(old.SourcePath!);
         }
 
-        _activities.Write(TimerSlot, next);
+        try
+        {
+            _activities.Write(TimerSlot, next);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            TaskbarHost.Log("timer: could not write — " + ex.Message);   // a locked state folder (antivirus, sync) used to crash the bar (review 11-03)
+        }
     }
 
     /// <summary>
@@ -3712,6 +3740,8 @@ public sealed partial class MainWindow : Window
             ActivityKind.AgentPermission => AgentMenuLabel(state, _text.NeedsAnswer),
             // "working" fell through to the transfer arrow ("Dismiss: ↑ session") — design check 10-01
             ActivityKind.AgentWorking => AgentMenuLabel(state, _text.Working),
+            // notices and errors fell through to the transfer arrow too ("Dismiss: ↑ IsleBar" for the connect card — review 11-03)
+            ActivityKind.Notice or ActivityKind.Error => string.IsNullOrEmpty(state.Title) ? state.Name ?? "" : state.Title,
             _ => $"{DirectionGlyph(state)} {state.Name}",
         };
     }
