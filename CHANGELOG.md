@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.7 (2026-11-03)
+
+### Fixes
+- The bar no longer crashes when it closes or restarts while the long-question preview is open (a theme change or an
+  Explorer restart while typing). New in 0.1.6.
+
 ## 0.1.6 (2026-11-03)
 
 ### Fixes

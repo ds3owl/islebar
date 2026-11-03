@@ -1,4 +1,4 @@
-using IsleBar.App.Interop;
+﻿using IsleBar.App.Interop;
 using IsleBar.App.IslandUi;
 using IsleBar.App.Options;
 using Microsoft.UI.Xaml;
@@ -26,6 +26,7 @@ internal sealed class PromptPreviewWindow
     private PreviewCard _back = new();
     private PreviewCard? _swapping;   // the back card, cloaked, being drawn at the new size
     private int _frames;
+    private bool _closed;   // after Close() a typing session ending at exit still asked to hide it — a closed window's AppWindow is null (11-03)
 
     public PromptPreviewWindow()
     {
@@ -38,6 +39,11 @@ internal sealed class PromptPreviewWindow
 
     public void ApplyFonts(string? language)
     {
+        if (_closed)
+        {
+            return;
+        }
+
         AppFonts.Apply(_front, language);
         AppFonts.Apply(_back, language);
     }
@@ -45,6 +51,11 @@ internal sealed class PromptPreviewWindow
     /// <param name="caret">Insertion point in <paramref name="text"/> (the input box's caret index).</param>
     public void Show(string text, int caret, int anchorX, int bandTop)
     {
+        if (_closed)
+        {
+            return;
+        }
+
         if (_swapping is { } next)
         {
             // Still being drawn at the size it will appear with: follow the typing there; a further change of size restarts the wait.
@@ -103,6 +114,12 @@ internal sealed class PromptPreviewWindow
             return;
         }
 
+        if (_closed)
+        {
+            CompositionTarget.Rendering -= OnRendering;
+            return;
+        }
+
         _frames++;
         if (_frames == 3)
         {
@@ -124,10 +141,15 @@ internal sealed class PromptPreviewWindow
     private static bool SameRect(Windows.Graphics.RectInt32 a, Windows.Graphics.RectInt32 b) =>
         a.X == b.X && a.Y == b.Y && a.Width == b.Width && a.Height == b.Height;
 
-    public bool UnderCursor() => _front.UnderCursor() || (_swapping?.UnderCursor() ?? false);
+    public bool UnderCursor() => !_closed && (_front.UnderCursor() || (_swapping?.UnderCursor() ?? false));
 
     public void Hide()
     {
+        if (_closed)
+        {
+            return;
+        }
+
         if (_swapping is { } next)
         {
             CompositionTarget.Rendering -= OnRendering;
@@ -141,6 +163,7 @@ internal sealed class PromptPreviewWindow
 
     public void Close()
     {
+        _closed = true;
         CompositionTarget.Rendering -= OnRendering;
         _swapping = null;
         _front.Close();
