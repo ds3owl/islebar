@@ -449,7 +449,6 @@ public sealed class IslandTests
     [InlineData("1h30m", 90 * 60)]
     [InlineData("1h 30m", 90 * 60)]
     [InlineData("1시간", 60 * 60)]
-    [InlineData("2시", 2 * 60 * 60)]
     [InlineData("90s", 90)]
     [InlineData("90초", 90)]
     [InlineData("90 sec", 90)]
@@ -474,6 +473,8 @@ public sealed class IslandTests
     [InlineData("0")]
     [InlineData("-5분")]                         // the leading '-' is left over → a question
     [InlineData("25시간")]                       // exceeds 24 hours
+    [InlineData("3시")]                          // a time of day ("3 o'clock"), not a 3-hour timer
+    [InlineData("1시 30분")]
     [InlineData("10분 20분")]                    // same unit twice → a typo
     [InlineData("분")]
     [InlineData("")]

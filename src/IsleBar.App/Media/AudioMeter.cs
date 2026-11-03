@@ -79,6 +79,8 @@ internal sealed class AudioMeter : IDisposable
             return;
         }
 
+        var deviceId = device.GetId(out var id) == 0 ? id : null;
+        var nextDeviceCheck = DateTime.UtcNow.AddSeconds(1);
         var iid = typeof(IAudioClient).GUID;
         Marshal.ThrowExceptionForHR(device.Activate(ref iid, 1, IntPtr.Zero, out var clientObject));
         var client = (IAudioClient)clientObject;
@@ -165,6 +167,17 @@ internal sealed class AudioMeter : IDisposable
                         _needed.Set();   // a read slipped in while we were resetting — keep capturing
                     }
 
+                    // Headphones connected while the speakers stay: nothing fails, the capture just goes on hearing the old device and
+                    // the bars stood still until the music stopped (review 11-03). Once a second, follow the default device.
+                    if (DateTime.UtcNow >= nextDeviceCheck)
+                    {
+                        nextDeviceCheck = DateTime.UtcNow.AddSeconds(1);
+                        if (deviceId is not null && DefaultDeviceId(enumerator) is { } now && now != deviceId)
+                        {
+                            return;   // released below; the loop captures again from the new default at once
+                        }
+                    }
+
                     _stop.Token.WaitHandle.WaitOne(10);
                 }
             }
@@ -216,7 +229,18 @@ internal sealed class AudioMeter : IDisposable
     {
         [PreserveSig]
         int Activate(ref Guid iid, int clsCtx, IntPtr activationParams, [MarshalAs(UnmanagedType.IUnknown)] out object instance);
+
+        [PreserveSig]
+        int OpenPropertyStore(int access, out IntPtr store);   // unused; keeps the vtable order
+
+        [PreserveSig]
+        int GetId([MarshalAs(UnmanagedType.LPWStr)] out string id);
     }
+
+    /// <summary>The id of the default speaker now, or null.</summary>
+    private static string? DefaultDeviceId(IMMDeviceEnumerator enumerator)
+        => enumerator.GetDefaultAudioEndpoint(0 /* eRender */, 1 /* eMultimedia */, out var device) == 0 && device is not null
+           && device.GetId(out var id) == 0 ? id : null;
 
     [ComImport]
     [Guid("1CB9AD4C-DBFA-4C32-B178-C2F568A703B2")]

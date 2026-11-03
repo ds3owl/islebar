@@ -144,13 +144,15 @@ internal static class PopupPlacement
     /// Shows it off-screen first so the controls' templates are fully built before measuring, then moves it above the search box.
     /// (Measuring before showing gives a small width because button templates don't exist yet, and buttons overlap — measured on PC 09-29)
     /// </summary>
-    public static void ShowSized(Window window, FrameworkElement content, int widthDip, int anchorX, int bandTop)
+    /// <param name="placed">Runs once the window has been put in place (under a picture of the screen until it is drawn).</param>
+    public static void ShowSized(Window window, FrameworkElement content, int widthDip, int anchorX, int bandTop, Action? placed = null)
     {
         window.AppWindow.Move(new Windows.Graphics.PointInt32(-32000, -32000));
         void OnLoaded(object sender, RoutedEventArgs e)
         {
             content.Loaded -= OnLoaded;
             SizeAndPlaceAbove(window, content, widthDip, anchorX, bandTop);
+            placed?.Invoke();
         }
 
         content.Loaded += OnLoaded;
@@ -175,6 +177,24 @@ internal static class PopupPlacement
         if (app.Size.Width == size.Width && app.Size.Height == size.Height && app.Position.X == at.X && app.Position.Y == at.Y)
         {
             return false;
+        }
+
+        if (app.IsVisible && !IsWaitingForFrame(window))
+        {
+            // On screen, the window reaches its new size a few frames before XAML has drawn it there (a band under the old text
+            // when a line wrapped; an empty outline when placed on screen for the first time) — hold a picture of the screen as
+            // it is now over both places until it has been drawn. A cloaked window isn't seen, so needs none.
+            int left = at.X, top = at.Y, right = at.X + size.Width, bottom = at.Y + size.Height;
+            if (app.Position.X > -30000)
+            {
+                left = Math.Min(left, app.Position.X);
+                top = Math.Min(top, app.Position.Y);
+                right = Math.Max(right, app.Position.X + app.Size.Width);
+                bottom = Math.Max(bottom, app.Position.Y + app.Size.Height);
+            }
+
+            var shadow = DpiSetup.Px(16);   // the system shadow around the window moves with it; the bottom edge stays put above the bar
+            ScreenGhost.Popup.Cover(left - shadow, top - shadow, right + shadow, bottom);
         }
 
         app.MoveAndResize(new Windows.Graphics.RectInt32(at.X, at.Y, size.Width, size.Height));
@@ -264,6 +284,21 @@ internal static class PopupPlacement
 
         window.Closed += OnClosed;
         CompositionTarget.Rendering += OnRendering;
+    }
+
+    /// <summary>Whether <paramref name="window"/> was just shown cloaked by <see cref="ShowDrawnAbove"/> and is still waiting for its first frame.</summary>
+    public static bool IsWaitingForFrame(Window window) => s_waitingForFrame.ContainsKey(window);
+
+    /// <summary>Cloaks or uncloaks a window: shown and drawn as usual, but kept off the screen while cloaked.</summary>
+    public static void SetCloaked(Window window, bool on) => Cloak(WinRT.Interop.WindowNative.GetWindowHandle(window), on);
+
+    /// <summary>Where and how big the window would be above the search box for this content, without changing the window
+    /// (except a hidden window's temporary layout size).</summary>
+    public static Windows.Graphics.RectInt32 FitAbove(Window window, FrameworkElement content, int widthDip, int anchorX, int bandTop)
+    {
+        var size = ContentSize(window, content, widthDip);
+        var at = AbovePosition(size, anchorX, bandTop);
+        return new Windows.Graphics.RectInt32(at.X, at.Y, size.Width, size.Height);
     }
 
     /// <summary>The outer window size that fits the content (width is the larger of <paramref name="widthDip"/> and the content).</summary>

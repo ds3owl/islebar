@@ -30,6 +30,16 @@ public partial class App : Application
         CrashReports.StartIfAllowed();   // opt-in only (setup checkbox or settings) — 10-01
         UnhandledException += (_, e) =>
         {
+            if (IsClosedWindow(e.Exception))
+            {
+                // Something touched a window that had already closed (a late TextChanged or Rendering tick on a popup, 11-03):
+                // the window is gone, nothing is left half-done, and the bar itself is fine — ending the whole bar for it only
+                // made it crash again on the same step after each relaunch (review 11-03).
+                AppLog.Write($"closed window touched (handled) {e.Message}{Environment.NewLine}{e.Exception}");
+                e.Handled = true;
+                return;
+            }
+
             AppLog.Write($"FATAL (ui) {e.Message}{Environment.NewLine}{e.Exception}");
             CrashReports.Capture(e.Exception, "ui");
         };
@@ -44,6 +54,10 @@ public partial class App : Application
             e.SetObserved();   // don't let a stray background task tear the whole app down
         };
     }
+
+    /// <summary>"The WinUI Desktop Window object has already been closed" (0x800710DD) or RO_E_CLOSED (an object used after Close).</summary>
+    private static bool IsClosedWindow(Exception? exception) =>
+        exception is not null && unchecked((uint)exception.HResult) is 0x800710DD or 0x80000013;
 
     /// <summary>Exit code reported to the supervising launcher.</summary>
     internal static int ExitCode { get; set; } = ExitCodes.UserQuit;

@@ -91,6 +91,10 @@ internal static class CrashReports
                 options.CacheDirectoryPath = Path.Combine(AppPaths.DataDirectory, "crash-reports");   // a hard crash is sent on the next start
                 options.SetBeforeSend((e, _) => Scrub(e));
                 options.DisableAppDomainUnhandledExceptionCapture();   // our own handlers capture (and flush) those — no duplicates
+                // Crashes only: a background task's error the app has already dealt with (marked observed) isn't one, and WinUI's
+                // own hook would send each UI crash a second time beside ours (review 11-03).
+                options.DisableUnobservedTaskExceptionCapture();
+                options.DisableWinUiUnhandledExceptionIntegration();
             });
             _started = true;
         }
@@ -239,6 +243,7 @@ internal static class CrashReports
             foreach (var x in exceptions)
             {
                 x.Value = Clean(x.Value);
+                x.Mechanism?.Data.Clear();   // Exception.Data lands here (a WinRT error's description, for one) — not scrubbed otherwise
                 foreach (var frame in x.Stacktrace?.Frames ?? [])
                 {
                     frame.AbsolutePath = null;   // where the file was on the build machine — not needed to read the stack

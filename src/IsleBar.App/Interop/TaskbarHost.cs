@@ -77,6 +77,7 @@ internal sealed class TaskbarHost(IntPtr windowHandle)
         SetWindowLong(_wrap, GWL_STYLE,
             Signed32((style | WS_CHILD | WS_CLIPSIBLINGS) & ~(WS_POPUP | FrameBits)));
 
+        ScreenGhost.Pill.Cover(_wrap);   // the move into the taskbar reaches the screen in steps — no frame without the pill
         Marshal.SetLastSystemError(0);
         SetParent(_wrap, tray);
         var error = Marshal.GetLastWin32Error();
@@ -114,6 +115,7 @@ internal sealed class TaskbarHost(IntPtr windowHandle)
             return;
         }
 
+        ScreenGhost.Pill.Cover(_wrap);   // the move out of the taskbar reaches the screen in steps — no frame without the pill
         SetParent(_wrap, IntPtr.Zero);
 
         var style = Unsigned32(GetWindowLong(_wrap, GWL_STYLE));
@@ -129,6 +131,7 @@ internal sealed class TaskbarHost(IntPtr windowHandle)
         // Bring the detached window to the front — otherwise keystrokes after the first click leak to the previous foreground window (Explorer search etc.) (measured on PC 09-29).
         // Our process just received the click, so Windows allows it.
         ForegroundHelper.Bring(_wrap);
+        ScreenGhost.Pill.Raise();   // the pill was just made topmost over it
     }
 
     /// <summary>
@@ -144,6 +147,7 @@ internal sealed class TaskbarHost(IntPtr windowHandle)
             return;
         }
 
+        ScreenGhost.Pill.Destroy();
         ShowWindow(_wrap, 0 /* SW_HIDE */);
         if (GetParent(_wrap) != IntPtr.Zero)
         {

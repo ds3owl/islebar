@@ -37,9 +37,15 @@ internal sealed class MediaWatcher : IDisposable
     public ActivityState? Current { get; private set; }
 
     /// <summary>Album art for the current track (only if the player provides it). When the track changes, <see cref="CurrentArtKey"/> changes too.</summary>
-    public Windows.Storage.Streams.IRandomAccessStreamReference? CurrentArt { get; private set; }
+    public Windows.Storage.Streams.IRandomAccessStreamReference? CurrentArt => _art?.Item1;
 
-    public string? CurrentArtKey { get; private set; }
+    public string? CurrentArtKey => _art?.Item2;
+
+    /// <summary>The art and the track it belongs to, published as one object: set as two fields from the watcher's thread, the bar
+    /// could read the new key with the old picture between them and keep the previous track's cover and colour (review 11-03).</summary>
+    public Tuple<Windows.Storage.Streams.IRandomAccessStreamReference?, string?>? CurrentArtWithKey => _art;
+
+    private volatile Tuple<Windows.Storage.Streams.IRandomAccessStreamReference?, string?>? _art;
 
     public void Start() => _ = Task.Run(LoopAsync);
 
@@ -191,8 +197,7 @@ internal sealed class MediaWatcher : IDisposable
         }
 
         var props = await session.TryGetMediaPropertiesAsync();
-        CurrentArt = props?.Thumbnail;
-        CurrentArtKey = props is null ? null : $"{session.SourceAppUserModelId}|{props.Title}|{props.AlbumTitle}";
+        _art = Tuple.Create(props?.Thumbnail, props is null ? null : $"{session.SourceAppUserModelId}|{props.Title}|{props.AlbumTitle}");
         var title = props?.Title?.Trim() ?? string.Empty;
         var artist = props?.Artist?.Trim() ?? string.Empty;
         if (title.Length == 0)

@@ -57,6 +57,10 @@ public static partial class Program
             return ExitCodes.AlreadyRunning;   // a supervising launcher already exists
         }
 
+        // The supervisor's own start, end and death are logged too: when it stopped one night (11-03), nothing said why.
+        Interop.TaskbarHost.Log($"supervisor: start (pid {Environment.ProcessId})");
+        AppDomain.CurrentDomain.UnhandledException += (_, e) =>
+            Interop.TaskbarHost.Log($"supervisor: FATAL {e.ExceptionObject}");
         try
         {
             Interop.CrashReports.StartIfAllowed();
@@ -110,10 +114,17 @@ public static partial class Program
                 }
                 if (!ExitCodes.ShouldRelaunch(code))
                 {
+                    Interop.TaskbarHost.Log($"supervisor: end (bar exit code {code})");
                     return code;
                 }
 
-                Thread.Sleep(backoff.After(code, DateTime.UtcNow - started));
+                var wait = backoff.After(code, DateTime.UtcNow - started);
+                if (backoff.InCrashLoop)
+                {
+                    Interop.TaskbarHost.Log($"supervisor: the bar keeps dying at start — next try in {wait.TotalMinutes:0} min");
+                }
+
+                Thread.Sleep(wait);
             }
         }
         finally

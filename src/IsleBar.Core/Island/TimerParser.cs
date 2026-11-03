@@ -14,9 +14,10 @@ public static partial class TimerParser
     /// <summary>Timers longer than this are rejected.</summary>
     public static readonly TimeSpan MaxDuration = TimeSpan.FromHours(24);
 
-    // number + unit as one chunk. Spaces/commas in between are allowed.
+    // number + unit as one chunk. Spaces/commas in between are allowed. Korean "시" alone is a time of day, not hours:
+    // "3시" started a 3-hour timer and "1시 30분" a 90-minute one (review 11-03) — only "시간" counts.
     [GeneratedRegex(
-        @"(?<value>\d+(?:[.,]\d+)?)\s*(?<unit>시간|시|분|초|hours|hour|hrs|hr|h|minutes|minute|mins|min|m|seconds|second|secs|sec|s)",
+        @"(?<value>\d+(?:[.,]\d+)?)\s*(?<unit>시간|분|초|hours|hour|hrs|hr|h|minutes|minute|mins|min|m|seconds|second|secs|sec|s)",
         RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
     private static partial Regex Component();
 
@@ -109,7 +110,7 @@ public static partial class TimerParser
 
     private static TimeUnit UnitOf(string unit) => unit.ToLowerInvariant() switch
     {
-        "시간" or "시" or "h" or "hr" or "hrs" or "hour" or "hours" => TimeUnit.Hour,
+        "시간" or "h" or "hr" or "hrs" or "hour" or "hours" => TimeUnit.Hour,
         "초" or "s" or "sec" or "secs" or "second" or "seconds" => TimeUnit.Second,
         _ => TimeUnit.Minute,   // minutes · m · min · mins · minute · minutes (and the Korean minute unit)
     };

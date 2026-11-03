@@ -178,6 +178,9 @@ internal static partial class NativeMethods
     [LibraryImport("user32.dll")]
     internal static partial uint GetDpiForSystem();
 
+    [LibraryImport("user32.dll")]
+    internal static partial uint GetDpiForWindow(IntPtr window);
+
     [LibraryImport("user32.dll", EntryPoint = "SystemParametersInfoW")]
     [return: MarshalAs(UnmanagedType.Bool)]
     internal static partial bool SystemParametersInfo(uint action, uint param, ref RECT data, uint winIni);

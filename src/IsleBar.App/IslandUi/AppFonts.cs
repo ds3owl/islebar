@@ -72,13 +72,18 @@ internal static class AppFonts
         }
 
         root.FontFamily = normal;
-        Strengthen(root, strong);
+        Strengthen(root, normal, strong);
     }
 
-    private static void Strengthen(object? node, FontFamily strong)
+    private static void Strengthen(object? node, FontFamily normal, FontFamily strong)
     {
         switch (node)
         {
+            case TextBox box:
+                // A text box's own style sets the theme font, so it doesn't inherit ours. That font picks its glyphs by the
+                // display language: on Korean Windows "\" came out as "₩" in the compose box (English promo film, user 11-03).
+                box.FontFamily = normal;
+                break;
             case TextBlock text when text.FontWeight.Weight >= 600:
                 text.FontFamily = strong;
                 text.FontWeight = Microsoft.UI.Text.FontWeights.Medium;
@@ -86,18 +91,18 @@ internal static class AppFonts
             case Panel panel:
                 foreach (var child in panel.Children)
                 {
-                    Strengthen(child, strong);
+                    Strengthen(child, normal, strong);
                 }
 
                 break;
             case Border border:
-                Strengthen(border.Child, strong);
+                Strengthen(border.Child, normal, strong);
                 break;
             case ScrollViewer scroll:
-                Strengthen(scroll.Content, strong);
+                Strengthen(scroll.Content, normal, strong);
                 break;
             case ContentControl content:
-                Strengthen(content.Content, strong);
+                Strengthen(content.Content, normal, strong);
                 break;
         }
     }

@@ -3,7 +3,7 @@
 ; Settings, logs and state in %LOCALAPPDATA%\IsleBar are kept on uninstall (reinstalling picks them up again).
 
 #ifndef AppVersion
-  #define AppVersion "0.1.5"
+  #define AppVersion "0.1.6"
 #endif
 #ifndef PublishDir
   #define PublishDir "..\build\app"

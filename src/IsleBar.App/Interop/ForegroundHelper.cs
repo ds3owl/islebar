@@ -20,7 +20,9 @@ internal static class ForegroundHelper
 
         var ours = GetCurrentThreadId();
         var theirs = foreground == IntPtr.Zero ? 0u : GetWindowThreadProcessId(foreground, IntPtr.Zero);
-        var attached = theirs != 0 && theirs != ours && AttachThreadInput(ours, theirs, true);
+        // Not with a window that has stopped responding ("Not responding"): linked to its input, our focus calls wait on its
+        // thread, and the bar's UI hung until that app came back (review 11-03).
+        var attached = theirs != 0 && theirs != ours && !IsHungAppWindow(foreground) && AttachThreadInput(ours, theirs, true);
         try
         {
             BringWindowToTop(window);
@@ -108,4 +110,8 @@ internal static class ForegroundHelper
 
     [DllImport("user32.dll")]
     private static extern void SwitchToThisWindow(IntPtr window, [MarshalAs(UnmanagedType.Bool)] bool altTab);
+
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool IsHungAppWindow(IntPtr window);
 }

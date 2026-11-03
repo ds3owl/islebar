@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.1.6 (2026-11-03)
+
+### Fixes
+- No more flicker when a line wraps: the long-question preview and the multi-line question box showed a see-through or
+  white band under the old text for a few frames each time the text wrapped onto a new line or back.
+- The pill no longer disappears for a frame when typing starts or ends, and the multi-line question box replaces the
+  preview without a blank moment (Shift+Enter).
+- The multi-line question box shows "\" as a backslash (Korean Windows drew it as "₩").
+- Alt+F4 while typing no longer closes the bar.
+- Clicking the pill or pressing Ctrl+Alt+C while the multi-line question box is open keeps you typing.
+- "3시" (a time of day in Korean) is no longer read as a 3-hour timer; "3시간" still is.
+- AltGr+C types its character (for example "ć" on Polish keyboards) instead of opening the bar.
+- While Do Not Disturb or presentation mode is on (also while sharing the screen), the copy notice no longer shows what was
+  copied.
+- The bar uses the taskbar's display scale, so it is sized right after the scale changes without signing out.
+- The bar no longer hangs when the app in front has stopped responding.
+- The music bars follow a new default speaker (headphones connected while playing), and the album colour no longer lags
+  behind the track.
+- A model-list update no longer restarts the bar while you are typing.
+- Other small fixes: downloads no longer blink off for a second when one finishes, a closed terminal's "working" no longer
+  sticks when Windows reuses its process number, the timer digits change colour together with the label, the Codex mark no
+  longer blinks on a theme change, the pill no longer pops while you type.
+- With the taskbar on several displays, only the main taskbar's search box is hidden.
+- Crash reports (only when you turned them on) are limited to crashes, and a bar that keeps crashing at start is retried
+  every 10 minutes instead of every minute.
+
 ## 0.1.5 (2026-11-03)
 
 ### Fixes

@@ -22,7 +22,12 @@ internal static class DpiSetup
     public static void Ensure()
     {
         SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
-        Scale = GetDpiForSystem() / 96.0;
+        // The taskbar's own scale, not the system's: the system DPI is fixed at sign-in, so after the display scale changed (or
+        // the laptop was docked to a screen with another scale) the bar the watchdog relaunched for it read the old value again
+        // and stayed the wrong size until sign-out (review 11-03).
+        var taskbar = FindWindow("Shell_TrayWnd", null);
+        var dpi = taskbar == IntPtr.Zero ? 0 : GetDpiForWindow(taskbar);
+        Scale = (dpi == 0 ? GetDpiForSystem() : dpi) / 96.0;
         IsCorrect = CurrentAwareness() == AwarenessPerMonitorAwareV2;
     }
 

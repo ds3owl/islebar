@@ -89,9 +89,21 @@ internal sealed class DownloadWatcher : IDisposable
                 }
 
                 var info = new FileInfo(file);
-                if (now - new DateTimeOffset(info.LastWriteTimeUtc, TimeSpan.Zero) > Stalled)
+                long length;
+                try
                 {
-                    continue;   // paused or abandoned partial file
+                    length = info.Length;
+                }
+                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+                {
+                    // Renamed by the browser between listing and reading — the download just finished. Thrown up to the loop, it
+                    // emptied the whole list, and every download blinked off for a second before "done" showed (review 11-03).
+                    continue;
+                }
+
+                if (!info.Exists || now - new DateTimeOffset(info.LastWriteTimeUtc, TimeSpan.Zero) > Stalled)
+                {
+                    continue;   // gone meanwhile, or a paused or abandoned partial file
                 }
 
                 partials.Add(file);
@@ -106,7 +118,7 @@ internal sealed class DownloadWatcher : IDisposable
                     Title = "Download → PC",            // ending with "PC" means receiving (↓)
                     Name = FinalName(file),
                     Stage = "download",
-                    Done = info.Length,                 // bytes received (total size unknown)
+                    Done = length,                      // bytes received (total size unknown)
                     State = "run",
                     SourcePath = "download:" + file,
                     UpdatedAt = _firstSeen[file],

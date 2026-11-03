@@ -102,12 +102,13 @@ internal sealed class ComposeWindow : Window
         _box.Focus(FocusState.Programmatic);
     }
 
-    public void ShowAbove(int anchorX, int bandTop)
+    /// <param name="placed">Runs once the window is in place on screen (what it replaces can go then, under the same picture).</param>
+    public void ShowAbove(int anchorX, int bandTop, Action? placed = null)
     {
         (_anchorX, _bandTop) = (anchorX, bandTop);
         // Grow up to the top of the screen, then scroll inside — it used to stop at 10 lines, cutting a long prompt off (user 10-01)
         _box.MaxHeight = PopupPlacement.MaxHeightAbove(anchorX, bandTop) - 32;
-        PopupPlacement.ShowSized(this, (FrameworkElement)Content, WidthDip, anchorX, bandTop);
+        PopupPlacement.ShowSized(this, (FrameworkElement)Content, WidthDip, anchorX, bandTop, placed);
     }
 
     /// <summary>As lines grow, the window grows upward too (up to the top of the screen, then scrolls inside).</summary>

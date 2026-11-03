@@ -177,7 +177,7 @@ internal sealed class ClipboardWatcher : NoticeWatcher
         try
         {
             var s = Text;
-            if (IsFlaggedSecret() || ClipboardRules.IsPasswordManager(owner))
+            if (IsFlaggedSecret() || ClipboardRules.IsPasswordManager(owner) || ScreenMayBeShared())
             {
                 return (NoticeText.Copied(s, NoticeText.Masked), NoticeGlyphs.Copy);
             }
@@ -207,6 +207,16 @@ internal sealed class ClipboardWatcher : NoticeWatcher
             CloseClipboard();
         }
     }
+
+    /// <summary>
+    /// Do Not Disturb (Windows turns it on by itself while presenting or duplicating the screen) or presentation mode: the
+    /// copy notice keeps quiet about what was copied — the first characters of a private line showed on a shared screen,
+    /// though message cards already stay hidden then (review 11-03).
+    /// </summary>
+    private static bool ScreenMayBeShared() =>
+        Interop.NativeMethods.DoNotDisturbOn()
+        || (Interop.NativeMethods.SHQueryUserNotificationState(out var state) == 0
+            && state is Interop.NativeMethods.QUNS_PRESENTATION_MODE or Interop.NativeMethods.QUNS_QUIET_TIME);
 
     /// <summary>Whether the "don't record" mark added by password managers is present.</summary>
     private bool IsFlaggedSecret()

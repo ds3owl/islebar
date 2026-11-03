@@ -115,6 +115,16 @@ public sealed partial class MainWindow : Window
         _fileSearch = new FileSearchWorker(OnSearchResult);
         _watchdog = new Watchdog(_taskbar, () => ThemeColors.FromSystem().Light, RequestExit,
             _ => _ui.TryEnqueue(Retheme));
+        // Alt+F4 while typing (the detached pill can be the foreground window) closed the bar with the "quit" exit code, so the
+        // supervisor didn't bring it back until the next sign-in (review 11-03). The bar only closes through RequestExit.
+        AppWindow.Closing += (_, e) =>
+        {
+            if (!_watchdog.Quitting)
+            {
+                e.Cancel = true;
+                TaskbarHost.Log("close request ignored (Alt+F4)");
+            }
+        };
 
         ApplyFonts();
         ApplyTheme();
@@ -150,6 +160,7 @@ public sealed partial class MainWindow : Window
         // Ctrl+Alt+C = type from anywhere (same key as the Python version). Switches to the input box even if an island is showing.
         _hotkey = new GlobalHotkey(() => _ui.TryEnqueue(() =>
         {
+            _keepTypingUntil = _compose is null ? DateTime.MinValue : DateTime.UtcNow.AddSeconds(1);   // the compose box closes as the bar takes focus — typing goes on in the bar
             _taskbar.TakeFocus();
             BeginTyping();
             Entry.Focus(FocusState.Programmatic);
@@ -254,6 +265,7 @@ public sealed partial class MainWindow : Window
                 return;   // clicked the island and went to that task (not the start of typing)
             }
 
+            _keepTypingUntil = _compose is null ? DateTime.MinValue : DateTime.UtcNow.AddSeconds(1);   // the compose box closes as the bar takes focus — typing goes on in the bar
             _taskbar.TakeFocus();
             BeginTyping();
             Entry.Focus(FocusState.Programmatic);
@@ -541,6 +553,8 @@ public sealed partial class MainWindow : Window
     }
 
     private PromptPreviewWindow? _preview;
+    private bool _composeOpening;   // the compose box is made but not yet in place on screen
+    private DateTime _keepTypingUntil;   // the pill or the hotkey just took focus from an open compose box
 
     /// <summary>
     /// A long question overflowing the input box is shown in full above it (focus stays put so typed characters aren't lost).
@@ -551,7 +565,11 @@ public sealed partial class MainWindow : Window
         var show = _mode == BarMode.Claude && _typing && _compose is null && Entry.Text.Length >= 10 && Overflows();
         if (!show)
         {
-            _preview?.Hide();
+            if (!_composeOpening)
+            {
+                _preview?.Hide();   // while the compose box is being placed, the preview waits for it (OpenCompose)
+            }
+
             return;
         }
 
@@ -563,7 +581,7 @@ public sealed partial class MainWindow : Window
         if (_preview is null)
         {
             _preview = new PromptPreviewWindow();
-            AppFonts.Apply(_preview, _language);
+            _preview.ApplyFonts(_language);
             _preview.Clicked += () =>
             {
                 // Clicking the preview used to end typing and lose the question (10-03). End typing first, then open the compose box:
@@ -599,7 +617,8 @@ public sealed partial class MainWindow : Window
         }
 
         var opening = text;
-        _preview?.Hide();
+        // The long-question preview stays until the compose box is in place: hidden first, nothing was on screen for ~6 frames
+        // while the box was made and drawn (60 fps capture, 11-03). It goes under the picture that covers the box being drawn.
 
         _compose = new ComposeWindow(
             () =>
@@ -627,7 +646,15 @@ public sealed partial class MainWindow : Window
         _compose.Closed += (_, _) =>
         {
             _compose = null;
-            if (_typing && !_watchdog.Quitting)   // not while exiting: re-attaching to the taskbar then is what ReleaseForClose avoids
+            _composeOpening = false;
+            if (DateTime.UtcNow < _keepTypingUntil && _typing)
+            {
+                // Closed because the pill was clicked or Ctrl+Alt+C pressed: that asked for typing, and ending it here put the bar
+                // back to idle (review 11-03). The draft is kept for the next Shift+Enter.
+                _keepTypingUntil = DateTime.MinValue;
+                Entry.Focus(FocusState.Programmatic);
+            }
+            else if (_typing && !_watchdog.Quitting)   // not while exiting: re-attaching to the taskbar then is what ReleaseForClose avoids
             {
                 EndTyping();   // the bar stayed in typing mode while the compose box had the question
             }
@@ -635,7 +662,12 @@ public sealed partial class MainWindow : Window
             RenderIsland();   // back to the status display
         };
         AppFonts.Apply(_compose, _language);
-        _compose.ShowAbove(PopupAnchorX, TaskbarTop());
+        _composeOpening = true;
+        _compose.ShowAbove(PopupAnchorX, TaskbarTop(), () =>
+        {
+            _composeOpening = false;
+            _preview?.Hide();
+        });
         RenderIsland();
     }
 
@@ -961,7 +993,7 @@ public sealed partial class MainWindow : Window
                 {
                     _swapping = false;
                     RenderIsland();
-                    if (_snapshot.IsActive)
+                    if (_snapshot.IsActive && !_typing)   // typing may have started during the fade-out
                     {
                         _animator.Enter();
                     }
@@ -989,7 +1021,9 @@ public sealed partial class MainWindow : Window
                 RenderIsland();
             }
 
-            if (change is IslandAnimator.Change.Appeared or IslandAnimator.Change.Swapped)
+            // Not while typing: the arrival pop (the whole pill squeezes, the left icon bounces) ran under the person's typing
+            // whenever a copy notice, a song change or a finished agent came in (review 11-03).
+            if (!_typing && _compose is null && change is IslandAnimator.Change.Appeared or IslandAnimator.Change.Swapped)
             {
                 _animator.Enter();
             }
@@ -1029,11 +1063,16 @@ public sealed partial class MainWindow : Window
             return;
         }
 
-        Interop.NativeMethods.ShowWindow(_taskbar.OuterWindow, Interop.NativeMethods.SW_SHOWNOACTIVATE);
         Root.Background = BrushOf(TaskbarColorBeside());   // when the position changes, re-read the adjacent taskbar color too
         if (!_typing)
         {
-            _taskbar.PlaceAt(placement.X, placement.Y, _width, _height);
+            _taskbar.PlaceAt(placement.X, placement.Y, _width, _height);   // shows it too (SWP_SHOWWINDOW), at the new place in one step
+        }
+        else
+        {
+            // Typing: the detached pill stays where it is. Shown first and moved after, a hidden pill flashed for a frame at its old
+            // spot when it came back (review 11-03), so it is only shown here, where it doesn't move.
+            Interop.NativeMethods.ShowWindow(_taskbar.OuterWindow, Interop.NativeMethods.SW_SHOWNOACTIVATE);
         }
     }
 
@@ -1283,6 +1322,11 @@ public sealed partial class MainWindow : Window
         ClockDigits.Visibility = Visibility.Visible;
         if (clock == _clockShown && ClockDigits.Children.Count == clock.Length)
         {
+            foreach (var cell in ClockDigits.Children.OfType<Microsoft.UI.Xaml.Controls.TextBlock>())
+            {
+                cell.Foreground = IslandText.Foreground;   // same digits, but the colour may have changed (paused, resumed)
+            }
+
             return;
         }
 
@@ -1417,7 +1461,10 @@ public sealed partial class MainWindow : Window
         => string.Concat(m.SourcePath, "|", m.Name, "|", m.Msg, "|", m.Stage, "|", m.Done?.ToString(), "|", m.Total?.ToString(),
             "|", Math.Round(AvailableTextWidth()).ToString(System.Globalization.CultureInfo.InvariantCulture),
             // a task finishing behind paused music changes nothing above — its green border and the more-dot never showed (review 10-03)
-            "|", _backgroundDoneKey, "|", _snapshot.ExtraCount.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            "|", _backgroundDoneKey, "|", _snapshot.ExtraCount.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            // the album colour arrives after the track (read from the art), and the bars setting can change: without these, a paused
+            // or timeline-less track kept the previous track's colour, and toggling "bars follow the sound" did nothing (review 11-03)
+            "|", _albumTint?.ToString(), "|", _settings.AudioBars ? "1" : "0");
 
     /// <summary>
     /// Taskbar color just left of the pill. The band outside the alert border is painted this color so the pill clip edge (can't be anti-aliased)
@@ -1642,7 +1689,8 @@ public sealed partial class MainWindow : Window
     /// </summary>
     private async void ShowAlbumArt(bool on)
     {
-        var art = on ? _media.CurrentArt : null;
+        var current = on ? _media.CurrentArtWithKey : null;   // one read: the picture and its track together
+        var art = current?.Item1;
         if (art is null)
         {
             AlbumArt.Visibility = Visibility.Collapsed;
@@ -1651,7 +1699,7 @@ public sealed partial class MainWindow : Window
 
         LeadIcon.Visibility = Visibility.Collapsed;
         AlbumArt.Visibility = Visibility.Visible;
-        var key = _media.CurrentArtKey;
+        var key = current!.Item2;
         if (key == _albumArtKey)
         {
             return;
@@ -1979,6 +2027,9 @@ public sealed partial class MainWindow : Window
         var now = DateTimeOffset.UtcNow;
         // The done-alert hook only carries the session name (no folder name — user feedback 09-30). Without a name, just "Claude done"
         var name = state.Name;
+        // The colour first: the timer digits take theirs from the text, and set after them they kept the previous item's colour
+        // (bright, or green after "done") for a tick when a timer was paused or took over (review 11-03).
+        IslandText.Foreground = BrushOf(ForegroundFor(state, now));
         if (state.Kind == ActivityKind.Timer)
         {
             ShowTimerText(state, now);
@@ -2071,7 +2122,9 @@ public sealed partial class MainWindow : Window
             _ when state.Kind == ActivityKind.Timer && TimerRemaining(state, DateTimeOffset.UtcNow) <= TimeSpan.Zero => _theme.Ok,   // a finished timer is green, like the border
             _ => _theme.Accent,
         });
-        var track = ProgressTrackWidth();
+        // One reading per draw: read twice (width, then left), the second call compared the middle column against the value the
+        // first had just stored, so it always looked settled and took a mid-animation width (review 11-03).
+        var (trackLeft, track) = ProgressTrack();
         if (state.Kind == ActivityKind.Transfer && state.RunState == ActivityRunState.Running
             && (state.IsIndeterminate || state.Stage == "download"))
         {
@@ -2080,12 +2133,12 @@ public sealed partial class MainWindow : Window
             var phase = now.ToUnixTimeMilliseconds() % 1600 / 1600.0;
             var x = (phase * (track + piece)) - piece;
             var left = Math.Max(0, x);
-            ProgressLine.Margin = new Thickness(ProgressTrackLeft() + left, 0, 0, 3);
+            ProgressLine.Margin = new Thickness(trackLeft + left, 0, 0, 3);
             ProgressLine.Width = Math.Max(1, Math.Min(track, x + piece) - left);
             return;
         }
 
-        ProgressLine.Margin = new Thickness(ProgressTrackLeft(), 0, 0, 3);
+        ProgressLine.Margin = new Thickness(trackLeft, 0, 0, 3);
         // progress is based on the amount actually transferred
         ProgressLine.Width = fraction is { } f ? Math.Max(1, track * f) : 0;
     }
@@ -2244,10 +2297,6 @@ public sealed partial class MainWindow : Window
     private (double Left, double Width)? _progressTrack;
     private double _lastMidWidth = -1;
 
-    private double ProgressTrackWidth() => ProgressTrack().Width;
-
-    private double ProgressTrackLeft() => ProgressTrack().Left;
-
     // ---------------- Appearance ----------------
 
     /// <summary>Font for the bold part of the island text (track title, "42%", etc.) — set by UseFontsFor.</summary>
@@ -2330,7 +2379,7 @@ public sealed partial class MainWindow : Window
 
         if (_preview is not null)
         {
-            AppFonts.Apply(_preview, _language);   // Korean / Japanese / Chinese glyph shapes differ (review 10-03)
+            _preview.ApplyFonts(_language);   // Korean / Japanese / Chinese glyph shapes differ (review 10-03)
         }
 
         Entry.PlaceholderText = Placeholders.For(_mode, _settings.Agent);
@@ -2348,16 +2397,24 @@ public sealed partial class MainWindow : Window
     {
         _claudeGlyph = ClaudeGlyph.Create(
             ClaudeExecutable.Resolve(AgentProfiles.Get(AgentKind.Claude)), DpiSetup.Px(21), _theme.Icon);
-        CodexGlyph.Source = CodexMark.Find(CodexMark.DefaultRoots(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)),
-                ThemeColors.FromSystem().Light) is { } blossom
-            ? new Microsoft.UI.Xaml.Media.Imaging.SvgImageSource(new Uri(blossom))
-            : null;
         _codexMarkLoad++;
-        if (CodexGlyph.Source is null)
+        if (CodexMark.Find(CodexMark.DefaultRoots(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)),
+                ThemeColors.FromSystem().Light) is { } blossom)
         {
+            CodexGlyph.Source = new Microsoft.UI.Xaml.Media.Imaging.SvgImageSource(new Uri(blossom));
+            _codexMarkFromStore = false;
+        }
+        else
+        {
+            // The mark from the Store app is read and repainted off the UI thread. The current picture stays until then: cleared
+            // first, the plain chat glyph showed in its place for a moment on every theme change (review 11-03).
+            _codexMarkFromStore = true;
             _ = LoadStoreCodexMarkAsync(_codexMarkLoad, _theme.Icon);
         }
     }
+
+    /// <summary>The Codex mark is (being) taken from the Store app rather than the VS Code extension.</summary>
+    private bool _codexMarkFromStore;
 
     /// <summary>Counts <see cref="LoadAgentMarks"/> calls, so a slower read for an older theme doesn't land after a newer one.</summary>
     private int _codexMarkLoad;
@@ -2370,12 +2427,12 @@ public sealed partial class MainWindow : Window
     {
         var size = DpiSetup.Px(23);   // the 20×20 image with its -1.5 margins
         var alpha = await Task.Run(() => CodexStoreMark.ReadMask(size));
-        if (alpha is null || load != _codexMarkLoad || CodexGlyph.Source is not null)
+        if (load != _codexMarkLoad || !_codexMarkFromStore)
         {
-            return;
+            return;   // a newer load has taken over
         }
 
-        CodexGlyph.Source = ClaudeGlyph.Paint(alpha, size, color);
+        CodexGlyph.Source = alpha is null ? null : ClaudeGlyph.Paint(alpha, size, color);
         UpdateLeadIcon();
         UpdateTabHint();
     }
@@ -3142,7 +3199,7 @@ public sealed partial class MainWindow : Window
             // Same for "working": closing the window kills the session before its SessionEnd hook can run, which left a dead
             // session "working" for 6 h (found 10-01 when a terminal holding three sessions closed).
             if (state is { Kind: ActivityKind.AgentPermission or ActivityKind.AgentWorking, SourcePath: { } asked, Pid: { } askPid }
-                && !ProcessAlive(askPid))
+                && !ProcessAlive(askPid, state.UpdatedAt))
             {
                 TaskbarHost.Log($"{(state.Kind == ActivityKind.AgentWorking ? "working" : "permission")} cleared: {Path.GetFileName(asked)} (its terminal was closed)");
                 DeleteState(asked);
@@ -3154,7 +3211,7 @@ public sealed partial class MainWindow : Window
                 continue;
             }
 
-            if (!ProcessAlive(pid))
+            if (!ProcessAlive(pid, state.UpdatedAt))
             {
                 TaskbarHost.Log($"done cleared: {Path.GetFileName(path)} (its terminal was closed)");
                 DeleteState(path);
@@ -3195,12 +3252,27 @@ public sealed partial class MainWindow : Window
 
     private HashSet<IntPtr> _watchedWindows = [];
 
-    private static bool ProcessAlive(int pid)
+    /// <param name="written">When the state naming <paramref name="pid"/> was written: the agent was running then. A process with
+    /// that number started later is another program that got the number after the terminal closed — "working" or "done" stayed
+    /// up for hours on it, and a click could go to its window (review 11-03).</param>
+    private static bool ProcessAlive(int pid, DateTimeOffset written)
     {
         try
         {
             using var process = System.Diagnostics.Process.GetProcessById(pid);
-            return !process.HasExited;
+            if (process.HasExited)
+            {
+                return false;
+            }
+
+            try
+            {
+                return written == default || process.StartTime.ToUniversalTime() <= written.UtcDateTime.AddSeconds(5);   // a little slack for clocks and file times
+            }
+            catch (System.ComponentModel.Win32Exception)
+            {
+                return true;   // may not read its start time (an Administrator terminal) — it exists
+            }
         }
         catch (System.ComponentModel.Win32Exception)
         {
@@ -3494,7 +3566,14 @@ public sealed partial class MainWindow : Window
         var update = await new ModelAliasUpdater(_store, source).RunOnceAsync(DateTimeOffset.UtcNow);
         if (update.Changed)
         {
-            RequestExit(ExitCodes.RestartRequested);   // relaunch with the new buttons
+            // Relaunch with the new buttons — but not under someone typing: the question in the box (or the compose box) was lost
+            // when this landed within the first seconds after a start (review 11-03). Wait until the bar is idle.
+            while (_typing || _compose is not null || _menuOpen)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(2));
+            }
+
+            RequestExit(ExitCodes.RestartRequested);
         }
     }
 
