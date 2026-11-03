@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.9 (2026-11-03)
+
+### Fixes
+- Message cards: a burst of messages opens the card once instead of jumping for each one, a second message of another
+  height no longer flashes a blank strip, and the cards peeking out behind no longer appear before the front card.
+- The pill stays in place while an auto-hide taskbar slides in and out, and sits on the right side on right-to-left Windows.
+- A finished task's green border clears reliably after you go back to its terminal (the input watch re-arms itself).
+- Codex: no "limit reached" or 90 % notice from an old session's numbers, and the 90 % notice no longer repeats every turn.
+- A new prompt sent right as "done" was cleared is no longer lost from the pill; choosing a timer from the right-click menu
+  while one runs no longer makes the pill jump twice; the working icon no longer goes faint after a quick change.
+
 ## 0.1.8 (2026-11-03)
 
 ### Fixes

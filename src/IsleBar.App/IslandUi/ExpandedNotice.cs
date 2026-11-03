@@ -34,6 +34,7 @@ internal sealed class ExpandedNotice : Window
     {
         _stayTimer?.Stop();
         _open = false;
+        _closed = true;   // a present still queued for a burst must not show the closed window
         _dismissing++;   // a fade still running must not call Hide on the closed window
         UnhookOutsideClick();   // its system-wide mouse hook otherwise stayed until the process ended
         foreach (var peek in _peeks)
@@ -135,23 +136,63 @@ internal sealed class ExpandedNotice : Window
         }
 
         _dismissing++;   // a fade-out under way must not hide this new message when it finishes
-
         _stayTimer?.Stop();
-        int frontDip;
-        if (_listOpen)
+
+        // Present once per burst, not once per message: the bar feeds several messages in one callback, and presenting each
+        // one moved, resized and reshaped the windows several times in a row at different heights, and turned the second
+        // message's grow-out into a bump (review 11-03). Low priority runs after the rest of this callback has fed its messages.
+        if (_presentQueued)
         {
-            _behind = 0;
-            frontDip = BuildList();            // a new message joins the already-open list (one window, no peeks)
-        }
-        else
-        {
-            _behind = Math.Min(_stack.Count - 1, MaxBehind);
-            frontDip = BuildDeck();            // the front card only; the peeks are their own windows
+            return;
         }
 
-        Present(frontDip, firstGrow: !_open);
-        ArmDismiss(_listOpen ? StayExpanded : Stay);
-        _open = true;
+        _presentQueued = true;
+        if (!_ui.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, PresentQueued))
+        {
+            PresentQueued();   // the queue is shutting down; show it now rather than drop it
+        }
+    }
+
+    /// <summary>A present is queued for the messages fed since the last one.</summary>
+    private bool _presentQueued;
+
+    /// <summary>Set by <see cref="CloseAll"/>: a present still queued must not touch the closed windows.</summary>
+    private bool _closed;
+
+    /// <summary>Builds and presents the deck (or the open list) once for every message <see cref="Show"/> took since the last present.</summary>
+    private void PresentQueued()
+    {
+        _presentQueued = false;
+        if (_closed || _stack.Count == 0)
+        {
+            return;
+        }
+
+        try
+        {
+            _dismissing++;   // a click-away that started a fade between Show and now must not hide the card this brings back
+            _stayTimer?.Stop();
+            int frontDip;
+            if (_listOpen)
+            {
+                _behind = 0;
+                frontDip = BuildList();            // a new message joins the already-open list (one window, no peeks)
+            }
+            else
+            {
+                _behind = Math.Min(_stack.Count - 1, MaxBehind);
+                frontDip = BuildDeck();            // the front card only; the peeks are their own windows
+            }
+
+            Present(frontDip, firstGrow: !_open);
+            ArmDismiss(_listOpen ? StayExpanded : Stay);
+            _open = true;
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException)
+        {
+            // runs on its own dispatcher turn, outside the bar's guard around Show: a card that fails must not take the app down
+            AppLog.Write($"expanded notice: {ex.Message}");
+        }
     }
 
     /// <summary>
@@ -163,11 +204,15 @@ internal sealed class ExpandedNotice : Window
     {
         var w = DpiSetup.Px(CardWidthDip);
         var h = DpiSetup.Px(frontHeightDip);
-        _cardRect = new Windows.Graphics.RectInt32(
+        var next = new Windows.Graphics.RectInt32(
             _pill.X + ((_pill.Width - w) / 2),
             _pill.Y - h - DpiSetup.Px(10),
             w,
             h);
+        var covered = CoverResize(next, _listOpen ? 0 : _behind);
+        // Under the picture the first frames aren't seen, so the motion starts once it has gone (or it would play unseen)
+        var delay = covered ? GhostTime : TimeSpan.Zero;
+        _cardRect = next;
         AppWindow.MoveAndResize(_cardRect);
         ApplyRegion();
         _root.Width = CardWidthDip;
@@ -178,13 +223,35 @@ internal sealed class ExpandedNotice : Window
         visual.CenterPoint = new Vector3(CardWidthDip / 2f, frontHeightDip, 0);   // scale from the bottom, where the pill is
         if (firstGrow)
         {
+            // The peeks wait (cloaked) until the front has grown under them; ones still showing from a card fading out go
+            // unseen again so they don't float above the bar while it regrows.
+            var grow = ++_growId;
+            _grown = false;
+            foreach (var peek in _peeks)
+            {
+                peek?.Conceal();
+            }
+
             visual.Opacity = 0;
             visual.Scale = new Vector3(0.86f, 0.86f, 1);
             visual.Offset = new Vector3(0, 16, 0);
             AppWindow.Show(activateWindow: false);
-            SpringVector(visual, "Scale", Vector3.One);
-            SpringVector(visual, "Offset", Vector3.Zero);
-            FadeTo(visual, 1f, 0.14);
+            var batch = visual.Compositor.CreateScopedBatch(CompositionBatchTypes.Animation);
+            SpringVector(visual, "Scale", Vector3.One, delay);
+            SpringVector(visual, "Offset", Vector3.Zero, delay);
+            FadeTo(visual, 1f, 0.14, delay);
+            batch.End();
+            batch.Completed += (_, _) => _ui.TryEnqueue(() =>
+            {
+                // only the latest grow, and not once the card has started closing (its peeks would pop up during the fade)
+                if (grow != _growId || _closed || !_open)
+                {
+                    return;
+                }
+
+                _grown = true;
+                RevealPeeks();
+            });
 
             // Matched-geometry feel (research #3): the icon starts small and low — as if it's the little icon from the pill —
             // and springs up into its slot a beat after the card opens, so it reads as the same icon flowing from the bar into the card.
@@ -194,8 +261,8 @@ internal sealed class ExpandedNotice : Window
                 iv.CenterPoint = new Vector3((float)(icon.ActualWidth <= 0 ? 13 : icon.ActualWidth / 2), (float)(icon.ActualHeight <= 0 ? 13 : icon.ActualHeight / 2), 0);
                 iv.Scale = new Vector3(0.45f, 0.45f, 1);
                 iv.Offset = new Vector3(0, 26, 0);
-                DelayedSpring(iv, "Scale", Vector3.One);
-                DelayedSpring(iv, "Offset", Vector3.Zero);
+                DelayedSpring(iv, "Scale", Vector3.One, delay);
+                DelayedSpring(iv, "Offset", Vector3.Zero, delay);
             }
         }
         else
@@ -203,12 +270,69 @@ internal sealed class ExpandedNotice : Window
             visual.Opacity = 1;
             visual.Offset = Vector3.Zero;
             visual.Scale = new Vector3(0.97f, 0.97f, 1);
-            SpringVector(visual, "Scale", Vector3.One);
+            SpringVector(visual, "Scale", Vector3.One, delay);
         }
 
         PositionPeeks();
+        if (_grown)
+        {
+            RevealPeeks();   // the card is already up: a peek added now shows as soon as it has been drawn
+        }
+
         RaiseFrontAbovePeeks();
+        ScreenGhost.Notice.Raise();   // raising the front put it over the picture; the picture stays on top until it goes
         HookOutsideClick();   // the card is non-activating, so a global mouse hook (not WinUI pointer events) handles taps on it and clicks away
+    }
+
+    /// <summary>About how long <see cref="ScreenGhost.Popup"/> stays up (6 frames at 60 Hz); motion under it starts this late.</summary>
+    private static readonly TimeSpan GhostTime = TimeSpan.FromMilliseconds(100);
+
+    /// <summary>Counts first grows, so a grow that finished late doesn't reveal the peeks of a newer one.</summary>
+    private int _growId;
+
+    /// <summary>The front card has finished growing out of the pill, so the peeks behind it may be seen.</summary>
+    private bool _grown;
+
+    /// <summary>How many peek windows are placed behind the front right now (0 when hidden or when the list is open).</summary>
+    private int _peeksPlaced;
+
+    /// <summary>
+    /// Before the card on screen is moved or resized to <paramref name="next"/>, lays a picture of the screen over the old and new
+    /// places (front card and the peeks above it): resized while on screen, the window reached its new size a frame or more before
+    /// XAML had drawn it there, a white or empty strip when a second message of another height came in (review 11-03). Returns
+    /// whether it covered anything.
+    /// </summary>
+    private bool CoverResize(Windows.Graphics.RectInt32 next, int peeksNext)
+    {
+        var app = AppWindow;
+        if (!app.IsVisible || app.Position.X <= -30000)
+        {
+            return false;   // not on screen: nothing seen to cover (the first grow starts hidden)
+        }
+
+        if (app.Position.X == next.X && app.Position.Y == next.Y && app.Size.Width == next.Width && app.Size.Height == next.Height)
+        {
+            return false;   // same place and size: the new content is drawn in place, and a new peek waits cloaked until drawn
+        }
+
+        var topNow = app.Position.Y - DpiSetup.Px(Peek * _peeksPlaced);
+        var topNext = next.Y - DpiSetup.Px(Peek * peeksNext);
+        var shadow = DpiSetup.Px(16);   // the system shadow around the windows moves with them; the bottom edge stays put above the pill
+        ScreenGhost.Notice.Cover(
+            Math.Min(app.Position.X, next.X) - shadow,
+            Math.Min(topNow, topNext) - shadow,
+            Math.Max(app.Position.X + app.Size.Width, next.X + next.Width) + shadow,
+            Math.Max(app.Position.Y + app.Size.Height, next.Y + next.Height));
+        return true;
+    }
+
+    /// <summary>Lets the placed peeks be seen (each is uncloaked once it has been drawn).</summary>
+    private void RevealPeeks()
+    {
+        for (var k = 1; k <= _peeksPlaced; k++)
+        {
+            _peeks[k - 1]?.Reveal();
+        }
     }
 
     /// <summary>Puts each peek window behind the front, offset up and inset, showing only a strip above the front (the rest tucks under it).</summary>
@@ -231,12 +355,17 @@ internal sealed class ExpandedNotice : Window
                     _cardRect.Width - (2 * inset),
                     DpiSetup.Px((Peek * k) + 10));   // the strip above the front + a little to tuck under it
                 slot.Place(rect, DpiSetup.Px(Radius), dark);
+                // Raised explicitly in this order: a peek already on screen is only moved now, not shown again, so a peek
+                // newly added at the back would otherwise land over the one in front of it
+                SetWindowPos(slot.Handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
             }
             else
             {
                 slot?.HidePeek();
             }
         }
+
+        _peeksPlaced = _listOpen ? 0 : Math.Min(_behind, MaxBehind);
     }
 
     /// <summary>Raises the front card over its peek windows (all topmost; the last one raised in the band is on top).</summary>
@@ -576,6 +705,8 @@ internal sealed class ExpandedNotice : Window
             peek?.HidePeek();
         }
 
+        _peeksPlaced = 0;
+        _grown = false;
         AppWindow.Hide();
         _open = false;
         _listOpen = false;
@@ -761,32 +892,45 @@ internal sealed class ExpandedNotice : Window
 
     private static Color CardColor(bool dark) => dark ? Color.FromArgb(255, 44, 44, 48) : Color.FromArgb(255, 255, 255, 255);
 
-    private static void SpringVector(Visual visual, string property, Vector3 to)
+    /// <param name="delay">Held at its start value this long first (while a picture of the screen covers the card).</param>
+    private static void SpringVector(Visual visual, string property, Vector3 to, TimeSpan delay = default)
     {
         var spring = visual.Compositor.CreateSpringVector3Animation();
         spring.FinalValue = to;
         spring.DampingRatio = 0.8f;   // research (MS Composition Scale/Size rec): damping ~0.8, less wobble than 0.72 = a crisper open
         spring.Period = TimeSpan.FromMilliseconds(48);
+        if (delay > TimeSpan.Zero)
+        {
+            spring.DelayTime = delay;
+            spring.DelayBehavior = Microsoft.UI.Composition.AnimationDelayBehavior.SetInitialValueBeforeDelay;
+        }
+
         visual.StartAnimation(property, spring);
     }
 
     /// <summary>A slightly livelier spring that starts a beat late, so the icon visibly flows into place after the card has opened.</summary>
-    private static void DelayedSpring(Visual visual, string property, Vector3 to)
+    private static void DelayedSpring(Visual visual, string property, Vector3 to, TimeSpan extraDelay = default)
     {
         var spring = visual.Compositor.CreateSpringVector3Animation();
         spring.FinalValue = to;
         spring.DampingRatio = 0.7f;
         spring.Period = TimeSpan.FromMilliseconds(58);
-        spring.DelayTime = TimeSpan.FromMilliseconds(70);
+        spring.DelayTime = TimeSpan.FromMilliseconds(70) + extraDelay;
         spring.DelayBehavior = Microsoft.UI.Composition.AnimationDelayBehavior.SetInitialValueBeforeDelay;
         visual.StartAnimation(property, spring);
     }
 
-    private static void FadeTo(Visual visual, float to, double seconds)
+    private static void FadeTo(Visual visual, float to, double seconds, TimeSpan delay = default)
     {
         var fade = visual.Compositor.CreateScalarKeyFrameAnimation();
         fade.InsertKeyFrame(1f, to);
         fade.Duration = TimeSpan.FromSeconds(seconds);
+        if (delay > TimeSpan.Zero)
+        {
+            fade.DelayTime = delay;
+            fade.DelayBehavior = Microsoft.UI.Composition.AnimationDelayBehavior.SetInitialValueBeforeDelay;
+        }
+
         visual.StartAnimation("Opacity", fade);
     }
 }

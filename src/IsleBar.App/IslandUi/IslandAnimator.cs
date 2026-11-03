@@ -125,6 +125,7 @@ internal sealed class IslandAnimator
     /// </summary>
     public void Exit(Action done)
     {
+        _motion++;   // a pop still running must not restart the breath over this fade
         var finished = false;
         void Finish()
         {
@@ -165,6 +166,7 @@ internal sealed class IslandAnimator
     /// <summary>After the item goes away, quietly return to the input box look (transparent → opaque over 0.15 s, no pop).</summary>
     public void Restore()
     {
+        _motion++;
         foreach (var element in _bouncers)
         {
             var visual = ElementCompositionPreview.GetElementVisual(element);
@@ -239,12 +241,16 @@ internal sealed class IslandAnimator
         visual.Properties.InsertVector3("Translation", Vector3.Zero);
         visual.StartAnimation(nameof(Visual.Scale), SpringVector(0.5f, 1f, PopResponse, PopDamping));
         // the pop's fade takes over the icon's opacity, which ended the "working" breath for good (review 10-03) — pick it up after
+        // A batch also completes when its animation is interrupted (the next swap's fade-out, a newer pop): the breath then
+        // replaced the interrupting animation and the icon hung near invisible for 0.6 s (review 11-03). Only the latest motion
+        // picks the breath back up.
+        var motion = ++_motion;
         var batch = _compositor.CreateScopedBatch(CompositionBatchTypes.Animation);
         visual.StartAnimation(nameof(Visual.Opacity), Scalar(0f, 1f, TimeSpan.FromMilliseconds(120), null));
         batch.End();
         batch.Completed += (_, _) =>
         {
-            if (_breathing)
+            if (_breathing && motion == _motion)
             {
                 StartBreath(visual);
             }
@@ -281,6 +287,7 @@ internal sealed class IslandAnimator
     }
 
     private bool _breathing;
+    private int _motion;   // counts pops, fades and restores — so a finished pop knows whether something newer took over
 
     /// <summary>
     /// "Working" breathes: the lead mark slowly grows and fades (1 → 1.08, opacity 1 → 0.65, 1.8 s) while an agent works —

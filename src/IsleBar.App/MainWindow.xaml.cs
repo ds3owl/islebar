@@ -1066,7 +1066,7 @@ public sealed partial class MainWindow : Window
         Root.Background = BrushOf(TaskbarColorBeside());   // when the position changes, re-read the adjacent taskbar color too
         if (!_typing)
         {
-            _taskbar.PlaceAt(placement.X, placement.Y, _width, _height);   // shows it too (SWP_SHOWWINDOW), at the new place in one step
+            _taskbar.PlaceAt(placement.X, placement.Y, _width, _height, placement.TrayLeft, placement.TrayTop);   // shows it too (SWP_SHOWWINDOW), at the new place in one step
         }
         else
         {
@@ -2812,7 +2812,7 @@ public sealed partial class MainWindow : Window
             return;
         }
 
-        _taskbar.PlaceAt(_placement.X, _placement.Y, _width, _height);
+        _taskbar.PlaceAt(_placement.X, _placement.Y, _width, _height, _placement.TrayLeft, _placement.TrayTop);
     }
 
     /// <summary>Settings window. Brings it to the front if already open.</summary>
@@ -3202,7 +3202,7 @@ public sealed partial class MainWindow : Window
                 && !ProcessAlive(askPid, state.UpdatedAt))
             {
                 TaskbarHost.Log($"{(state.Kind == ActivityKind.AgentWorking ? "working" : "permission")} cleared: {Path.GetFileName(asked)} (its terminal was closed)");
-                DeleteState(asked);
+                DeleteState(asked, state.UpdatedAt);
                 continue;
             }
 
@@ -3214,7 +3214,7 @@ public sealed partial class MainWindow : Window
             if (!ProcessAlive(pid, state.UpdatedAt))
             {
                 TaskbarHost.Log($"done cleared: {Path.GetFileName(path)} (its terminal was closed)");
-                DeleteState(path);
+                DeleteState(path, state.UpdatedAt);
                 continue;
             }
 
@@ -3230,7 +3230,7 @@ public sealed partial class MainWindow : Window
             if (window != IntPtr.Zero && _terminalInput.TakeTouched(window))
             {
                 TaskbarHost.Log($"done seen: {Path.GetFileName(path)} (clicked or typed in its terminal)");
-                DeleteState(path);
+                DeleteState(path, state.UpdatedAt);
                 present.Remove(path);
             }
         }
@@ -3599,12 +3599,14 @@ public sealed partial class MainWindow : Window
     /// throwing it away: starting a stopwatch used to wipe a running Pomodoro without a word (user chose "ask once", 10-01).
     /// True if it started now; false if it's waiting for the answer.
     /// </summary>
+    /// <summary>A timer (or stopwatch) is counting or paused — a new one asks first whether to replace it.</summary>
+    private bool TimerRunning(DateTimeOffset now) => _activities.Read(now).Any(s => s.Kind == ActivityKind.Timer
+        && (s.IsPaused || TimerParser.IsStopwatch(s) || TimerParser.Remaining(s, now) > TimeSpan.Zero));
+
     private bool StartTimer(ActivityState next)
     {
         var now = DateTimeOffset.UtcNow;
-        var running = _activities.Read(now).Any(s => s.Kind == ActivityKind.Timer
-            && (s.IsPaused || TimerParser.IsStopwatch(s) || TimerParser.Remaining(s, now) > TimeSpan.Zero));
-        if (!running)
+        if (!TimerRunning(now))
         {
             ReplaceTimer(next);
             return true;
@@ -3673,13 +3675,35 @@ public sealed partial class MainWindow : Window
         // pill for hours) the completion was never seen — a click there deleted it unseen (review 10-03)
         if (_backgroundDone is { SourcePath: { } path } && _backgroundDoneKey is not null && _glowKey == _backgroundDoneKey)
         {
-            DeleteState(path);
+            DeleteState(path, _backgroundDone.UpdatedAt);
             _backgroundDone = null;
             _backgroundDoneKey = null;
             UpdateGlow();
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Deletes a state file only if it is still the one that was read: the session's hook may have rewritten it since (a quick
+    /// ↑+Enter in the terminal while "done" showed), and deleting by path then lost that turn's "working" (review 11-03).
+    /// </summary>
+    private static void DeleteState(string path, DateTimeOffset read)
+    {
+        try
+        {
+            if (read != default && File.GetLastWriteTimeUtc(path) != read.UtcDateTime)
+            {
+                TaskbarHost.Log($"state kept: {Path.GetFileName(path)} (rewritten since it was read)");
+                return;
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return;
+        }
+
+        DeleteState(path);
     }
 
     private static void DeleteState(string path)
@@ -3760,13 +3784,16 @@ public sealed partial class MainWindow : Window
             });
         }
 
-        if (detached && !_typing && _taskbar.Attach())
+        var now = DateTimeOffset.UtcNow;
+        // A timer chosen while another runs asks "replace it?" in the input box, so typing starts right away: put back into the
+        // taskbar first, the pill was taken straight out again — two jumps in a row (review 11-03). It just stays out then.
+        var timerChoice = chosen == MenuPomodoro || chosen == MenuStopwatch || (chosen >= MenuQuickBase && chosen - MenuQuickBase < quick.Count);
+        if (detached && !_typing && !(timerChoice && TimerRunning(now)) && _taskbar.Attach())
         {
             PlaceOnTaskbar();
             ApplyRegion();
         }
 
-        var now = DateTimeOffset.UtcNow;
         if (chosen == MenuQuit)
         {
             RequestExit(ExitCodes.UserQuit);

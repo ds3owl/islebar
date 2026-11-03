@@ -19,6 +19,7 @@ internal sealed class ScreenGhost
     public static readonly ScreenGhost Pill = new(4);
     // A popup resized on screen was once still a frame short of drawn after 4 ticks (compose box, 60 fps capture 11-03)
     public static readonly ScreenGhost Popup = new(6);
+    public static readonly ScreenGhost Notice = new(6);   // the message card: its own picture, so a preview resizing at the same moment keeps its cover
 
     private readonly int _framesShown;   // Rendering ticks to wait: a tick comes before its frame, and the window needs a few
 

@@ -35,6 +35,7 @@ internal sealed class AgentRecordWatcher : NoticeWatcher
         public byte[] Pending = [];          // the end of the last read that isn't a whole line yet (bytes: a UTF-8 character may be split)
         public bool DropFirstLine;           // started mid-file: the first piece is the tail of a line
         public IReadOnlyList<UsageWindow>? Windows;
+        public DateTimeOffset? WindowsAt;      // the reading's line time: one from before the current turn is not used
     }
 
     public AgentRecordWatcher(Func<Core.Localization.LanguageStrings> strings)
@@ -168,9 +169,12 @@ internal sealed class AgentRecordWatcher : NoticeWatcher
         {
             var line = lines[i];
 
-            if (AgentUsage.FromCodexLine(line) is { } windows)
+            // only readings from this turn whose windows haven't reset count: an old one (codex resume on an old session) gave a
+            // stale heads-up and an already-expired "limit reached" end time (review 11-03)
+            if (AgentUsage.FreshCodexReading(line, since, now) is { } windows)
             {
                 followed.Windows = windows;
+                followed.WindowsAt = AgentRecord.LineTime(line);
                 if (AgentUsage.ToWarnAbout(windows) is { } high
                     && AgentUsage.FirstWarning(Path.Combine(Interop.AppPaths.DataDirectory, "usage_warned.txt"), AgentKind.Codex, high))
                 {
@@ -180,7 +184,7 @@ internal sealed class AgentRecordWatcher : NoticeWatcher
             else if (AgentUsage.CodexFailureFrom(line) is { } failure && (AgentRecord.LineTime(line) is not { } at || at > since) && unchanged())
             {
                 var notice = failure.UsageLimit
-                    ? AgentNotices.UsageLimit(AgentKind.Codex, AgentUsage.ResetOfFullest(followed.Windows), Text, now)
+                    ? AgentNotices.UsageLimit(AgentKind.Codex, AgentUsage.ResetOfFullest(followed.WindowsAt is not { } read || read > since ? followed.Windows : null, now), Text, now)   // no usable reading: an hour
                     : AgentNotices.Stopped(AgentKind.Codex, failure.Reason, Text, now);
                 store.Write(id, notice);   // replaces "working" — the next prompt turns it back into "working"
                 Interop.TaskbarHost.Log($"codex: turn failed ({(failure.UsageLimit ? "usage limit" : failure.Reason.ToString())})");

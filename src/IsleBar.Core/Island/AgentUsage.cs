@@ -17,6 +17,9 @@ public sealed record CodexFailure(bool UsageLimit, StopReason Reason);
 /// </summary>
 public static class AgentUsage
 {
+    /// <summary>Two readings whose resets are this close belong to the same usage window (see <see cref="FirstWarning"/>).</summary>
+    public static readonly TimeSpan SameResetWithin = TimeSpan.FromMinutes(5);
+
     /// <summary>Claude Code status line input → its usage windows (Pro/Max plans only; empty for API keys).</summary>
     public static IReadOnlyList<UsageWindow> FromClaudeStatus(string? json)
     {
@@ -88,9 +91,32 @@ public static class AgentUsage
         return new CodexFailure(false, reason);
     }
 
-    /// <summary>When a hit limit lifts: the reset of the fullest window in the last reading (the one that ran out).</summary>
-    public static DateTimeOffset? ResetOfFullest(IReadOnlyList<UsageWindow>? windows)
-        => windows is { Count: > 0 } ? windows.MaxBy(w => w.Percent)!.ResetsAt : null;
+    /// <summary>
+    /// A Codex record line's usage windows if they still describe the plan now, else null: the line must be from the current
+    /// turn (after <paramref name="since"/>; a line without a time counts, as for failures) and no window may have reset yet.
+    /// The first read takes the end of the record, so after <c>codex resume</c> on an old session the latest reading is days
+    /// old — its reset already passed, and it gave a "limit reached" notice that had expired before it showed and a stale 90%
+    /// heads-up (review 11-03).
+    /// </summary>
+    public static IReadOnlyList<UsageWindow>? FreshCodexReading(string? line, DateTimeOffset since, DateTimeOffset now)
+    {
+        if (FromCodexLine(line) is not { } windows
+            || (AgentRecord.LineTime(line!) is { } at && at <= since)
+            || windows.Any(w => w.ResetsAt is { } r && r <= now))
+        {
+            return null;
+        }
+
+        return windows;
+    }
+
+    /// <summary>
+    /// When a hit limit lifts: the reset of the fullest window in the last reading (the one that ran out). Null when there is
+    /// no reading or that reset has already passed (a long turn can outlive it) — the notice then falls back to an hour, as
+    /// <see cref="AgentNotices.UsageLimit"/> does for an unknown reset; a past time would end the notice before it shows.
+    /// </summary>
+    public static DateTimeOffset? ResetOfFullest(IReadOnlyList<UsageWindow>? windows, DateTimeOffset now)
+        => windows is { Count: > 0 } && windows.MaxBy(w => w.Percent)!.ResetsAt is { } r && r > now ? r : null;
 
     /// <summary>The window to warn about (at or above <see cref="AgentNotices.WarnAtPercent"/>, below 100), fullest first.</summary>
     public static UsageWindow? ToWarnAbout(IReadOnlyList<UsageWindow>? windows)
@@ -98,15 +124,22 @@ public static class AgentUsage
 
     /// <summary>
     /// Whether this window was already warned about (<paramref name="warnedFile"/> lists "agent:key:reset" lines); records it if not.
-    /// Once per window: the same 5-hour window never warns twice. Never throws — on trouble it warns again rather than never.
+    /// Once per window: the same 5-hour window never warns twice. A reset within <see cref="SameResetWithin"/> of one already
+    /// warned about is the same window — agents report the reset a second or so apart between readings, and the exact second
+    /// in the mark made the heads-up come back every turn (review 11-03); a new window resets hours later.
+    /// Never throws — on trouble it warns again rather than never.
     /// </summary>
     public static bool FirstWarning(string warnedFile, string agent, UsageWindow window)
     {
-        var mark = $"{agent}:{window.Key}:{window.ResetsAt?.ToUnixTimeSeconds() ?? 0}";
+        var prefix = $"{agent}:{window.Key}:";
+        var reset = window.ResetsAt?.ToUnixTimeSeconds() ?? 0;
+        var mark = prefix + reset.ToString(System.Globalization.CultureInfo.InvariantCulture);
         try
         {
             var seen = File.Exists(warnedFile) ? File.ReadAllLines(warnedFile).ToList() : [];
-            if (seen.Contains(mark))
+            if (seen.Any(s => s.StartsWith(prefix, StringComparison.Ordinal)
+                              && long.TryParse(s.AsSpan(prefix.Length), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var r)
+                              && Math.Abs(r - reset) <= (long)SameResetWithin.TotalSeconds))
             {
                 return false;
             }

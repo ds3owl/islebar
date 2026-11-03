@@ -9,7 +9,11 @@ namespace IsleBar.App.Tracking;
 /// <param name="Mode">Whether to cover it, sit to its left, or hide.</param>
 /// <param name="X">Screen x where our window goes (physical pixels).</param>
 /// <param name="Y">Screen y where our window goes.</param>
-internal sealed record BarPlacement(PlacementMode Mode, int X, int Y)
+/// <param name="TrayLeft">Where the taskbar window was (screen) when X and Y were read, in the same pass — the pill is placed
+/// relative to it. Read later on the UI thread instead, it disagreed while an auto-hide taskbar slid in or out, and the pill
+/// jumped or sat off its spot (review 11-03).</param>
+/// <param name="TrayTop">See <paramref name="TrayLeft"/>.</param>
+internal sealed record BarPlacement(PlacementMode Mode, int X, int Y, int? TrayLeft = null, int? TrayTop = null)
 {
     public static readonly BarPlacement Hidden = new(PlacementMode.Hide, 0, 0);
 }
@@ -155,6 +159,8 @@ internal sealed class SearchBoxTracker : IDisposable
                     searchBox ??= FindDescendant(automation, tray, SearchBoxAutomationId);
 
                     var rect = searchBox is null ? default : searchBox.CurrentBoundingRectangle;
+                    var trayRect = default(RECT);
+                    var trayKnown = GetWindowRect(tray, out trayRect);
                     // "Search icon only" / "icon and label": the button is far narrower than the pill, and centring the pill on it
                     // covered the Start button and the icons beside it (review 10-03) — treat it like no search box
                     if (rect.right - rect.left > 0 && rect.right - rect.left >= _barWidth * 0.6)
@@ -162,7 +168,9 @@ internal sealed class SearchBoxTracker : IDisposable
                         SetCurrent(new BarPlacement(
                             PlacementMode.OverRealSearchBox,
                             rect.left + ((rect.right - rect.left - _barWidth) / 2),
-                            rect.top + ((rect.bottom - rect.top - _barHeight) / 2)));
+                            rect.top + ((rect.bottom - rect.top - _barHeight) / 2),
+                            trayKnown ? trayRect.Left : null,
+                            trayKnown ? trayRect.Top : null));
                     }
                     else
                     {
@@ -180,12 +188,18 @@ internal sealed class SearchBoxTracker : IDisposable
                             left = widgetsRect.right + DpiSetup.Px(8);
                         }
 
-                        (bandTop, bandHeight) = TaskbarBand();   // the taskbar may have moved or changed size since
+                        // The taskbar window itself where it can be read: the work-area guess is wrong for an auto-hide taskbar
+                        // (the work area then reaches the screen bottom) and left the pill off the band, unseen (review 11-03)
+                        (bandTop, bandHeight) = trayKnown && trayRect.Bottom > trayRect.Top
+                            ? (trayRect.Top, trayRect.Bottom - trayRect.Top)
+                            : TaskbarBand();
                         SetCurrent(startX > DpiSetup.Px(300) && left + _barWidth <= startX - DpiSetup.Px(8)
                             ? new BarPlacement(
                                 PlacementMode.TaskbarLeftEdge,
                                 left,
-                                bandTop + ((bandHeight - _barHeight) / 2))
+                                bandTop + ((bandHeight - _barHeight) / 2),
+                                trayKnown ? trayRect.Left : null,
+                                trayKnown ? trayRect.Top : null)
                             : BarPlacement.Hidden);
                         delay = NotFoundDelay;
                     }

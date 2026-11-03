@@ -85,9 +85,27 @@ internal sealed class TerminalInputWatch : IDisposable
                 var module = GetModuleHandle(null);
                 var mouseHook = SetWindowsHookExW(WH_MOUSE_LL, mouse, module, 0);
                 var keyHook = SetWindowsHookExW(WH_KEYBOARD_LL, key, module, 0);
-                while (GetMessage(out _, IntPtr.Zero, 0, 0) > 0)
+                if (mouseHook == IntPtr.Zero || keyHook == IntPtr.Zero)
                 {
+                    AppLog.Write($"terminal input: hook not installed (error {Marshal.GetLastWin32Error()})");
                 }
+
+                // Windows drops a low-level hook without a word when one call runs past its time limit (a GC pause, heavy paging,
+                // resume from sleep), and the finished task's green border then never cleared (review 11-03). Hook again every
+                // minute: an unhook and a hook are cheap, and a dropped hook comes back within a minute.
+                var timer = SetTimer(IntPtr.Zero, IntPtr.Zero, 60_000, IntPtr.Zero);
+                while (GetMessage(out var msg, IntPtr.Zero, 0, 0) > 0)
+                {
+                    if (msg.message == WM_TIMER)
+                    {
+                        UnhookWindowsHookEx(mouseHook);
+                        UnhookWindowsHookEx(keyHook);
+                        mouseHook = SetWindowsHookExW(WH_MOUSE_LL, mouse, module, 0);
+                        keyHook = SetWindowsHookExW(WH_KEYBOARD_LL, key, module, 0);
+                    }
+                }
+
+                KillTimer(IntPtr.Zero, timer);
 
                 UnhookWindowsHookEx(mouseHook);
                 UnhookWindowsHookEx(keyHook);
@@ -224,6 +242,15 @@ internal sealed class TerminalInputWatch : IDisposable
 
     [DllImport("user32.dll")]
     private static extern int GetMessage(out MSG msg, IntPtr hwnd, uint min, uint max);
+
+    private const uint WM_TIMER = 0x0113;
+
+    [DllImport("user32.dll")]
+    private static extern IntPtr SetTimer(IntPtr hwnd, IntPtr id, uint elapse, IntPtr func);
+
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool KillTimer(IntPtr hwnd, IntPtr id);
 
     [DllImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]

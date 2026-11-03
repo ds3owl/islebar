@@ -166,7 +166,9 @@ internal sealed class TaskbarHost(IntPtr windowHandle)
     }
 
     /// <summary>Places at screen coordinates (x, y), converted to taskbar-relative coordinates if a child.</summary>
-    public void PlaceAt(int x, int y, int width, int height)
+    /// <param name="trayLeft">Where the taskbar was when (x, y) was read (see BarPlacement); the current position otherwise.</param>
+    /// <param name="trayTop">See <paramref name="trayLeft"/>.</param>
+    public void PlaceAt(int x, int y, int width, int height, int? trayLeft = null, int? trayTop = null)
     {
         if (Host != IntPtr.Zero)
         {
@@ -175,9 +177,23 @@ internal sealed class TaskbarHost(IntPtr windowHandle)
                 return;
             }
 
-            var ok = SetWindowPos(_wrap, HWND_TOP, x - hostRect.Left, y - hostRect.Top, width, height,
-                SWP_NOACTIVATE | SWP_SHOWWINDOW);
-            Log($"PlaceAt child {x - hostRect.Left},{y - hostRect.Top} {width}x{height} ok={ok} err={Marshal.GetLastWin32Error()}");
+            if (trayLeft is { } tl && trayTop is { } tt)
+            {
+                (hostRect.Left, hostRect.Top) = (tl, tt);   // the same moment as (x, y): a sliding taskbar can't put them out of step
+            }
+
+            int cx = x - hostRect.Left, cy = y - hostRect.Top;
+            if ((Unsigned32(GetWindowLong(Host, GWL_EXSTYLE)) & WS_EX_LAYOUTRTL) != 0)
+            {
+                // A right-to-left Windows (Arabic, Hebrew) mirrors the taskbar: a child's x counts from its right edge, and the
+                // subtraction above put the pill on the wrong side (review 11-03). MapWindowPoints knows the mirroring.
+                var r = new RECT { Left = x, Top = y, Right = x + width, Bottom = y + height };
+                _ = MapWindowPoints(IntPtr.Zero, Host, ref r, 2);
+                (cx, cy) = (Math.Min(r.Left, r.Right), r.Top);
+            }
+
+            var ok = SetWindowPos(_wrap, HWND_TOP, cx, cy, width, height, SWP_NOACTIVATE | SWP_SHOWWINDOW);
+            Log($"PlaceAt child {cx},{cy} {width}x{height} ok={ok} err={Marshal.GetLastWin32Error()}");
         }
         else
         {
@@ -198,5 +214,10 @@ internal sealed class TaskbarHost(IntPtr windowHandle)
     /// <summary>Outer window handle (used for region clipping, etc.).</summary>
     public IntPtr OuterWindow => _wrap;
 
-    internal static void Log(string message) => AppLog.Write(message);   // central rotating log (10-01)
+    internal static void Log(string message) => AppLog.Write(message);
+
+    private const uint WS_EX_LAYOUTRTL = 0x0040_0000;
+
+    [DllImport("user32.dll")]
+    private static extern int MapWindowPoints(IntPtr from, IntPtr to, ref RECT points, uint count);   // central rotating log (10-01)
 }
