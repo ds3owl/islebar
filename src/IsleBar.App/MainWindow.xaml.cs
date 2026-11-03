@@ -3426,8 +3426,11 @@ public sealed partial class MainWindow : Window
     /// <summary>Closes the results list window (recreated on the next search).</summary>
     private void CloseResults()
     {
-        _results?.Close();
-        _results = null;
+        if (_results is { } results)
+        {
+            _results = null;
+            Options.PopupPlacement.CloseCleanly(results);
+        }
     }
 
     private bool MoveResultSelection(int delta) => _results?.Move(delta) ?? true;

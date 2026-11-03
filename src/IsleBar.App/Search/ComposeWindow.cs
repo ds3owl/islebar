@@ -185,6 +185,6 @@ internal sealed class ComposeWindow : Window
             _cancel(text);
         }
 
-        Close();
+        PopupPlacement.CloseCleanly(this);
     }
 }

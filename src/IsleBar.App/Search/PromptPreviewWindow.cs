@@ -16,8 +16,9 @@ namespace IsleBar.App.Search;
 /// Two cards take turns. A window resized on screen reaches the screen at its new size a few frames before XAML has drawn
 /// it at that size, so each time the text wrapped onto a new line (or back) the card showed the old text with a see-through
 /// or white band under it for 1–3 frames (60 fps capture, user 11-03: "줄바뀌면 깜빡이는거 여전한거 같은디"). Now a change of
-/// size is drawn on the other card while it is cloaked; once drawn, it is uncloaked over the old one, which is then hidden.
-/// The card on screen is never resized.
+/// size is drawn on the other card while it is cloaked; once drawn, it is uncloaked over the old one, which is then cloaked.
+/// The card on screen is never resized. The other card stays shown but cloaked, so it is ready: shown for the first time at a
+/// swap, it needed longer than 3 frames and came up blank white for a frame (promo films at 300 %, 7 of 10, 11-03).
 /// </para>
 /// </summary>
 internal sealed class PromptPreviewWindow
@@ -26,6 +27,7 @@ internal sealed class PromptPreviewWindow
     private PreviewCard _back = new();
     private PreviewCard? _swapping;   // the back card, cloaked, being drawn at the new size
     private int _frames;
+    private int _uncloakAt;   // Rendering ticks before the new card is uncloaked: more when it had to be shown first
     private bool _closed;   // after Close() a typing session ending at exit still asked to hide it — a closed window's AppWindow is null (11-03)
 
     public PromptPreviewWindow()
@@ -76,6 +78,7 @@ internal sealed class PromptPreviewWindow
             _front.SetText(text, caret);
             _front.ShowAbove(anchorX, bandTop);
             _front.FollowCaret();
+            WarmUp(_back, text, caret, anchorX, bandTop);
             return;
         }
 
@@ -93,13 +96,34 @@ internal sealed class PromptPreviewWindow
         StartSwap(_back, target);
     }
 
+    /// <summary>Shows the other card cloaked beside the one on screen, so its first frame is long drawn before a swap needs it.</summary>
+    private static void WarmUp(PreviewCard card, string text, int caret, int anchorX, int bandTop)
+    {
+        if (card.AppWindow.IsVisible)
+        {
+            return;
+        }
+
+        PopupPlacement.SetCloaked(card, true);
+        card.SetText(text, caret);
+        card.AppWindow.MoveAndResize(card.Fit(anchorX, bandTop));
+        card.AppWindow.Show(activateWindow: false);
+        card.StopBlink();
+    }
+
     private void StartSwap(PreviewCard next, Windows.Graphics.RectInt32 at)
     {
         _swapping = next;
         _frames = 0;
+        var cold = !next.AppWindow.IsVisible;
+        _uncloakAt = cold ? 8 : 4;
         PopupPlacement.SetCloaked(next, true);
         next.AppWindow.MoveAndResize(at);
-        next.AppWindow.Show(activateWindow: false);
+        if (cold)
+        {
+            next.AppWindow.Show(activateWindow: false);
+        }
+
         var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(next);
         NativeMethods.SetWindowPos(hwnd, NativeMethods.HWND_TOPMOST, 0, 0, 0, 0, NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOSIZE | NativeMethods.SWP_NOACTIVATE);   // above the card it replaces
         next.FollowCaret();
@@ -121,19 +145,20 @@ internal sealed class PromptPreviewWindow
         }
 
         _frames++;
-        if (_frames == 3)
+        if (_frames == _uncloakAt)
         {
-            // A Rendering tick comes before its frame is drawn: by the third, the new size has been drawn. It goes on screen over
-            // the old card (it covers it when it grew; when it shrank, the old one shows behind it for this one frame).
+            // A Rendering tick comes before its frame is drawn: a few ticks on, the new size has been drawn. It goes on screen
+            // over the old card (it covers it when it grew; when it shrank, the old one shows behind it for this one frame).
             PopupPlacement.SetCloaked(next, false);
         }
-        else if (_frames >= 4)
+        else if (_frames > _uncloakAt)
         {
             // A frame later the old card goes. Not in the same step: had the two changes reached the screen in separate frames
-            // the other way round, there would have been a frame with no card at all.
+            // the other way round, there would have been a frame with no card at all. Cloaked, not hidden: it stays ready.
             CompositionTarget.Rendering -= OnRendering;
             _swapping = null;
-            _front.Hide();
+            PopupPlacement.SetCloaked(_front, true);
+            _front.StopBlink();
             (_front, _back) = (next, _front);
         }
     }
@@ -159,6 +184,11 @@ internal sealed class PromptPreviewWindow
         }
 
         _front.Hide();
+        if (_back.AppWindow.IsVisible)
+        {
+            _back.Hide();   // the ready card too; it is shown cloaked again with the next preview
+            PopupPlacement.SetCloaked(_back, false);
+        }
     }
 
     public void Close()
@@ -291,5 +321,7 @@ internal sealed class PromptPreviewWindow
             _blink.Stop();
             AppWindow.Hide();
         }
+
+        public void StopBlink() => _blink.Stop();
     }
 }

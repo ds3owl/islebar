@@ -102,7 +102,7 @@ internal sealed class OptionsFlyout : Window
         }
 
         _closing = true;
-        Close();
+        PopupPlacement.CloseCleanly(this);
     }
 }
 
@@ -288,6 +288,24 @@ internal static class PopupPlacement
 
     /// <summary>Whether <paramref name="window"/> was just shown cloaked by <see cref="ShowDrawnAbove"/> and is still waiting for its first frame.</summary>
     public static bool IsWaitingForFrame(Window window) => s_waitingForFrame.ContainsKey(window);
+
+    /// <summary>
+    /// Closes a popup without its last frame: a WinUI window closed while on screen showed one blank white frame before it went
+    /// (the compose box on Enter, promo film 11-03). Cloaked first, it just disappears.
+    /// </summary>
+    public static void CloseCleanly(Window window)
+    {
+        try
+        {
+            SetCloaked(window, true);
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or System.Runtime.InteropServices.COMException)
+        {
+            // already closing: nothing to hide
+        }
+
+        window.Close();
+    }
 
     /// <summary>Cloaks or uncloaks a window: shown and drawn as usual, but kept off the screen while cloaked.</summary>
     public static void SetCloaked(Window window, bool on) => Cloak(WinRT.Interop.WindowNative.GetWindowHandle(window), on);

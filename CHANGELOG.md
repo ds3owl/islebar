@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.8 (2026-11-03)
+
+### Fixes
+- The long-question preview no longer shows a blank white card for a frame the first time a line wraps (seen at 300 %
+  display scale).
+- The multi-line question box, the file results and the options box close without a blank white frame.
+
 ## 0.1.7 (2026-11-03)
 
 ### Fixes
