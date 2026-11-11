@@ -3178,10 +3178,13 @@ public sealed partial class MainWindow : Window
 
     private bool _chimeSeeded;
 
-    // Terminal window of each finished task's session, looked up once per state file (finding it briefly attaches to the console).
+    // Terminal window(s) of each finished task's session, looked up once per state file (finding it briefly attaches to the console).
     // A failed lookup (no visible terminal — e.g. an editor's built-in terminal) is retried after a while rather than kept forever.
-    private readonly Dictionary<string, IntPtr> _doneWindows = new(StringComparer.OrdinalIgnoreCase);
-    private readonly Dictionary<string, DateTimeOffset> _doneWindowRetry = new(StringComparer.OrdinalIgnoreCase);
+    // A background session has no terminal of its own: the terminals it's read from are looked up again every few seconds, since
+    // you may attach to it after it finished (11-11).
+    private sealed record DoneTerminals(IntPtr[] Windows, bool Background, DateTimeOffset LookAgain);
+
+    private readonly Dictionary<string, DoneTerminals> _doneWindows = new(StringComparer.OrdinalIgnoreCase);
     private readonly Interop.TerminalInputWatch _terminalInput = new();
 
     /// <summary>
@@ -3193,6 +3196,9 @@ public sealed partial class MainWindow : Window
     private void DismissSeenAgents(List<ActivityState> items)
     {
         var present = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        // Taken once for every window, then matched to each task: two finished tasks in one terminal (tabs, or a background session
+        // read from the same terminal) both clear on that click — taking it per task left the second one green.
+        var touched = _watchedWindows.Where(_terminalInput.TakeTouched).ToHashSet();
         foreach (var state in items)
         {
             // A question/permission prompt whose terminal was closed can't be answered any more — clear the orange too.
@@ -3219,17 +3225,16 @@ public sealed partial class MainWindow : Window
             }
 
             present.Add(path);
-            if (!_doneWindows.TryGetValue(path, out var window)
-                || (window == IntPtr.Zero && DateTimeOffset.UtcNow >= _doneWindowRetry.GetValueOrDefault(path)))
+            _doneWindows.TryGetValue(path, out var found);
+            if (found is null || ((found.Windows.Length == 0 || found.Background) && DateTimeOffset.UtcNow >= found.LookAgain))
             {
-                window = AgentWindow.Find(pid);
-                _doneWindows[path] = window;
-                _doneWindowRetry[path] = DateTimeOffset.UtcNow.AddSeconds(30);
+                found = LookUpTerminals(path, pid, found);
+                _doneWindows[path] = found;
             }
 
-            if (window != IntPtr.Zero && _terminalInput.TakeTouched(window))
+            if (found.Windows.Any(touched.Contains))
             {
-                TaskbarHost.Log($"done seen: {Path.GetFileName(path)} (clicked or typed in its terminal)");
+                TaskbarHost.Log($"done seen: {Path.GetFileName(path)} (clicked or typed in {(found.Background ? "a terminal it's read from" : "its terminal")})");
                 DeleteState(path, state.UpdatedAt);
                 present.Remove(path);
             }
@@ -3238,11 +3243,10 @@ public sealed partial class MainWindow : Window
         foreach (var gone in _doneWindows.Keys.Where(p => !present.Contains(p)).ToList())
         {
             _doneWindows.Remove(gone);
-            _doneWindowRetry.Remove(gone);
         }
 
         // Hooks only while a finished task is waiting (installing/removing only when that changes)
-        var windows = _doneWindows.Values.Where(w => w != IntPtr.Zero).ToHashSet();
+        var windows = _doneWindows.Values.SelectMany(d => d.Windows).Where(w => w != IntPtr.Zero).ToHashSet();
         if (!windows.SetEquals(_watchedWindows))
         {
             _watchedWindows = windows;
@@ -3251,6 +3255,29 @@ public sealed partial class MainWindow : Window
     }
 
     private HashSet<IntPtr> _watchedWindows = [];
+
+    /// <summary>The finished task's own terminal; for a background session, the terminals it's read from (see AgentWindow.FindViewers).</summary>
+    private static DoneTerminals LookUpTerminals(string path, int pid, DoneTerminals? before)
+    {
+        var now = DateTimeOffset.UtcNow;
+        var own = AgentWindow.Find(pid, log: before is null);
+        if (own != IntPtr.Zero)
+        {
+            return new DoneTerminals([own], false, now.AddSeconds(30));
+        }
+
+        if (AgentWindow.FindViewers(pid) is not { } viewers)
+        {
+            return new DoneTerminals([], false, now.AddSeconds(30));
+        }
+
+        if (before is null || !before.Windows.SequenceEqual(viewers))
+        {
+            TaskbarHost.Log($"done {Path.GetFileName(path)}: background session, read from {viewers.Length} terminal(s)");
+        }
+
+        return new DoneTerminals(viewers, true, now.AddSeconds(3));
+    }
 
     /// <param name="written">When the state naming <paramref name="pid"/> was written: the agent was running then. A process with
     /// that number started later is another program that got the number after the terminal closed — "working" or "done" stayed

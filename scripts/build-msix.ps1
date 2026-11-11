@@ -13,7 +13,7 @@ param(
     [string]$IdentityName = 'ds3owl.IsleBar.Test',
     [string]$Publisher = 'CN=IsleBar Test',
     [string]$PublisherDisplayName = 'ds3owl',
-    [string]$Version = '0.1.9',
+    [string]$Version = '0.1.10',
     [switch]$Test,
     [switch]$NoNativeMode
 )

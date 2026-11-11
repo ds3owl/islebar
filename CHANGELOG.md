@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.10 (2026-11-11)
+
+### Fixes
+- A background Claude session's green border now clears when you go back to it. Sessions sent to the background
+  (`claude --bg`, or from the session list) run in a hidden console, so clicking the terminal you read them in did
+  nothing; the bar now watches the terminals they are opened in (`claude attach` or a running Claude's session list).
+- Two finished tasks in one terminal both clear on the same click (the second one stayed green).
+
 ## 0.1.9 (2026-11-03)
 
 ### Fixes
